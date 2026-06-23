@@ -4,36 +4,47 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-[#f5f5f5]">
       {/* HEADER */}
-      <header className="max-w-7xl mx-auto px-8 py-4">
+      <header className="max-w-7xl mx-auto px-6 lg:px-8 py-6">
         <div className="flex items-center justify-between">
-          <nav className="flex gap-12 text-lg font-medium text-slate-800">
-            <a href="#">Come funziona</a>
-            <a href="#">Funzionalità</a>
-            <a href="#">Per chi</a>
-            <a href="#">Roadmap</a>
+          {/* Desktop Menu */}
+          <nav className="hidden lg:flex gap-12 text-lg font-medium text-slate-800">
+            <a href="#come-funziona">Come funziona</a>
+            <a href="#funzionalita">Funzionalità</a>
+            <a href="#per-chi">Per chi</a>
+            <a href="#roadmap">Roadmap</a>
           </nav>
 
-          <button className="bg-[#2563FF] text-white px-8 py-4 rounded-2xl font-semibold hover:bg-[#1f56e5] transition">
+          {/* Mobile */}
+          <button className="lg:hidden bg-[#2563FF] text-white px-5 py-3 rounded-xl font-semibold">
+            Menu
+          </button>
+
+          {/* CTA Desktop */}
+          <button className="hidden lg:block bg-[#2563FF] text-white px-8 py-4 rounded-2xl font-semibold hover:bg-[#1f56e5] transition">
             Entra nella lista d'attesa
           </button>
         </div>
       </header>
 
       {/* HERO */}
-      <section className="max-w-7xl mx-auto px-8 pt-0 pb-12">
-        <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-8 items-center">
-          {/* COLONNA SINISTRA */}
-          <div className="flex flex-col justify-start">
+      <section className="max-w-7xl mx-auto px-6 lg:px-8 pb-16">
+        <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-12 items-center">
+
+          {/* SINISTRA */}
+          <div className="text-center lg:text-left">
+
+            {/* LOGO */}
             <Image
               src="/logo.png"
               alt="Commety"
-              width={360}
-              height={96}
+              width={420}
+              height={110}
               priority
-              className="mb-4"
+              className="mb-6 mx-auto lg:mx-0 w-[280px] md:w-[340px] lg:w-[420px] h-auto"
             />
 
-            <h1 className="text-[78px] leading-[0.92] font-extrabold text-[#08122E]">
+            {/* CLAIM */}
+            <h1 className="text-5xl md:text-6xl lg:text-[78px] leading-[0.92] font-extrabold text-[#08122E]">
               Tutto quello che accade
               <br />
               <span className="text-[#2563FF]">
@@ -41,12 +52,14 @@ export default function Home() {
               </span>
             </h1>
 
-            <p className="mt-8 text-2xl text-slate-600 leading-relaxed max-w-2xl">
+            {/* DESCRIZIONE */}
+            <p className="mt-8 text-lg md:text-xl lg:text-2xl text-slate-600 leading-relaxed max-w-2xl mx-auto lg:mx-0">
               Scopri cosa sta succedendo vicino a te grazie alle
               segnalazioni in tempo reale della community.
             </p>
 
-            <div className="flex flex-wrap gap-4 mt-10">
+            {/* TAG */}
+            <div className="flex flex-wrap justify-center lg:justify-start gap-4 mt-10">
               <span className="px-5 py-3 rounded-full bg-blue-100 text-blue-700">
                 ☔ Meteo
               </span>
@@ -68,21 +81,24 @@ export default function Home() {
               </span>
             </div>
 
-            <button className="mt-10 w-fit bg-[#2563FF] text-white px-10 py-5 rounded-2xl text-xl font-semibold hover:bg-[#1f56e5] transition">
+            {/* CTA */}
+            <button className="mt-10 mx-auto lg:mx-0 w-fit bg-[#2563FF] text-white px-10 py-5 rounded-2xl text-lg lg:text-xl font-semibold hover:bg-[#1f56e5] transition">
               Entra nella lista d'attesa
             </button>
           </div>
 
-          {/* COLONNA DESTRA */}
+          {/* DESTRA */}
           <div className="flex justify-center items-center">
             <Image
               src="/esempio.png"
               alt="Commety piattaforma desktop e mobile"
-              width={850}
-              height={650}
+              width={900}
+              height={900}
               priority
+              className="w-full max-w-[420px] md:max-w-[550px] lg:max-w-[850px] h-auto"
             />
           </div>
+
         </div>
       </section>
     </main>
