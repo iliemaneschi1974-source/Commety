@@ -13,9 +13,8 @@ export default function Home() {
           {/* Desktop Menu */}
           <nav className="hidden lg:flex gap-12 text-lg font-medium text-slate-800">
             <a href="#come-funziona">Come funziona</a>
-            <a href="#funzionalita">Funzionalità</a>
             <a href="#per-chi">Per chi</a>
-            <a href="#roadmap">Roadmap</a>
+            <a href="#diverso">Perchè è diverso</a>
           </nav>
 
           {/* Mobile */}
@@ -54,13 +53,7 @@ export default function Home() {
         Come funziona
       </a>
 
-      <a
-        href="#funzionalita"
-        onClick={() => setMenuOpen(false)}
-        className="text-3xl font-semibold"
-      >
-        Funzionalità
-      </a>
+    
 
       <a
         href="#per-chi"
@@ -71,7 +64,7 @@ export default function Home() {
       </a>
 
       <a
-        href="#roadmap"
+        href="#diverso"
         onClick={() => setMenuOpen(false)}
         className="text-3xl font-semibold"
       >
@@ -291,7 +284,7 @@ export default function Home() {
 
 </div>
 </section>
-<section className="max-w-7xl mx-auto px-6 lg:px-8 py-24">
+<section id="diverso" className="max-w-7xl mx-auto px-6 lg:px-8 py-24">
   <div className="text-center mb-16">
     <h2 className="text-4xl lg:text-5xl font-extrabold text-[#08122E]">
       Perché Commety è diverso
