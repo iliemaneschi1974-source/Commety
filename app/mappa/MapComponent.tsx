@@ -107,8 +107,6 @@ console.log("Posizione non autorizzata");
 
 const addReport = () => {
 if (!title.trim()) return;
-
-```
 const newReport = {
   id: Date.now(),
   type,
@@ -130,7 +128,7 @@ setDescription("");
 setType("meteo");
 setSelectedPosition(null);
 setOpen(false);
-```
+
 
 };
 
@@ -141,7 +139,6 @@ zoom={13}
 style={{ height: "100%", width: "100%" }}
 > <RecenterMap position={userPosition} />
 
-```
     <ClickHandler
       onSelect={(position) => {
         setSelectedPosition(position);
@@ -243,7 +240,5 @@ style={{ height: "100%", width: "100%" }}
     </div>
   )}
 </main>
-```
-
 );
 }
