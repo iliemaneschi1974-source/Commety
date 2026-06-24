@@ -62,7 +62,6 @@ export default function Home() {
       >
         Per chi
       </a>
-
       <a
         href="#diverso"
         onClick={() => setMenuOpen(false)}
@@ -338,7 +337,10 @@ export default function Home() {
 
   </div>
 </section>
-<section className="max-w-5xl mx-auto px-6 py-24 text-center">
+<section
+  id="cta"
+  className="max-w-5xl mx-auto px-6 py-24 text-center"
+>
   <h2 className="text-4xl lg:text-6xl font-extrabold text-[#08122E]">
     Pronto a scoprire cosa accade davvero intorno a te?
   </h2>
@@ -348,9 +350,30 @@ export default function Home() {
     la più grande rete di segnalazioni in tempo reale.
   </p>
 
-  <button className="mt-10 bg-[#2563FF] text-white px-10 py-5 rounded-2xl text-xl font-semibold hover:bg-[#1f56e5] transition">
-    Entra nella lista d'attesa
-  </button>
+  <form
+    action="https://formspree.io/f/xqeveage"
+    method="POST"
+    className="mt-10 max-w-xl mx-auto"
+  >
+    <input
+      type="email"
+      name="email"
+      required
+      placeholder="Inserisci la tua email"
+      className="w-full px-6 py-5 rounded-2xl border border-slate-300 text-lg focus:outline-none focus:ring-2 focus:ring-[#2563FF]"
+    />
+
+    <button
+      type="submit"
+      className="mt-4 w-full bg-[#2563FF] text-white px-10 py-5 rounded-2xl text-xl font-semibold hover:bg-[#1f56e5] transition"
+    >
+      Richiedi accesso anticipato
+    </button>
+  </form>
+
+  <p className="mt-4 text-sm text-slate-500">
+    Nessuno spam. Solo aggiornamenti sul lancio di Commety.
+  </p>
 </section>
 <footer className="bg-[#08122E] text-white mt-20">
   <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
