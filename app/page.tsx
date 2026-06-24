@@ -26,9 +26,12 @@ export default function Home() {
 </button>
 
           {/* CTA Desktop */}
-          <button className="hidden lg:block bg-[#2563FF] text-white px-8 py-4 rounded-2xl font-semibold hover:bg-[#1f56e5] transition">
-            Entra nella lista d'attesa
-          </button>
+          <a
+  href="#cta"
+  className="bg-[#2563FF] text-white px-8 py-4 rounded-2xl font-semibold hover:bg-[#1f56e5] transition"
+>
+  Entra nella lista d'attesa
+</a>
         </div>
       </header>
 {menuOpen && (
@@ -70,9 +73,12 @@ export default function Home() {
         Perché è diverso
       </a>
 
-      <button className="mt-8 bg-[#2563FF] text-white px-8 py-4 rounded-2xl font-semibold">
-        Entra nella lista d'attesa
-      </button>
+      <a
+  href="#cta"
+  className="bg-[#2563FF] text-white px-8 py-4 rounded-2xl font-semibold hover:bg-[#1f56e5] transition"
+>
+  Entra nella lista d'attesa
+</a>
 
     </div>
 
@@ -132,11 +138,14 @@ export default function Home() {
                 🚗 Viabilità
               </span>
             </div>
-
+<br></br>
             {/* CTA */}
-            <button className="mt-10 mx-auto lg:mx-0 w-fit bg-[#2563FF] text-white px-10 py-5 rounded-2xl text-lg lg:text-xl font-semibold hover:bg-[#1f56e5] transition">
-              Entra nella lista d'attesa
-            </button>
+            <a
+  href="#cta"
+  className="bg-[#2563FF] text-white px-8 py-4 rounded-2xl font-semibold hover:bg-[#1f56e5] transition"
+>
+  Entra nella lista d'attesa
+</a>
           </div>
 
           {/* DESTRA */}
