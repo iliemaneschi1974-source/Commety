@@ -247,49 +247,49 @@ export default function Home() {
 
   <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
 
-    <div className="bg-white rounded-3xl p-8 text-center shadow-sm">
-      <div className="text-5xl mb-4">🌧️</div>
-      <h3 className="text-xl font-bold text-[#08122E]">
-        Appassionati meteo
-      </h3>
-    </div>
-
-    <div className="bg-white rounded-3xl p-8 text-center shadow-sm">
-      <div className="text-5xl mb-4">🏍️</div>
-      <h3 className="text-xl font-bold text-[#08122E]">
-        Motociclisti
-      </h3>
-    </div>
-
-    <div className="bg-white rounded-3xl p-8 text-center shadow-sm">
-      <div className="text-5xl mb-4">🥾</div>
-      <h3 className="text-xl font-bold text-[#08122E]">
-        Escursionisti
-      </h3>
-    </div>
-
-    <div className="bg-white rounded-3xl p-8 text-center shadow-sm">
-      <div className="text-5xl mb-4">🚗</div>
-      <h3 className="text-xl font-bold text-[#08122E]">
-        Automobilisti
-      </h3>
-    </div>
-
-    <div className="bg-white rounded-3xl p-8 text-center shadow-sm">
-      <div className="text-5xl mb-4">👨‍👩‍👧‍👦</div>
-      <h3 className="text-xl font-bold text-[#08122E]">
-        Famiglie
-      </h3>
-    </div>
-
-    <div className="bg-white rounded-3xl p-8 text-center shadow-sm">
-      <div className="text-5xl mb-4">🛡️</div>
-      <h3 className="text-xl font-bold text-[#08122E]">
-        Protezione Civile
-      </h3>
-    </div>
-
+  <div className="bg-white rounded-3xl p-8 text-center shadow-sm flex flex-col items-center">
+    <div className="text-5xl mb-4">🌧️</div>
+    <h3 className="text-xl font-bold text-[#08122E] min-h-[56px] flex items-center justify-center">
+      Appassionati meteo
+    </h3>
   </div>
+
+  <div className="bg-white rounded-3xl p-8 text-center shadow-sm flex flex-col items-center">
+    <div className="text-5xl mb-4">🏍️</div>
+    <h3 className="text-xl font-bold text-[#08122E] min-h-[56px] flex items-center justify-center">
+      Motociclisti
+    </h3>
+  </div>
+
+  <div className="bg-white rounded-3xl p-8 text-center shadow-sm flex flex-col items-center">
+    <div className="text-5xl mb-4">🥾</div>
+    <h3 className="text-xl font-bold text-[#08122E] min-h-[56px] flex items-center justify-center">
+      Escursionisti
+    </h3>
+  </div>
+
+  <div className="bg-white rounded-3xl p-8 text-center shadow-sm flex flex-col items-center">
+    <div className="text-5xl mb-4">🚗</div>
+    <h3 className="text-xl font-bold text-[#08122E] min-h-[56px] flex items-center justify-center">
+      Automobilisti
+    </h3>
+  </div>
+
+  <div className="bg-white rounded-3xl p-8 text-center shadow-sm flex flex-col items-center">
+    <div className="text-5xl mb-4">👨‍👩‍👧‍👦</div>
+    <h3 className="text-xl font-bold text-[#08122E] min-h-[56px] flex items-center justify-center">
+      Famiglie
+    </h3>
+  </div>
+
+  <div className="bg-white rounded-3xl p-8 text-center shadow-sm flex flex-col items-center">
+    <div className="text-5xl mb-4">🛡️</div>
+    <h3 className="text-xl font-bold text-[#08122E] min-h-[56px] flex items-center justify-center">
+      Protezione Civile
+    </h3>
+  </div>
+
+</div>
 </section>
 <section className="max-w-7xl mx-auto px-6 lg:px-8 py-24">
   <div className="text-center mb-16">
