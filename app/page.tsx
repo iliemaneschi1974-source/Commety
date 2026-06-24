@@ -68,7 +68,7 @@ export default function Home() {
         onClick={() => setMenuOpen(false)}
         className="text-3xl font-semibold"
       >
-        Roadmap
+        Perché è diverso
       </a>
 
       <button className="mt-8 bg-[#2563FF] text-white px-8 py-4 rounded-2xl font-semibold">
