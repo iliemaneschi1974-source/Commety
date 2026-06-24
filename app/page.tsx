@@ -143,8 +143,7 @@ export default function Home() {
             {/* CTA */}
             <a
   href="#cta"
-  className="bg-[#2563FF] text-white px-8 py-4 rounded-2xl font-semibold hover:bg-[#1f56e5] transition"
->
+className="mt-10 mx-auto lg:mx-0 w-fit bg-[#2563FF] text-white px-10 py-5 rounded-2xl text-lg lg:text-xl font-semibold hover:bg-[#1f56e5] transition">
   Entra nella lista d'attesa
 </a>
           </div>
