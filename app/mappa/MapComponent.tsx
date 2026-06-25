@@ -1,7 +1,11 @@
 "use client";
-
+import UserLocation from "@/components/Map/UserLocation";
+import { useMapContext } from "@/contexts/MapContext";
+import Header from "@/components/Header/Header";
+import { getMarkerIcon } from "@/components/Map/MapMarker";
 import { useEffect, useState } from "react";
 import {
+
 MapContainer,
 TileLayer,
 Marker,
@@ -24,18 +28,49 @@ shadowUrl:
 "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
 });
 
-function RecenterMap({
-position,
-}: {
-position: [number, number];
-}) {
-const map = useMap();
+function RecenterMap() {
+  const map = useMap();
 
-useEffect(() => {
-map.setView(position, 13);
-}, [position, map]);
+  const {
+    center,
+    zoom,
+    bounds,
+  } = useMapContext();
 
-return null;
+  useEffect(() => {
+    if (bounds) {
+      const southWest: [number, number] = [
+        bounds[0],
+        bounds[2],
+      ];
+
+      const northEast: [number, number] = [
+        bounds[1],
+        bounds[3],
+      ];
+
+      map.flyToBounds(
+  [southWest, northEast],
+  {
+    padding: [60, 60],
+    maxZoom: 17,
+    animate: true,
+    duration: 1.3,
+  }
+);
+
+      return;
+    }
+
+    map.flyTo(center, zoom, {
+      animate: true,
+      duration: 1.4,
+      easeLinearity: 0.25,
+    });
+
+  }, [center, zoom, bounds, map]);
+
+  return null;
 }
 
 function ClickHandler({
@@ -80,8 +115,14 @@ lng: 9.15,
 },
 ]);
 
+const {
+  center,
+  zoom,
+  flyTo,
+} = useMapContext();
+
 const [userPosition, setUserPosition] =
-useState<[number, number]>([45.4642, 9.19]);
+  useState<[number, number]>(center);
 
 const [selectedPosition, setSelectedPosition] =
 useState<[number, number] | null>(null);
@@ -94,10 +135,14 @@ const [description, setDescription] = useState("");
 useEffect(() => {
 navigator.geolocation.getCurrentPosition(
 (position) => {
-setUserPosition([
-position.coords.latitude,
-position.coords.longitude,
-]);
+const coords: [number, number] = [
+  position.coords.latitude,
+  position.coords.longitude,
+];
+
+setUserPosition(coords);
+
+flyTo(coords, 15);
 },
 () => {
 console.log("Posizione non autorizzata");
@@ -133,12 +178,12 @@ setOpen(false);
 };
 
 return ( <main className="h-screen w-screen relative">
+<Header />
 <MapContainer
-center={userPosition}
-zoom={13}
+center={center}
+zoom={zoom}
 style={{ height: "100%", width: "100%" }}
-> <RecenterMap position={userPosition} />
-
+> <RecenterMap />
     <ClickHandler
       onSelect={(position) => {
         setSelectedPosition(position);
@@ -150,7 +195,7 @@ style={{ height: "100%", width: "100%" }}
       attribution="&copy; OpenStreetMap contributors"
       url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
     />
-
+<UserLocation />
     {selectedPosition && (
       <Marker position={selectedPosition}>
         <Popup>Punto selezionato 📍</Popup>
@@ -161,6 +206,7 @@ style={{ height: "100%", width: "100%" }}
       <Marker
         key={report.id}
         position={[report.lat, report.lng]}
+        icon={getMarkerIcon(report.type)}
       >
         <Popup>
           <div className="min-w-[180px]">
