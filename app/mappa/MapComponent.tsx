@@ -70,30 +70,33 @@ export default function MapComponent() {
         console.warn("Posizione non autorizzata");
       }
     );
-  }, [flyTo]);
+  }, []);
 
-  const handleCreateReport = async (
-    data: ReportFormData
-  ) => {
-    try {
-      const position =
-        selectedPosition ?? userPosition;
+ const handleCreateReport = async (
+  data: ReportFormData
+) => {
+  try {
+    const position =
+      selectedPosition ?? userPosition;
 
-      await createReport({
-        ...data,
-        lat: position[0],
-        lng: position[1],
-      });
+    console.log("selectedPosition:", selectedPosition);
+    console.log("userPosition:", userPosition);
 
-      setSelectedPosition(null);
-      setOpen(false);
-    } catch (error) {
-      console.error(
-        "Errore durante la creazione della segnalazione:",
-        error
-      );
-    }
-  };
+    await createReport({
+      ...data,
+      lat: position[0],
+      lng: position[1],
+    });
+
+    setSelectedPosition(null);
+    setOpen(false);
+  } catch (error) {
+    console.error(
+      "Errore durante la creazione della segnalazione:",
+      error
+    );
+  }
+};
 
   return (
     <main className="relative h-screen w-screen">

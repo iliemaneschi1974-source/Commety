@@ -27,21 +27,21 @@ const reportsCollection = collection(db, "reports");
 export async function createReport(
   input: CreateReportInput
 ) {
-  return addDoc(reportsCollection, {
+  console.log("createReport INIZIO");
+
+  const result = await addDoc(reportsCollection, {
     ...input,
-
     status: "ACTIVE",
-
     confirmations: 0,
-
     commentsCount: 0,
-
     images: [],
-
     createdAt: serverTimestamp(),
-
     updatedAt: serverTimestamp(),
   });
+
+  console.log("createReport FINE", result.id);
+
+  return result;
 }
 
 /**
