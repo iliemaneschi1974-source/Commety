@@ -1,5 +1,6 @@
 "use client";
-
+import { Report } from "@/types/report";
+import ReportBottomSheet from "@/components/Map/ReportBottomSheet";
 import { useEffect, useState } from "react";
 import L from "leaflet";
 import {
@@ -49,7 +50,11 @@ export default function MapComponent() {
     useState<[number, number] | null>(null);
 
   const [open, setOpen] = useState(false);
+  const [selectedReport, setSelectedReport] =
+  useState<Report | null>(null);
 
+const [sheetOpen, setSheetOpen] =
+  useState(false);
   useEffect(() => {
     if (!navigator.geolocation) {
       console.warn("Geolocalizzazione non supportata");
@@ -134,7 +139,12 @@ export default function MapComponent() {
           </Marker>
         )}
 
-        <ReportsLayer />
+        <ReportsLayer
+  onReportClick={(report) => {
+    setSelectedReport(report);
+    setSheetOpen(true);
+  }}
+/>
       </MapContainer>
 
       <FloatingButton
@@ -146,6 +156,11 @@ export default function MapComponent() {
         onClose={() => setOpen(false)}
         onSubmit={handleCreateReport}
       />
+      <ReportBottomSheet
+  report={selectedReport}
+  open={sheetOpen}
+  onClose={() => setSheetOpen(false)}
+/>
     </main>
   );
 }

@@ -24,6 +24,10 @@ export interface Report {
   lat: number;
   lng: number;
 
+  // Reverse Geocoding
+  address?: string;
+  city?: string;
+
   status: ReportStatus;
 
   createdAt?: Timestamp;

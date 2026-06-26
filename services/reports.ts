@@ -14,6 +14,7 @@ import {
 } from "firebase/firestore";
 
 import { db } from "@/lib/firebase";
+import { reverseGeocode } from "@/services/geocoding";
 import {
   CreateReportInput,
   Report,
@@ -29,12 +30,22 @@ export async function createReport(
 ) {
   console.log("createReport INIZIO");
 
+  const location = await reverseGeocode(
+    input.lat,
+  input.lng
+  );
+
   const result = await addDoc(reportsCollection, {
     ...input,
+
+    address: location.address,
+    city: location.city,
+
     status: "ACTIVE",
     confirmations: 0,
     commentsCount: 0,
     images: [],
+
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   });
