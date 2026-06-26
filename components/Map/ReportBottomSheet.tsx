@@ -1,6 +1,8 @@
 "use client";
 
 import BottomSheet from "@/components/ui/BottomSheet";
+import { Button } from "@/components/ui/button";
+import { useConfirmation } from "@/hooks/useConfirmation";
 import { Report } from "@/types/report";
 
 interface ReportBottomSheetProps {
@@ -22,11 +24,24 @@ export default function ReportBottomSheet({
   open,
   onClose,
 }: ReportBottomSheetProps) {
+
+  const {
+    confirmed,
+    loading,
+    toggle,
+  } = useConfirmation(report?.id);
+
   if (!report) return null;
 
+
+
   return (
-    <BottomSheet open={open} onClose={onClose}>
+    <BottomSheet
+      open={open}
+      onClose={onClose}
+    >
       <div className="px-6 pb-8">
+
         <div className="mb-4">
           <span className="rounded-full bg-blue-100 px-3 py-1 text-sm font-semibold text-blue-700">
             {CATEGORY_LABELS[report.type]}
@@ -42,6 +57,7 @@ export default function ReportBottomSheet({
         </p>
 
         <div className="mt-6 flex items-center justify-between rounded-2xl bg-slate-100 p-4">
+
           <div className="text-center">
             <div className="text-xl">👍</div>
 
@@ -71,7 +87,7 @@ export default function ReportBottomSheet({
 
             {report.address ? (
               <>
-                <div className="text-xs font-medium text-slate-700 break-words">
+                <div className="break-words text-xs font-medium text-slate-700">
                   {report.address}
                 </div>
 
@@ -89,17 +105,31 @@ export default function ReportBottomSheet({
               </div>
             )}
           </div>
+
         </div>
 
         <div className="mt-6 grid grid-cols-2 gap-3">
-          <button className="rounded-xl bg-[#2563FF] py-3 font-semibold text-white transition hover:bg-[#1d4ed8]">
-            👍 Conferma
-          </button>
 
-          <button className="rounded-xl border py-3 font-semibold transition hover:bg-slate-100">
+          <Button
+            onClick={toggle}
+            disabled={loading}
+            variant={confirmed ? "secondary" : "default"}
+          >
+            {loading
+              ? "⏳ Conferma..."
+              : confirmed
+                ? "✅ Confermato"
+                : "👍 Conferma"}
+          </Button>
+
+          <Button
+            variant="outline"
+          >
             💬 Commenta
-          </button>
+          </Button>
+
         </div>
+
       </div>
     </BottomSheet>
   );
