@@ -1,21 +1,18 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
-import Providers from "./providers";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+import { MapProvider } from "@/contexts/MapContext";
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const inter = Inter({
   subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
 });
 
 export const metadata: Metadata = {
   title: "Commety",
-  description: "Scopri cosa succede intorno a te",
+  description: "Community Map",
 };
 
 export default function RootLayout({
@@ -26,10 +23,12 @@ export default function RootLayout({
   return (
     <html
       lang="it"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${inter.variable} h-full`}
     >
-      <body className="min-h-screen bg-slate-100">
-        <Providers>{children}</Providers>
+      <body className="min-h-full font-sans antialiased">
+        <MapProvider>
+          {children}
+        </MapProvider>
       </body>
     </html>
   );
