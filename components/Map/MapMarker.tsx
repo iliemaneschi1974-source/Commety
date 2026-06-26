@@ -12,9 +12,11 @@ import { ReportCategory } from "@/types/report";
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 
+import { ReactElement } from "react";
+
 export interface MarkerConfig {
   color: string;
-  icon: JSX.Element;
+  icon: ReactElement;
 }
 
 export const MARKER_CONFIG: Record<ReportCategory, MarkerConfig> = {
