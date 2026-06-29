@@ -8,6 +8,7 @@ import Comments from "@/components/Map/Comments";
 import ImageViewer from "@/components/Map/ImageViewer";
 import { useConfirmation } from "@/hooks/useConfirmation";
 import { Report } from "@/types/report";
+import { buildShareData } from "@/lib/share";
 
 interface ReportBottomSheetProps {
   report: Report | null;
@@ -34,11 +35,32 @@ export default function ReportBottomSheet({
     loading,
     toggle,
   } = useConfirmation(report?.id);
-  const [viewerOpen, setViewerOpen] = useState(false);
+const [viewerOpen, setViewerOpen] = useState(false);
 const [currentImage, setCurrentImage] = useState(0);
 
   if (!report) return null;
+  const currentReport = report;
+async function handleShare() {
+  const shareData = buildShareData({
+    reportId: currentReport.id,
+    title: currentReport.title,
+    address: currentReport.address,
+    city: currentReport.city,
+  });
 
+  try {
+    if (navigator.share) {
+      await navigator.share(shareData);
+      return;
+    }
+
+    await navigator.clipboard.writeText(shareData.url);
+
+    alert("✅ Link copiato negli appunti");
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 
   return (
