@@ -1,8 +1,11 @@
 "use client";
 
+import { useState } from "react";
+
 import BottomSheet from "@/components/ui/BottomSheet";
 import { Button } from "@/components/ui/button";
 import Comments from "@/components/Map/Comments";
+import ImageViewer from "@/components/Map/ImageViewer";
 import { useConfirmation } from "@/hooks/useConfirmation";
 import { Report } from "@/types/report";
 
@@ -31,6 +34,8 @@ export default function ReportBottomSheet({
     loading,
     toggle,
   } = useConfirmation(report?.id);
+  const [viewerOpen, setViewerOpen] = useState(false);
+const [currentImage, setCurrentImage] = useState(0);
 
   if (!report) return null;
 
@@ -67,10 +72,14 @@ export default function ReportBottomSheet({
 
   <div className="mt-4">
     <img
-      src={report.images[0]}
+  src={report.images[0]}
+  onClick={() => {
+    setCurrentImage(0);
+    setViewerOpen(true);
+  }}
       alt="Foto segnalazione"
       loading="lazy"
-      className="mx-auto max-h-[70vh] w-auto max-w-full rounded-2xl border border-slate-200 bg-slate-100 shadow-sm"
+      className="cursor-pointer mx-auto max-h-[70vh] w-auto max-w-full rounded-2xl border border-slate-200 bg-slate-100 shadow-sm"
     />
   </div>
 
@@ -93,9 +102,13 @@ export default function ReportBottomSheet({
         <img
           key={index}
           src={image}
+          onClick={() => {
+    setCurrentImage(index);
+    setViewerOpen(true);
+  }}
           alt={`Foto ${index + 1}`}
           loading="lazy"
-          className="
+          className="cursor-pointer 
             h-auto
             max-h-[70vh]
             w-full
@@ -207,7 +220,29 @@ export default function ReportBottomSheet({
         </div>
 
         <Comments reportId={report.id} />
-      </div>
-    </BottomSheet>
+</div>
+
+<ImageViewer
+  images={report.images}
+  currentIndex={currentImage}
+  open={viewerOpen}
+  onClose={() => setViewerOpen(false)}
+  onPrevious={() =>
+    setCurrentImage((prev) =>
+      prev === 0
+        ? report.images.length - 1
+        : prev - 1
+    )
+  }
+  onNext={() =>
+    setCurrentImage((prev) =>
+      prev === report.images.length - 1
+        ? 0
+        : prev + 1
+    )
+  }
+/>
+
+</BottomSheet>
   );
 }
