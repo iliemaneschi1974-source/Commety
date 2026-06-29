@@ -7,12 +7,18 @@ import {
   ReactNode,
 } from "react";
 
+import { ReportCategory } from "@/types/report";
+
 export type BoundingBox = [
   number, // south
   number, // north
   number, // west
   number // east
 ];
+
+export type ReportFilter =
+  | "all"
+  | ReportCategory;
 
 interface MapContextType {
   center: [number, number];
@@ -22,11 +28,17 @@ interface MapContextType {
 
   bounds: BoundingBox | null;
 
+  filter: ReportFilter;
+
   setCenter: (center: [number, number]) => void;
   setZoom: (zoom: number) => void;
 
   setUserLocation: (
     position: [number, number] | null
+  ) => void;
+
+  setFilter: (
+    filter: ReportFilter
   ) => void;
 
   flyTo: (
@@ -58,6 +70,9 @@ export function MapProvider({
   const [bounds, setBounds] =
     useState<BoundingBox | null>(null);
 
+  const [filter, setFilter] =
+    useState<ReportFilter>("all");
+
   function flyTo(
     position: [number, number],
     newZoom = 15
@@ -84,6 +99,9 @@ export function MapProvider({
         setUserLocation,
 
         bounds,
+
+        filter,
+        setFilter,
 
         setCenter,
         setZoom,

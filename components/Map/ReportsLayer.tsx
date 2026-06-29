@@ -1,7 +1,8 @@
 "use client";
 
-import { Marker, Popup } from "react-leaflet";
+import { Marker } from "react-leaflet";
 
+import { useMapContext } from "@/contexts/MapContext";
 import useReports from "@/hooks/useReports";
 import { Report } from "@/types/report";
 import { getMarkerIcon } from "./MapMarker";
@@ -19,6 +20,8 @@ export default function ReportsLayer({
     error,
   } = useReports();
 
+  const { filter } = useMapContext();
+
   if (loading) {
     return null;
   }
@@ -28,17 +31,24 @@ export default function ReportsLayer({
     return null;
   }
 
+  const visibleReports =
+    filter === "all"
+      ? reports
+      : reports.filter(
+          (report) => report.type === filter
+        );
+
   return (
     <>
-      {reports.map((report) => (
+      {visibleReports.map((report) => (
         <Marker
-  key={report.id}
-  position={[report.lat, report.lng]}
-  icon={getMarkerIcon(report.type)}
-  eventHandlers={{
-    click: () => onReportClick(report),
-  }}
-/>
+          key={report.id}
+          position={[report.lat, report.lng]}
+          icon={getMarkerIcon(report.type)}
+          eventHandlers={{
+            click: () => onReportClick(report),
+          }}
+        />
       ))}
     </>
   );
