@@ -1,8 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { KeyboardEvent, useState } from "react";
 
+import CommentCard from "@/components/Map/CommentCard";
+import { Button } from "@/components/ui/button";
 import { useComments } from "@/hooks/useComments";
+import { getDeviceId } from "@/services/device";
 
 interface CommentsProps {
   reportId: string;
@@ -15,67 +18,85 @@ export default function Comments({
     comments,
     loading,
     create,
+    remove,
   } = useComments(reportId);
 
   const [text, setText] = useState("");
 
-  async function handleSubmit() {
-    if (!text.trim()) {
-      return;
-    }
+  const deviceId = getDeviceId();
 
-    await create(text);
+  async function handleSubmit() {
+    const value = text.trim();
+
+    if (!value) return;
+
+    await create(value);
 
     setText("");
   }
 
-  return (
-    <div className="mt-6">
+  async function handleDelete(commentId: string) {
+    const confirmed = window.confirm(
+      "Vuoi eliminare questo commento?"
+    );
 
-      <h3 className="mb-3 text-lg font-semibold">
-        Commenti
+    if (!confirmed) {
+      return;
+    }
+
+    await remove(commentId);
+  }
+
+  function handleKeyDown(
+    event: KeyboardEvent<HTMLInputElement>
+  ) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      handleSubmit();
+    }
+  }
+
+  return (
+    <div className="mt-8 border-t pt-6">
+      <h3 className="mb-4 text-lg font-semibold text-slate-900">
+        💬 Commenti
       </h3>
 
       <div className="space-y-3">
-
         {comments.length === 0 ? (
-          <p className="text-sm text-slate-500">
+          <div className="rounded-xl border border-dashed border-slate-300 bg-slate-50 p-5 text-center text-sm text-slate-500">
             Nessun commento.
-          </p>
+            <br />
+            Sii il primo a contribuire.
+          </div>
         ) : (
           comments.map((comment) => (
-            <div
+            <CommentCard
               key={comment.id}
-              className="rounded-xl border bg-white p-3"
-            >
-              <p className="text-sm text-slate-800">
-                {comment.text}
-              </p>
-            </div>
+              comment={comment}
+              isMine={comment.deviceId === deviceId}
+              onDelete={() => handleDelete(comment.id)}
+            />
           ))
         )}
-
       </div>
 
-      <div className="mt-4 flex gap-2">
-
+      <div className="mt-5 flex gap-2">
         <input
           value={text}
           onChange={(e) => setText(e.target.value)}
+          onKeyDown={handleKeyDown}
           placeholder="Scrivi un commento..."
-          className="flex-1 rounded-xl border px-3 py-2 outline-none focus:border-blue-500"
+          className="flex-1 rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-[#2563FF] focus:ring-2 focus:ring-[#2563FF]/20"
         />
 
-        <button
+        <Button
           onClick={handleSubmit}
-          disabled={loading}
-          className="rounded-xl bg-[#2563FF] px-4 py-2 font-semibold text-white disabled:opacity-50"
+          disabled={loading || !text.trim()}
         >
-          {loading ? "..." : "Invia"}
-        </button>
-
+          {loading ? "Invio..." : "Invia"}
+        </Button>
       </div>
-
     </div>
   );
 }
