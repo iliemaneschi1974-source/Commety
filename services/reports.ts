@@ -15,6 +15,8 @@ import {
 
 import { db } from "@/lib/firebase";
 import { reverseGeocode } from "@/services/geocoding";
+import { uploadImages } from "@/services/storage";
+
 import {
   CreateReportInput,
   Report,
@@ -28,15 +30,19 @@ const reportsCollection = collection(db, "reports");
 export async function createReport(
   input: CreateReportInput
 ) {
-  console.log("createReport INIZIO");
+  console.log("========== createReport ==========");
+  console.log("Input ricevuto:", input);
+  console.log("File ricevuti:", input.images);
 
   const location = await reverseGeocode(
     input.lat,
-  input.lng
+    input.lng
   );
 
-  const result = await addDoc(reportsCollection, {
-    ...input,
+  const { images, ...reportData } = input;
+
+  const reportRef = await addDoc(reportsCollection, {
+    ...reportData,
 
     address: location.address,
     city: location.city,
@@ -50,11 +56,34 @@ export async function createReport(
     updatedAt: serverTimestamp(),
   });
 
-  console.log("createReport FINE", result.id);
+  console.log("✅ Report creato:", reportRef.id);
 
-  return result;
+  let imageUrls: string[] = [];
+
+  if (images.length > 0) {
+    console.log("⬆️ Inizio upload immagini...");
+
+    imageUrls = await uploadImages(
+      images,
+      reportRef.id
+    );
+
+    console.log("✅ URL restituiti:", imageUrls);
+
+    await updateDoc(reportRef, {
+      images: imageUrls,
+      updatedAt: serverTimestamp(),
+    });
+
+    console.log("✅ Firestore aggiornato con gli URL");
+  } else {
+    console.warn("⚠️ Nessuna immagine ricevuta");
+  }
+
+  console.log("========== FINE createReport ==========");
+
+  return reportRef;
 }
-
 /**
  * Listener realtime delle segnalazioni attive.
  */
@@ -70,15 +99,23 @@ export function listenReports(
   return onSnapshot(
     q,
     (snapshot: QuerySnapshot<DocumentData>) => {
-      const reports: Report[] = snapshot.docs.map((document) => ({
-        id: document.id,
-        ...(document.data() as Omit<Report, "id">),
-      }));
+      const reports: Report[] = snapshot.docs.map(
+        (document) => ({
+          id: document.id,
+          ...(document.data() as Omit<
+            Report,
+            "id"
+          >),
+        })
+      );
 
       callback(reports);
     },
     (error) => {
-      console.error("Errore listener reports:", error);
+      console.error(
+        "Errore listener reports:",
+        error
+      );
     }
   );
 }
@@ -110,14 +147,17 @@ export async function confirmReport(
   report: Report
 ) {
   return updateReport(report.id, {
-    confirmations: report.confirmations + 1,
+    confirmations:
+      report.confirmations + 1,
   });
 }
 
 /**
  * Segna una segnalazione come risolta.
  */
-export async function resolveReport(id: string) {
+export async function resolveReport(
+  id: string
+) {
   return updateReport(id, {
     status: "RESOLVED",
   });

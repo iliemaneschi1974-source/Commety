@@ -56,7 +56,82 @@ export default function ReportBottomSheet({
         <p className="mt-2 text-slate-600">
           {report.description}
         </p>
+      {report.images.length > 0 && (
+  <div className="mt-6">
 
+    <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
+      📷 Foto
+    </h3>
+
+    {report.images.length === 1 ? (
+
+  <div className="mt-4">
+    <img
+      src={report.images[0]}
+      alt="Foto segnalazione"
+      loading="lazy"
+      className="mx-auto max-h-[70vh] w-auto max-w-full rounded-2xl border border-slate-200 bg-slate-100 shadow-sm"
+    />
+  </div>
+
+) : report.images.length > 1 ? (
+
+  <>
+    <div
+      className="
+        mt-4
+        flex
+        snap-x
+        snap-mandatory
+        gap-4
+        overflow-x-auto
+        scroll-smooth
+        pb-3
+      "
+    >
+      {report.images.map((image, index) => (
+        <img
+          key={index}
+          src={image}
+          alt={`Foto ${index + 1}`}
+          loading="lazy"
+          className="
+            h-auto
+            max-h-[70vh]
+            w-full
+            min-w-full
+            snap-center
+            rounded-2xl
+            border
+            border-slate-200
+            bg-slate-100
+            object-contain
+            shadow-sm
+          "
+        />
+      ))}
+    </div>
+
+    <div className="mt-2 flex justify-center gap-2">
+      {report.images.map((_, index) => (
+        <div
+          key={index}
+          className="h-2 w-2 rounded-full bg-slate-300"
+        />
+      ))}
+    </div>
+  </>
+
+) : null}
+
+    {report.images.length === 2 && (
+      <div className="mt-2 text-center text-xs text-slate-400">
+        ← scorri →
+      </div>
+    )}
+
+  </div>
+)}
         <div className="mt-6 flex items-center justify-between rounded-2xl bg-slate-100 p-4">
 
           <div className="text-center">

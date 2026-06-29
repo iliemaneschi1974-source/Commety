@@ -36,6 +36,10 @@ export interface Report {
   userId?: string;
   username?: string;
 
+  /**
+   * URL pubblici delle immagini salvate
+   * su Firebase Storage.
+   */
   images: string[];
 
   confirmations: number;
@@ -50,4 +54,10 @@ export interface CreateReportInput {
 
   lat: number;
   lng: number;
+
+  /**
+   * File compressi selezionati
+   * dall'utente.
+   */
+  images: File[];
 }

@@ -120,7 +120,7 @@ export default function ReportForm({
         />
 
         <ImagePicker
-          maxImages={1}
+          maxImages={2}
           onChange={(images) =>
             setForm((prev) => ({
               ...prev,

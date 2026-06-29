@@ -10,15 +10,15 @@ import { storage } from "@/lib/firebase";
 /**
  * Carica una singola immagine nello Storage.
  */
+/**
+ * Carica una singola immagine nello Storage.
+ */
 export async function uploadImage(
   file: File,
   reportId: string
 ): Promise<string> {
-  const extension =
-    file.name.split(".").pop() || "jpg";
-
   const filename =
-    `${Date.now()}.${extension}`;
+    `${crypto.randomUUID()}.jpg`;
 
   const storageRef = ref(
     storage,
@@ -27,7 +27,7 @@ export async function uploadImage(
 
   await uploadBytes(storageRef, file);
 
-  return getDownloadURL(storageRef);
+  return await getDownloadURL(storageRef);
 }
 
 /**
