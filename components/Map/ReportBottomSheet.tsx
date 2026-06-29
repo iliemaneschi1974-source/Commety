@@ -238,7 +238,13 @@ async function handleShare() {
           >
             💬 Commenta
           </Button>
-
+        <Button
+    variant="outline"
+    onClick={handleShare}
+    className="col-span-2"
+  >
+    📤 Condividi
+  </Button>
         </div>
 
         <Comments reportId={report.id} />
