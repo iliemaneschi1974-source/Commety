@@ -28,8 +28,8 @@ export function buildShareData({
     .join(", ");
 
   const text = location
-    ? `📍 ${location}\n\nGuarda questa segnalazione su Commety:\n${url}`
-    : `Guarda questa segnalazione su Commety:\n${url}`;
+  ? `📍 ${location}\n\nGuarda questa segnalazione su Commety`
+  : `Guarda questa segnalazione su Commety`;
 
   return {
     title,

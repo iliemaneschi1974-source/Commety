@@ -4,6 +4,7 @@ import {
   deleteDoc,
   doc,
   DocumentData,
+  getDoc,
   onSnapshot,
   orderBy,
   query,
@@ -84,6 +85,30 @@ export async function createReport(
 
   return reportRef;
 }
+
+/**
+ * Recupera una segnalazione tramite ID.
+ */
+export async function getReportById(
+  id: string
+): Promise<Report | null> {
+  const snapshot = await getDoc(
+    doc(db, "reports", id)
+  );
+
+  if (!snapshot.exists()) {
+    return null;
+  }
+
+  return {
+    id: snapshot.id,
+    ...(snapshot.data() as Omit<
+      Report,
+      "id"
+    >),
+  };
+}
+
 /**
  * Listener realtime delle segnalazioni attive.
  */

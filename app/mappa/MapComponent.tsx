@@ -36,7 +36,13 @@ L.Icon.Default.mergeOptions({
     "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
 });
 
-export default function MapComponent() {
+interface MapComponentProps {
+  sharedReportId?: string;
+}
+
+export default function MapComponent({
+  sharedReportId,
+}: MapComponentProps) {
   const {
     center,
     zoom,
