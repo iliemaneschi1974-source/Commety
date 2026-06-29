@@ -2,6 +2,7 @@
 
 import BottomSheet from "@/components/ui/BottomSheet";
 import { Button } from "@/components/ui/button";
+import Comments from "@/components/Map/Comments";
 import { useConfirmation } from "@/hooks/useConfirmation";
 import { Report } from "@/types/report";
 
@@ -130,6 +131,7 @@ export default function ReportBottomSheet({
 
         </div>
 
+        <Comments reportId={report.id} />
       </div>
     </BottomSheet>
   );
