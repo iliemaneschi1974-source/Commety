@@ -1,6 +1,12 @@
 "use client";
 
-import { ReactNode, useEffect } from "react";
+import {
+  ReactNode,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { X } from "lucide-react";
 
 interface BottomSheetProps {
   open: boolean;
@@ -53,7 +59,6 @@ export default function BottomSheet({
 
           rounded-t-3xl
           bg-white
-
           shadow-2xl
 
           transition-transform
@@ -70,15 +75,52 @@ export default function BottomSheet({
           }
         `}
       >
-        {/* Handle */}
-        <div className="flex justify-center py-3">
-          <div className="h-1.5 w-12 rounded-full bg-slate-300" />
+        {/* Header */}
+        <div className="relative">
+
+          {/* Handle */}
+          <div className="flex justify-center py-3">
+            <div className="h-1.5 w-12 rounded-full bg-slate-300" />
+          </div>
+
+          {/* Close button */}
+          <button
+            onClick={onClose}
+            aria-label="Chiudi"
+            className="
+              absolute
+              right-3
+              top-2
+
+              flex
+              h-11
+              w-11
+              items-center
+              justify-center
+
+              rounded-full
+
+              text-slate-500
+
+              transition-all
+              duration-200
+
+              hover:bg-slate-100
+              hover:text-slate-700
+
+              active:scale-95
+            "
+          >
+            <X size={22} strokeWidth={2.5} />
+          </button>
+
         </div>
 
         {/* Content */}
         <div className="overflow-y-auto max-h-[calc(85vh-32px)]">
           {children}
         </div>
+
       </div>
     </>
   );
