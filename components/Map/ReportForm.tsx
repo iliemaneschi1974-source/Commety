@@ -1,12 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
+import ImagePicker from "@/components/Map/ImagePicker";
 import { ReportCategory } from "@/types/report";
 
 export interface ReportFormData {
   type: ReportCategory;
   title: string;
   description: string;
+  images: File[];
 }
 
 interface ReportFormProps {
@@ -19,6 +22,7 @@ const INITIAL_FORM: ReportFormData = {
   type: "meteo",
   title: "",
   description: "",
+  images: [],
 };
 
 export default function ReportForm({
@@ -26,7 +30,9 @@ export default function ReportForm({
   onClose,
   onSubmit,
 }: ReportFormProps) {
-  const [form, setForm] = useState<ReportFormData>(INITIAL_FORM);
+  const [form, setForm] =
+    useState<ReportFormData>(INITIAL_FORM);
+
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
@@ -40,7 +46,7 @@ export default function ReportForm({
     return null;
   }
 
-  const handleSubmit = async () => {
+  async function handleSubmit() {
     if (!form.title.trim() || submitting) {
       return;
     }
@@ -52,18 +58,21 @@ export default function ReportForm({
         type: form.type,
         title: form.title.trim(),
         description: form.description.trim(),
+        images: form.images,
       });
 
       setForm(INITIAL_FORM);
+
       onClose();
     } finally {
       setSubmitting(false);
     }
-  };
+  }
 
   return (
     <div className="fixed inset-0 z-[2000] flex items-center justify-center bg-black/40 p-4">
       <div className="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl">
+
         <h2 className="mb-6 text-2xl font-bold">
           Nuova segnalazione
         </h2>
@@ -100,7 +109,7 @@ export default function ReportForm({
 
         <textarea
           placeholder="Descrizione"
-          className="mb-6 h-32 w-full resize-none rounded-xl border p-3"
+          className="mb-4 h-32 w-full resize-none rounded-xl border p-3"
           value={form.description}
           onChange={(e) =>
             setForm((prev) => ({
@@ -110,7 +119,18 @@ export default function ReportForm({
           }
         />
 
+        <ImagePicker
+          maxImages={1}
+          onChange={(images) =>
+            setForm((prev) => ({
+              ...prev,
+              images,
+            }))
+          }
+        />
+
         <div className="flex gap-3">
+
           <button
             type="button"
             onClick={onClose}
@@ -123,12 +143,19 @@ export default function ReportForm({
           <button
             type="button"
             onClick={handleSubmit}
-            disabled={submitting || !form.title.trim()}
+            disabled={
+              submitting ||
+              !form.title.trim()
+            }
             className="flex-1 rounded-xl bg-[#2563FF] py-3 font-medium text-white transition hover:bg-[#1d4ed8] disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {submitting ? "Pubblicazione..." : "Pubblica"}
+            {submitting
+              ? "Pubblicazione..."
+              : "Pubblica"}
           </button>
+
         </div>
+
       </div>
     </div>
   );
