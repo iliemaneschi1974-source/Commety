@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface ImageViewerProps {
   images: string[];
@@ -11,6 +11,8 @@ interface ImageViewerProps {
   onNext: () => void;
 }
 
+const ANIMATION_DURATION = 200;
+
 export default function ImageViewer({
   images,
   currentIndex,
@@ -19,8 +21,26 @@ export default function ImageViewer({
   onPrevious,
   onNext,
 }: ImageViewerProps) {
+  const [visible, setVisible] = useState(open);
+
   useEffect(() => {
-    if (!open) return;
+    if (open) {
+      setVisible(true);
+    }
+  }, [open]);
+
+  useEffect(() => {
+    if (!open && visible) {
+      const timer = setTimeout(() => {
+        setVisible(false);
+      }, ANIMATION_DURATION);
+
+      return () => clearTimeout(timer);
+    }
+  }, [open, visible]);
+
+  useEffect(() => {
+    if (!visible) return;
 
     function handleKeyDown(event: KeyboardEvent) {
       switch (event.key) {
@@ -40,65 +60,89 @@ export default function ImageViewer({
 
     window.addEventListener("keydown", handleKeyDown);
 
-    return () => {
+    return () =>
       window.removeEventListener(
         "keydown",
         handleKeyDown
       );
-    };
-  }, [open, onClose, onPrevious, onNext]);
+  }, [visible, onClose, onPrevious, onNext]);
 
-  if (!open) {
+  if (!visible) {
     return null;
   }
 
   return (
-   <div
-  className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/95"
-  onClick={onClose}
->
+    <div
+      onClick={onClose}
+      className={`
+        fixed inset-0 z-[9999]
+        flex items-center justify-center
+        bg-black/95
+        transition-opacity duration-200
+        ${open ? "opacity-100" : "opacity-0"}
+      `}
+    >
       <button
-  onClick={(event) => {
-    event.stopPropagation();
-    onClose();
-  }}
-  className="absolute right-5 top-5 text-4xl font-light text-white transition hover:scale-110"
->
-  ✕
-</button>
+        onClick={(event) => {
+          event.stopPropagation();
+          onClose();
+        }}
+        className="absolute right-5 top-5 text-4xl text-white transition-all duration-200 hover:scale-110 active:scale-95"
+      >
+        ✕
+      </button>
 
       {images.length > 1 && (
         <button
-  onClick={(event) => {
-    event.stopPropagation();
-    onPrevious();
-  }}
-  className="absolute left-5 text-5xl text-white transition hover:scale-110"
->
-  ‹
-</button>
+          onClick={(event) => {
+            event.stopPropagation();
+            onPrevious();
+          }}
+          className="absolute left-5 text-5xl text-white transition-all duration-200 hover:scale-110 active:scale-95"
+        >
+          ‹
+        </button>
       )}
 
-      <img onClick={(event) => event.stopPropagation()}
+      <img
         src={images[currentIndex]}
         alt="Segnalazione"
-        className="max-h-[90vh] max-w-[95vw] rounded-xl object-contain"
+        onClick={(event) => event.stopPropagation()}
+        className={`
+          max-h-[90vh]
+          max-w-[95vw]
+          rounded-2xl
+          object-contain
+          shadow-2xl
+          transition-all duration-200
+          ${
+            open
+              ? "scale-100 opacity-100"
+              : "scale-95 opacity-0"
+          }
+        `}
       />
 
       {images.length > 1 && (
         <button
-  onClick={(event) => {
-    event.stopPropagation();
-    onNext();
-  }}
-  className="absolute right-5 text-5xl text-white transition hover:scale-110"
->
-  ›
-</button>
+          onClick={(event) => {
+            event.stopPropagation();
+            onNext();
+          }}
+          className="absolute right-5 text-5xl text-white transition-all duration-200 hover:scale-110 active:scale-95"
+        >
+          ›
+        </button>
       )}
 
       {images.length > 1 && (
-        <div className="absolute bottom-6 flex gap-2">
+        <div
+          className={`
+            absolute bottom-6 flex gap-2
+            transition-opacity duration-200
+            ${open ? "opacity-100" : "opacity-0"}
+          `}
+        >
           {images.map((_, index) => (
             <div
               key={index}
@@ -111,7 +155,6 @@ export default function ImageViewer({
           ))}
         </div>
       )}
-
     </div>
   );
 }
