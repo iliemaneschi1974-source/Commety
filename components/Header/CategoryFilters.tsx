@@ -1,73 +1,100 @@
 "use client";
 
 import { useMapContext } from "@/contexts/MapContext";
+import {
+  Globe,
+  CloudRain,
+  Car,
+  TriangleAlert,
+  SlidersHorizontal,
+} from "lucide-react";
 
-const FILTERS = [
+import { ReportFilter } from "@/contexts/MapContext";
+
+const FILTERS: {
+  id: ReportFilter;
+  title: string;
+  icon: React.ElementType;
+}[] = [
   {
     id: "all",
-    label: "🌍 Tutte",
+    title: "Tutte",
+    icon: Globe,
   },
   {
     id: "meteo",
-    label: "🌧️ Meteo",
+    title: "Meteo",
+    icon: CloudRain,
   },
   {
     id: "traffico",
-    label: "🚗 Traffico",
+    title: "Traffico",
+    icon: Car,
   },
   {
     id: "pericolo",
-    label: "⚠️ Pericolo",
-  },
-  {
-    id: "evento",
-    label: "🎉 Evento",
-  },
-  {
-    id: "mare",
-    label: "🏖️ Mare",
+    title: "Pericolo",
+    icon: TriangleAlert,
   },
 ];
 
 export default function CategoryFilters() {
-  const {
-    filter,
-    setFilter,
-  } = useMapContext();
+  const { filter, setFilter } = useMapContext();
 
   return (
-    <div
-      className="
-        flex
-        gap-2
-        overflow-x-auto
-        scrollbar-hide
-        pb-1
-      "
-    >
-      {FILTERS.map((item) => (
-        <button
-          key={item.id}
-          onClick={() => setFilter(item.id as any)}
-          className={`
-            whitespace-nowrap
-            rounded-full
-            px-4
-            py-2
-            text-sm
-            font-medium
-            transition-all
-            duration-200
-            ${
-              filter === item.id
-                ? "bg-[#2563FF] text-white shadow-md scale-105"
-                : "bg-slate-100 text-slate-700 hover:bg-slate-200"
-            }
-          `}
-        >
-          {item.label}
-        </button>
-      ))}
+    <div className="grid grid-cols-5 gap-3">
+      {FILTERS.map((item) => {
+        const Icon = item.icon;
+
+        const active = filter === item.id;
+
+        return (
+          <button
+            key={item.id}
+            title={item.title}
+            onClick={() => setFilter(item.id)}
+            className={`
+              flex
+              h-12
+              items-center
+              justify-center
+              rounded-2xl
+              transition-all
+              duration-200
+
+              ${
+                active
+                  ? "bg-[#2563FF] text-white shadow-lg scale-105"
+                  : "bg-slate-100 text-slate-600 hover:bg-slate-200 active:scale-95"
+              }
+            `}
+          >
+            <Icon size={22} strokeWidth={2.3} />
+          </button>
+        );
+      })}
+
+      <button
+        title="Altri filtri"
+        className="
+          flex
+          h-12
+          items-center
+          justify-center
+          rounded-2xl
+          bg-slate-100
+          text-slate-600
+          transition-all
+          duration-200
+          hover:bg-slate-200
+          active:scale-95
+        "
+      >
+        <SlidersHorizontal
+          size={22}
+          strokeWidth={2.3}
+        />
+      </button>
     </div>
   );
 }
