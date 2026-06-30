@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+
 import "./globals.css";
 
+import { AuthProvider } from "@/contexts/AuthContext";
 import { MapProvider } from "@/contexts/MapContext";
 
 const inter = Inter({
@@ -26,9 +28,11 @@ export default function RootLayout({
       className={`${inter.variable} h-full`}
     >
       <body className="min-h-full font-sans antialiased">
-        <MapProvider>
-          {children}
-        </MapProvider>
+        <AuthProvider>
+          <MapProvider>
+            {children}
+          </MapProvider>
+        </AuthProvider>
       </body>
     </html>
   );

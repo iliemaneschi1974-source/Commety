@@ -20,7 +20,7 @@ import {
 } from "next/navigation";
 import Header from "@/components/Header/Header";
 import ClickHandler from "@/components/Map/ClickHandler";
-import FloatingButton from "@/components/Map/FloatingButton";
+import UserFab from "@/components/User/UserFab";
 import RecenterMap from "@/components/Map/RecenterMap";
 import ReportForm, {
   ReportFormData,
@@ -206,9 +206,7 @@ const reportId = sharedReportId;
 />
       </MapContainer>
 
-      <FloatingButton
-        onClick={() => setOpen(true)}
-      />
+      <UserFab />
 
       <ReportForm
         open={open}
