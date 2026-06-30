@@ -1,7 +1,11 @@
 "use client";
 import { Report } from "@/types/report";
 import ReportBottomSheet from "@/components/Map/ReportBottomSheet";
-import { useEffect, useRef, useState } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import L from "leaflet";
 import {
   MapContainer,
@@ -55,6 +59,7 @@ export default function MapComponent() {
   const router = useRouter();
   const sharedReportId =
     searchParams.get("report");
+    const openedFromSharedLink = useRef(false);
     const sharedReportHandled = useRef(false);
 
   const [userPosition, setUserPosition] =
@@ -84,7 +89,10 @@ useEffect(() => {
       ];
 
       setUserPosition(coords);
-      flyTo(coords, 15);
+
+if (!openedFromSharedLink.current) {
+  flyTo(coords, 15);
+}
     },
     () => {
       console.warn("Posizione non autorizzata");
@@ -108,7 +116,7 @@ const reportId = sharedReportId;
         console.warn("Segnalazione non trovata");
         return;
       }
-
+      openedFromSharedLink.current = true;
       flyTo(
         [report.lat, report.lng],
         16
