@@ -2,6 +2,7 @@
 
 import {
   createContext,
+  useCallback,
   useContext,
   useState,
   ReactNode,
@@ -73,21 +74,24 @@ export function MapProvider({
   const [filter, setFilter] =
     useState<ReportFilter>("all");
 
-  function flyTo(
+  const flyTo = useCallback(
+  (
     position: [number, number],
     newZoom = 15
-  ) {
+  ) => {
     setBounds(null);
-
     setCenter(position);
     setZoom(newZoom);
-  }
+  },
+  []
+);
 
-  function fitBounds(
-    newBounds: BoundingBox
-  ) {
+  const fitBounds = useCallback(
+  (newBounds: BoundingBox) => {
     setBounds(newBounds);
-  }
+  },
+  []
+);
 
   return (
     <MapContext.Provider

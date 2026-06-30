@@ -6,7 +6,7 @@ import { useMapContext } from "@/contexts/MapContext";
 export default function UserLocation() {
   const { userLocation } = useMapContext();
 
-  console.log(userLocation);
+  
 
   if (!userLocation) return null;
 

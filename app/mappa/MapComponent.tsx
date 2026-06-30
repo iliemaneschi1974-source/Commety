@@ -1,7 +1,7 @@
 "use client";
 import { Report } from "@/types/report";
 import ReportBottomSheet from "@/components/Map/ReportBottomSheet";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import L from "leaflet";
 import {
   MapContainer,
@@ -10,7 +10,10 @@ import {
   TileLayer,
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-
+import {
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 import Header from "@/components/Header/Header";
 import ClickHandler from "@/components/Map/ClickHandler";
 import FloatingButton from "@/components/Map/FloatingButton";
@@ -22,7 +25,10 @@ import ReportsLayer from "@/components/Map/ReportsLayer";
 import UserLocation from "@/components/Map/UserLocation";
 
 import { useMapContext } from "@/contexts/MapContext";
-import { createReport } from "@/services/reports";
+import {
+  createReport,
+  getReportById,
+} from "@/services/reports";
 
 // Fix marker Leaflet + Next.js
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -36,18 +42,20 @@ L.Icon.Default.mergeOptions({
     "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
 });
 
-interface MapComponentProps {
-  sharedReportId?: string;
-}
 
-export default function MapComponent({
-  sharedReportId,
-}: MapComponentProps) {
+
+export default function MapComponent() {
   const {
     center,
     zoom,
     flyTo,
   } = useMapContext();
+
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const sharedReportId =
+    searchParams.get("report");
+    const sharedReportHandled = useRef(false);
 
   const [userPosition, setUserPosition] =
     useState<[number, number]>(center);
@@ -61,27 +69,64 @@ export default function MapComponent({
 
 const [sheetOpen, setSheetOpen] =
   useState(false);
-  useEffect(() => {
-    if (!navigator.geolocation) {
-      console.warn("Geolocalizzazione non supportata");
-      return;
+
+useEffect(() => {
+  if (!navigator.geolocation) {
+    console.warn("Geolocalizzazione non supportata");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      const coords: [number, number] = [
+        position.coords.latitude,
+        position.coords.longitude,
+      ];
+
+      setUserPosition(coords);
+      flyTo(coords, 15);
+    },
+    () => {
+      console.warn("Posizione non autorizzata");
     }
+  );
+}, []);
 
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const coords: [number, number] = [
-          position.coords.latitude,
-          position.coords.longitude,
-        ];
+useEffect(() => {
+  if (!sharedReportId) {
+    return;
+  }
+    sharedReportHandled.current = true;
+const reportId = sharedReportId;
+  async function openSharedReport() {
+    try {
+      const report = await getReportById(
+  reportId
+);
 
-        setUserPosition(coords);
-        flyTo(coords, 15);
-      },
-      () => {
-        console.warn("Posizione non autorizzata");
+      if (!report) {
+        console.warn("Segnalazione non trovata");
+        return;
       }
-    );
-  }, []);
+
+      flyTo(
+        [report.lat, report.lng],
+        16
+      );
+
+      setSelectedReport(report);
+
+      setSheetOpen(true);
+    } catch (error) {
+      console.error(
+        "Errore apertura segnalazione condivisa:",
+        error
+      );
+    }
+  }
+
+  openSharedReport();
+}, [sharedReportId]);
 
  const handleCreateReport = async (
   data: ReportFormData
@@ -165,7 +210,16 @@ const [sheetOpen, setSheetOpen] =
       <ReportBottomSheet
   report={selectedReport}
   open={sheetOpen}
-  onClose={() => setSheetOpen(false)}
+  onClose={() => {
+    setSheetOpen(false);
+    setSelectedReport(null);
+
+    if (sharedReportId) {
+      setTimeout(() => {
+        router.replace("/mappa");
+      }, 350);
+    }
+  }}
 />
     </main>
   );
