@@ -1,4 +1,5 @@
 "use client";
+import { useAuth } from "@/contexts/AuthContext";
 import { Report } from "@/types/report";
 import ReportBottomSheet from "@/components/Map/ReportBottomSheet";
 import {
@@ -54,7 +55,7 @@ export default function MapComponent() {
     zoom,
     flyTo,
   } = useMapContext();
-
+const { user } = useAuth();
   const searchParams = useSearchParams();
   const router = useRouter();
   const sharedReportId =
@@ -148,11 +149,23 @@ const reportId = sharedReportId;
 
     await createReport({
       ...data,
+
       lat: position[0],
       lng: position[1],
+
+      userId: user?.uid,
+
+      username: user?.profile.username,
+
+      displayName:
+        user?.profile.displayName,
+
+      avatarUrl:
+        user?.profile.avatarUrl,
     });
 
     setSelectedPosition(null);
+
     setOpen(false);
   } catch (error) {
     console.error(
@@ -161,7 +174,6 @@ const reportId = sharedReportId;
     );
   }
 };
-
   return (
     <main className="relative h-screen w-screen">
       <Header />

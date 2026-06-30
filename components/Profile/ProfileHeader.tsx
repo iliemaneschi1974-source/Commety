@@ -1,24 +1,51 @@
-import { MapPin } from "lucide-react"
+import Image from "next/image";
+import { MapPin } from "lucide-react";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { InfoRow } from "@/components/ui/info-row"
-import { Progress } from "@/components/ui/progress"
-import { ProfileHeaderData } from "@/types/profile"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { InfoRow } from "@/components/ui/info-row";
+import { Progress } from "@/components/ui/progress";
+import { ProfileHeaderData } from "@/types/profile";
 
 interface ProfileHeaderProps {
-  profile: ProfileHeaderData
+  profile: ProfileHeaderData;
 }
 
-export function ProfileHeader({ profile }: ProfileHeaderProps) {
+function formatJoinDate(date: string) {
+  if (!date) {
+    return "";
+  }
+
+  const parsedDate = new Date(date);
+
+  if (Number.isNaN(parsedDate.getTime())) {
+    return date;
+  }
+
+  return new Intl.DateTimeFormat("it-IT", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(parsedDate);
+}
+
+export function ProfileHeader({
+  profile,
+}: ProfileHeaderProps) {
   const progress =
     profile.nextLevelXp > 0
-      ? Math.min((profile.currentXp / profile.nextLevelXp) * 100, 100)
-      : 0
+      ? Math.min(
+          (profile.currentXp /
+            profile.nextLevelXp) *
+            100,
+          100
+        )
+      : 0;
 
   const remainingXp = Math.max(
-    profile.nextLevelXp - profile.currentXp,
+    profile.nextLevelXp -
+      profile.currentXp,
     0
-  )
+  );
 
   const initials = profile.nickname
     .trim()
@@ -26,24 +53,31 @@ export function ProfileHeader({ profile }: ProfileHeaderProps) {
     .map((part) => part[0])
     .join("")
     .slice(0, 2)
-    .toUpperCase()
+    .toUpperCase();
+
+  const joinedAt =
+    formatJoinDate(profile.joinedAt);
 
   return (
     <div
       data-slot="profile-header"
       className="flex flex-col items-center gap-6"
     >
-      <Avatar className="size-32 ring-4 ring-background shadow-md">
-        {profile.avatarUrl && (
-          <AvatarImage
+      <Avatar className="relative size-32 overflow-hidden ring-4 ring-background shadow-md">
+        {profile.avatarUrl ? (
+          <Image
             src={profile.avatarUrl}
             alt={profile.nickname}
+            fill
+            className="object-cover"
+            sizes="128px"
+            priority
           />
+        ) : (
+          <AvatarFallback className="text-4xl font-semibold">
+            {initials}
+          </AvatarFallback>
         )}
-
-        <AvatarFallback className="text-4xl font-semibold">
-          {initials}
-        </AvatarFallback>
       </Avatar>
 
       <div className="flex flex-col items-center gap-2 text-center">
@@ -51,10 +85,12 @@ export function ProfileHeader({ profile }: ProfileHeaderProps) {
           {profile.nickname}
         </h1>
 
-        <InfoRow icon={<MapPin className="size-4" />}>
+        <InfoRow
+          icon={<MapPin className="size-4" />}
+        >
           {profile.city
-            ? `${profile.city} · Iscritto da ${profile.joinedAt}`
-            : `Iscritto da ${profile.joinedAt}`}
+            ? `${profile.city} · Iscritto il ${joinedAt}`
+            : `Iscritto il ${joinedAt}`}
         </InfoRow>
 
         {profile.subtitle && (
@@ -71,16 +107,18 @@ export function ProfileHeader({ profile }: ProfileHeaderProps) {
           </span>
 
           <span className="text-sm text-muted-foreground">
-            {profile.currentXp} / {profile.nextLevelXp} XP
+            {profile.currentXp} /{" "}
+            {profile.nextLevelXp} XP
           </span>
         </div>
 
         <Progress value={progress} />
 
         <p className="mt-3 text-center text-sm text-muted-foreground">
-          Mancano {remainingXp} XP al livello successivo
+          Mancano {remainingXp} XP al
+          livello successivo
         </p>
       </div>
     </div>
-  )
+  );
 }

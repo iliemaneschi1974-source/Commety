@@ -33,8 +33,16 @@ export interface Report {
   createdAt?: Timestamp;
   updatedAt?: Timestamp;
 
+  /**
+   * Proprietario della segnalazione.
+   */
   userId?: string;
+
   username?: string;
+
+  displayName?: string;
+
+  avatarUrl?: string;
 
   /**
    * URL pubblici delle immagini salvate
@@ -43,6 +51,7 @@ export interface Report {
   images: string[];
 
   confirmations: number;
+
   commentsCount: number;
 }
 
@@ -50,10 +59,24 @@ export interface CreateReportInput {
   type: ReportCategory;
 
   title: string;
+
   description: string;
 
   lat: number;
+
   lng: number;
+
+  /**
+   * Utente autenticato.
+   * Se assente la segnalazione rimane anonima.
+   */
+  userId?: string;
+
+  username?: string;
+
+  displayName?: string;
+
+  avatarUrl?: string;
 
   /**
    * File compressi selezionati

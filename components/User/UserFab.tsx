@@ -2,22 +2,25 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { User } from "lucide-react";
 
 import LoginModal from "@/components/Auth/LoginModal";
+import UserMenu from "@/components/User/UserMenu";
+
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function UserFab() {
-  const router = useRouter();
-
   const { isAuthenticated, user } = useAuth();
 
-  const [loginOpen, setLoginOpen] = useState(false);
+  const [loginOpen, setLoginOpen] =
+    useState(false);
+
+  const [menuOpen, setMenuOpen] =
+    useState(false);
 
   function handleClick() {
     if (isAuthenticated) {
-      router.push("/profile");
+      setMenuOpen(true);
       return;
     }
 
@@ -31,12 +34,12 @@ export default function UserFab() {
         onClick={handleClick}
         aria-label={
           isAuthenticated
-            ? "Apri il profilo"
-            : "Accedi a Commety"
+            ? "Menu utente"
+            : "Accedi a commety"
         }
         title={
           isAuthenticated
-            ? "Profilo"
+            ? "Menu utente"
             : "Accedi"
         }
         className="
@@ -59,10 +62,14 @@ export default function UserFab() {
           active:scale-95
         "
       >
-        {isAuthenticated && user?.profile.avatarUrl ? (
+        {isAuthenticated &&
+        user?.profile.avatarUrl ? (
           <Image
             src={user.profile.avatarUrl}
-            alt={user.profile.displayName || "Profilo"}
+            alt={
+              user.profile.displayName ||
+              "Profilo"
+            }
             fill
             sizes="64px"
             className="object-cover"
@@ -77,7 +84,16 @@ export default function UserFab() {
 
       <LoginModal
         open={loginOpen}
-        onClose={() => setLoginOpen(false)}
+        onClose={() =>
+          setLoginOpen(false)
+        }
+      />
+
+      <UserMenu
+        open={menuOpen}
+        onClose={() =>
+          setMenuOpen(false)
+        }
       />
     </>
   );
