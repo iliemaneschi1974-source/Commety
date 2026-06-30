@@ -7,11 +7,7 @@ import { ProfileStats } from "@/components/Profile/ProfileStats";
 import { Card, CardContent } from "@/components/ui/card";
 
 import { useProfile } from "@/hooks/useProfile";
-
-import {
-  profileGalleryMock,
-  profileReportsMock,
-} from "@/lib/mock/profile";
+import { useUserReports } from "@/hooks/useUserReports";
 
 export default function ProfilePage() {
   const {
@@ -20,7 +16,15 @@ export default function ProfilePage() {
     profileStats,
   } = useProfile();
 
-  if (loading) {
+  const {
+    reports,
+    gallery,
+    reportsCount,
+    photosCount,
+    loading: reportsLoading,
+  } = useUserReports();
+
+  if (loading || reportsLoading) {
     return (
       <main className="mx-auto flex w-full max-w-3xl justify-center p-10">
         <p className="text-muted-foreground">
@@ -40,6 +44,12 @@ export default function ProfilePage() {
     );
   }
 
+  const stats = {
+    ...profileStats,
+    reports: reportsCount,
+    photos: photosCount,
+  };
+
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-col gap-6 p-6">
       <Card>
@@ -48,15 +58,15 @@ export default function ProfilePage() {
             <ProfileHeader profile={profileHeader} />
 
             <div className="border-t border-border/50 pt-8">
-              <ProfileStats stats={profileStats} />
+              <ProfileStats stats={stats} />
             </div>
 
             <div className="border-t border-border/50 pt-8">
-              <ProfileReports reports={profileReportsMock} />
+              <ProfileReports reports={reports} />
             </div>
 
             <div className="border-t border-border/50 pt-8">
-              <ProfileGallery images={profileGalleryMock} />
+              <ProfileGallery images={gallery} />
             </div>
           </div>
         </CardContent>

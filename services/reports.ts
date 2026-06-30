@@ -146,6 +146,44 @@ export function listenReports(
 }
 
 /**
+ * Listener realtime delle segnalazioni
+ * pubblicate da uno specifico utente.
+ */
+export function listenUserReports(
+  userId: string,
+  callback: (reports: Report[]) => void
+) {
+  const q = query(
+    reportsCollection,
+    where("userId", "==", userId),
+    orderBy("createdAt", "desc")
+  );
+
+  return onSnapshot(
+    q,
+    (snapshot: QuerySnapshot<DocumentData>) => {
+      const reports: Report[] = snapshot.docs.map(
+        (document) => ({
+          id: document.id,
+          ...(document.data() as Omit<
+            Report,
+            "id"
+          >),
+        })
+      );
+
+      callback(reports);
+    },
+    (error) => {
+      console.error(
+        "Errore listener user reports:",
+        error
+      );
+    }
+  );
+}
+
+/**
  * Aggiorna una segnalazione.
  */
 export async function updateReport(
