@@ -34,6 +34,24 @@ export interface Report {
   updatedAt?: Timestamp;
 
   /**
+   * Ultima attività registrata sulla segnalazione.
+   * Viene aggiornata con conferme, commenti,
+   * foto e future modifiche.
+   */
+  lastActivityAt?: Timestamp;
+
+  /**
+   * Data/ora di scadenza della segnalazione.
+   */
+  expiresAt?: Timestamp;
+
+  /**
+   * Data/ora massima oltre la quale
+   * la segnalazione non può più essere prorogata.
+   */
+  maxExpiresAt?: Timestamp;
+
+  /**
    * Proprietario della segnalazione.
    */
   userId?: string;

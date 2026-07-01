@@ -11,13 +11,15 @@ import {
   QuerySnapshot,
   serverTimestamp,
   updateDoc,
+  UpdateData,
   where,
 } from "firebase/firestore";
 
+import { calculateReportExpiration } from "@/lib/reportExpiration";
 import { db } from "@/lib/firebase";
 import { reverseGeocode } from "@/services/geocoding";
-import { uploadImages } from "@/services/storage";
 import { rewardReportCreation } from "@/services/reputation";
+import { uploadImages } from "@/services/storage";
 import {
   CreateReportInput,
   Report,
@@ -42,6 +44,11 @@ export async function createReport(
 
   const { images, ...reportData } = input;
 
+  const {
+    expiresAt,
+    maxExpiresAt,
+  } = calculateReportExpiration(input.type);
+
   const reportRef = await addDoc(reportsCollection, {
     ...reportData,
 
@@ -55,6 +62,10 @@ export async function createReport(
 
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
+    lastActivityAt: serverTimestamp(),
+
+    expiresAt,
+    maxExpiresAt,
   });
 
   console.log("✅ Report creato:", reportRef.id);
@@ -76,17 +87,23 @@ export async function createReport(
       updatedAt: serverTimestamp(),
     });
 
-    console.log("✅ Firestore aggiornato con gli URL");
+    console.log(
+      "✅ Firestore aggiornato con gli URL"
+    );
   } else {
     console.warn("⚠️ Nessuna immagine ricevuta");
   }
-if (input.userId) {
-  await rewardReportCreation(
-    input.userId,
-    images.length
+
+  if (input.userId) {
+    await rewardReportCreation(
+      input.userId,
+      images.length
+    );
+  }
+
+  console.log(
+    "========== FINE createReport =========="
   );
-}
-  console.log("========== FINE createReport ==========");
 
   return reportRef;
 }
@@ -193,7 +210,7 @@ export function listenUserReports(
  */
 export async function updateReport(
   id: string,
-  data: Partial<Omit<Report, "id" | "createdAt">>
+  data: UpdateData<Report>
 ) {
   return updateDoc(doc(db, "reports", id), {
     ...data,

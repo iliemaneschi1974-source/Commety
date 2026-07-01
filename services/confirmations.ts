@@ -10,6 +10,7 @@ import { db } from "@/lib/firebase";
 
 import { getCurrentUser } from "@/services/auth";
 import { getDeviceId } from "@/services/device";
+import { registerReportActivity } from "@/services/reportLifecycle";
 import { incrementReceivedConfirmations } from "@/services/reputation";
 
 /**
@@ -157,6 +158,11 @@ export async function toggleConfirmation(
       report.userId
     );
   }
+
+  await registerReportActivity(
+    reportId,
+    "confirmation"
+  );
 
   return true;
 }
