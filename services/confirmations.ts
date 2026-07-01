@@ -1,9 +1,12 @@
 import {
+  collection,
   doc,
   getDoc,
+  getDocs,
   onSnapshot,
   runTransaction,
   serverTimestamp,
+  writeBatch,
 } from "firebase/firestore";
 
 import { db } from "@/lib/firebase";
@@ -165,4 +168,37 @@ export async function toggleConfirmation(
   );
 
   return true;
+}
+
+/**
+ * Elimina tutte le conferme di una segnalazione.
+ *
+ * Utilizzata esclusivamente dal Lifecycle Engine
+ * durante il cleanup della segnalazione.
+ */
+export async function deleteReportConfirmations(
+  reportId: string
+): Promise<void> {
+  const confirmationsCollection = collection(
+    db,
+    "reports",
+    reportId,
+    "confirmations"
+  );
+
+  const snapshot = await getDocs(
+    confirmationsCollection
+  );
+
+  if (snapshot.empty) {
+    return;
+  }
+
+  const batch = writeBatch(db);
+
+  snapshot.docs.forEach((confirmation) => {
+    batch.delete(confirmation.ref);
+  });
+
+  await batch.commit();
 }

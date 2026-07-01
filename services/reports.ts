@@ -5,6 +5,7 @@ import {
   doc,
   DocumentData,
   getDoc,
+  getDocs,
   onSnapshot,
   orderBy,
   query,
@@ -132,6 +133,32 @@ export async function getReportById(
 }
 
 /**
+ * Restituisce tutte le segnalazioni ACTIVE.
+ *
+ * Utilizzata dal Lifecycle Engine,
+ * Scheduler e Cloud Functions.
+ */
+export async function getActiveReports(): Promise<
+  Report[]
+> {
+  const q = query(
+    reportsCollection,
+    where("status", "==", "ACTIVE"),
+    orderBy("createdAt", "desc")
+  );
+
+  const snapshot = await getDocs(q);
+
+  return snapshot.docs.map((document) => ({
+    id: document.id,
+    ...(document.data() as Omit<
+      Report,
+      "id"
+    >),
+  }));
+}
+
+/**
  * Listener realtime delle segnalazioni attive.
  */
 export function listenReports(
@@ -221,7 +248,9 @@ export async function updateReport(
 /**
  * Elimina una segnalazione.
  */
-export async function deleteReport(id: string) {
+export async function deleteReport(
+  id: string
+) {
   return deleteDoc(doc(db, "reports", id));
 }
 

@@ -3,12 +3,14 @@ import {
   deleteDoc,
   doc,
   DocumentData,
+  getDocs,
   onSnapshot,
   orderBy,
   query,
   QuerySnapshot,
   runTransaction,
   serverTimestamp,
+  writeBatch,
 } from "firebase/firestore";
 
 import { db } from "@/lib/firebase";
@@ -96,10 +98,12 @@ export function listenComments(
   return onSnapshot(
     q,
     (snapshot: QuerySnapshot<DocumentData>) => {
-      const comments: Comment[] = snapshot.docs.map((document) => ({
-        id: document.id,
-        ...(document.data() as Omit<Comment, "id">),
-      }));
+      const comments: Comment[] = snapshot.docs.map(
+        (document) => ({
+          id: document.id,
+          ...(document.data() as Omit<Comment, "id">),
+        })
+      );
 
       callback(comments);
     },
@@ -149,4 +153,35 @@ export async function deleteComment(
       updatedAt: serverTimestamp(),
     });
   });
+}
+
+/**
+ * Elimina tutti i commenti di una segnalazione.
+ *
+ * Utilizzata esclusivamente dal Lifecycle Engine
+ * durante il cleanup della segnalazione.
+ */
+export async function deleteReportComments(
+  reportId: string
+): Promise<void> {
+  const commentsCollection = collection(
+    db,
+    "reports",
+    reportId,
+    "comments"
+  );
+
+  const snapshot = await getDocs(commentsCollection);
+
+  if (snapshot.empty) {
+    return;
+  }
+
+  const batch = writeBatch(db);
+
+  snapshot.docs.forEach((comment) => {
+    batch.delete(comment.ref);
+  });
+
+  await batch.commit();
 }

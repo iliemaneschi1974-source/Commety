@@ -10,9 +10,6 @@ import { storage } from "@/lib/firebase";
 /**
  * Carica una singola immagine nello Storage.
  */
-/**
- * Carica una singola immagine nello Storage.
- */
 export async function uploadImage(
   file: File,
   reportId: string
@@ -27,7 +24,7 @@ export async function uploadImage(
 
   await uploadBytes(storageRef, file);
 
-  return await getDownloadURL(storageRef);
+  return getDownloadURL(storageRef);
 }
 
 /**
@@ -35,7 +32,7 @@ export async function uploadImage(
  */
 export async function deleteImage(
   imageUrl: string
-) {
+): Promise<void> {
   const imageRef = ref(storage, imageUrl);
 
   await deleteObject(imageRef);
@@ -48,9 +45,28 @@ export async function uploadImages(
   files: File[],
   reportId: string
 ): Promise<string[]> {
-  const uploads = files.map((file) =>
-    uploadImage(file, reportId)
+  return Promise.all(
+    files.map((file) =>
+      uploadImage(file, reportId)
+    )
   );
+}
 
-  return Promise.all(uploads);
+/**
+ * Elimina più immagini dallo Storage.
+ *
+ * Se l'elenco è vuoto termina immediatamente.
+ */
+export async function deleteImages(
+  imageUrls: string[]
+): Promise<void> {
+  if (imageUrls.length === 0) {
+    return;
+  }
+
+  await Promise.all(
+    imageUrls.map((imageUrl) =>
+      deleteImage(imageUrl)
+    )
+  );
 }
