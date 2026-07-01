@@ -9,7 +9,13 @@ export interface Comment {
 
   deviceId: string;
 
+  userId?: string;
+
   username?: string;
+
+  displayName?: string;
+
+  avatarUrl?: string;
 
   createdAt?: Timestamp;
 
@@ -20,4 +26,12 @@ export interface CreateCommentInput {
   reportId: string;
 
   text: string;
+
+  userId?: string;
+
+  username?: string;
+
+  displayName?: string;
+
+  avatarUrl?: string;
 }

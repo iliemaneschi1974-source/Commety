@@ -2,8 +2,15 @@
 
 import { Trash2 } from "lucide-react";
 
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+
 import { Comment } from "@/types/comment";
+import { formatRelativeDate } from "@/utils/formatRelativeDate";
 
 interface CommentCardProps {
   comment: Comment;
@@ -11,35 +18,18 @@ interface CommentCardProps {
   onDelete: () => void;
 }
 
-function formatDate(comment: Comment) {
-  if (!comment.createdAt) {
-    return "";
+function getInitials(comment: Comment) {
+  if (!comment.displayName) {
+    return "A";
   }
 
-  const date = comment.createdAt.toDate();
-  const today = new Date();
-
-  const isToday =
-    date.toDateString() === today.toDateString();
-
-  if (isToday) {
-    return date.toLocaleTimeString("it-IT", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  }
-
-  return (
-    date.toLocaleDateString("it-IT", {
-      day: "2-digit",
-      month: "short",
-    }) +
-    " • " +
-    date.toLocaleTimeString("it-IT", {
-      hour: "2-digit",
-      minute: "2-digit",
-    })
-  );
+  return comment.displayName
+    .trim()
+    .split(" ")
+    .map((part) => part[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
 }
 
 export default function CommentCard({
@@ -47,6 +37,9 @@ export default function CommentCard({
   isMine,
   onDelete,
 }: CommentCardProps) {
+  const author =
+    comment.displayName ?? "Anonimo";
+
   return (
     <div
       className={`flex ${
@@ -61,29 +54,33 @@ export default function CommentCard({
         }`}
       >
         <div className="mb-3 flex items-start justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <Avatar className="h-9 w-9">
+              {comment.avatarUrl && (
+                <AvatarImage
+                  src={comment.avatarUrl}
+                  alt={author}
+                />
+              )}
 
-          <div className="flex items-center gap-2">
-
-            <div
-              className={`flex h-8 w-8 items-center justify-center rounded-full font-bold ${
-                isMine
-                  ? "bg-blue-600 text-white"
-                  : "bg-blue-100 text-blue-700"
-              }`}
-            >
-              {isMine ? "T" : "A"}
-            </div>
+              <AvatarFallback>
+                {getInitials(comment)}
+              </AvatarFallback>
+            </Avatar>
 
             <div>
-              <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                {isMine ? "Tu" : "Anonimo"}
+              <div className="text-sm font-semibold text-slate-800">
+                {author}
               </div>
 
               <div className="text-xs text-slate-400">
-                {formatDate(comment)}
+                {comment.createdAt
+                  ? formatRelativeDate(
+                      comment.createdAt.toDate()
+                    )
+                  : ""}
               </div>
             </div>
-
           </div>
 
           {isMine && (
@@ -96,7 +93,6 @@ export default function CommentCard({
               <Trash2 className="size-4" />
             </Button>
           )}
-
         </div>
 
         <p className="whitespace-pre-wrap text-sm leading-relaxed text-slate-800">

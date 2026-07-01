@@ -17,7 +17,7 @@ import {
 import { db } from "@/lib/firebase";
 import { reverseGeocode } from "@/services/geocoding";
 import { uploadImages } from "@/services/storage";
-
+import { rewardReportCreation } from "@/services/reputation";
 import {
   CreateReportInput,
   Report,
@@ -80,7 +80,12 @@ export async function createReport(
   } else {
     console.warn("⚠️ Nessuna immagine ricevuta");
   }
-
+if (input.userId) {
+  await rewardReportCreation(
+    input.userId,
+    images.length
+  );
+}
   console.log("========== FINE createReport ==========");
 
   return reportRef;

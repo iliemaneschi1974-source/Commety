@@ -1,5 +1,4 @@
 import {
-  addDoc,
   collection,
   deleteDoc,
   doc,
@@ -14,6 +13,8 @@ import {
 
 import { db } from "@/lib/firebase";
 import { getDeviceId } from "@/services/device";
+import { rewardComment } from "@/services/reputation";
+
 import {
   Comment,
   CreateCommentInput,
@@ -48,8 +49,16 @@ export async function createComment(
 
     transaction.set(commentRef, {
       reportId: input.reportId,
+
       text: input.text,
+
       deviceId: getDeviceId(),
+
+      userId: input.userId ?? null,
+      username: input.username ?? null,
+      displayName: input.displayName ?? null,
+      avatarUrl: input.avatarUrl ?? null,
+
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
     });
@@ -59,6 +68,10 @@ export async function createComment(
       updatedAt: serverTimestamp(),
     });
   });
+
+  if (input.userId) {
+    await rewardComment(input.userId);
+  }
 }
 
 /**
@@ -91,7 +104,10 @@ export function listenComments(
       callback(comments);
     },
     (error) => {
-      console.error("Errore listener commenti:", error);
+      console.error(
+        "Errore listener commenti:",
+        error
+      );
     }
   );
 }
@@ -126,7 +142,10 @@ export async function deleteComment(
     transaction.delete(commentRef);
 
     transaction.update(reportRef, {
-      commentsCount: Math.max(0, currentComments - 1),
+      commentsCount: Math.max(
+        0,
+        currentComments - 1
+      ),
       updatedAt: serverTimestamp(),
     });
   });

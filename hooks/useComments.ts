@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useState } from "react";
 
+import { useAuth } from "@/contexts/AuthContext";
+
 import {
   createComment,
   deleteComment,
@@ -11,6 +13,8 @@ import {
 import { Comment } from "@/types/comment";
 
 export function useComments(reportId?: string) {
+  const { isAuthenticated, user } = useAuth();
+
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -40,14 +44,28 @@ export function useComments(reportId?: string) {
         await createComment({
           reportId,
           text: text.trim(),
+
+          ...(isAuthenticated && user
+            ? {
+                userId: user.uid,
+                username: user.profile.username,
+                displayName:
+                  user.profile.displayName,
+                avatarUrl:
+                  user.profile.avatarUrl,
+              }
+            : {}),
         });
       } catch (error) {
-        console.error("Errore creazione commento:", error);
+        console.error(
+          "Errore creazione commento:",
+          error
+        );
       } finally {
         setLoading(false);
       }
     },
-    [reportId]
+    [reportId, isAuthenticated, user]
   );
 
   const remove = useCallback(
@@ -57,9 +75,15 @@ export function useComments(reportId?: string) {
       }
 
       try {
-        await deleteComment(reportId, commentId);
+        await deleteComment(
+          reportId,
+          commentId
+        );
       } catch (error) {
-        console.error("Errore eliminazione commento:", error);
+        console.error(
+          "Errore eliminazione commento:",
+          error
+        );
       }
     },
     [reportId]

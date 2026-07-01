@@ -4,6 +4,18 @@ import { UserDocument } from "@/types/firestore-user";
 import { CommettyUser } from "@/types/user";
 
 /**
+ * Converte un Timestamp Firestore
+ * in stringa ISO.
+ */
+function toIsoString(
+  timestamp?: Timestamp | null
+): string {
+  return timestamp
+    ? timestamp.toDate().toISOString()
+    : new Date().toISOString();
+}
+
+/**
  * Converte un documento Firestore nel dominio CommettyUser.
  */
 export function toCommettyUser(
@@ -27,12 +39,17 @@ export function toCommettyUser(
     preferences: document.preferences,
 
     metadata: {
-      createdAt: document.metadata.createdAt.toDate().toISOString(),
+      createdAt: toIsoString(
+        document.metadata.createdAt
+      ),
 
-      updatedAt: document.metadata.updatedAt.toDate().toISOString(),
+      updatedAt: toIsoString(
+        document.metadata.updatedAt
+      ),
 
-      lastLoginAt:
-        document.metadata.lastLoginAt?.toDate().toISOString(),
+      lastLoginAt: document.metadata.lastLoginAt
+        ? toIsoString(document.metadata.lastLoginAt)
+        : undefined,
     },
   };
 }

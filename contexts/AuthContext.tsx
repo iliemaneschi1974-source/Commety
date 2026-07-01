@@ -17,6 +17,7 @@ import {
 
 import {
   ensureUserExists,
+  listenUser,
 } from "@/services/users";
 
 import { CommettyUser } from "@/types/user";
@@ -57,12 +58,18 @@ export function AuthProvider({
             return;
           }
 
-          const commettyUser =
-            await ensureUserExists(
-              firebaseUser
-            );
+          await ensureUserExists(firebaseUser);
 
-          setUser(commettyUser);
+const unsubscribeUser = listenUser(
+  firebaseUser.uid,
+  (commettyUser) => {
+    setUser(commettyUser);
+  }
+);
+
+setLoading(false);
+
+return unsubscribeUser;
         } catch (error) {
           console.error(
             "Errore autenticazione:",
