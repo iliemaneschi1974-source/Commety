@@ -1,12 +1,13 @@
 "use client";
 
+import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 
 import { ProfileGallery } from "@/components/Profile/ProfileGallery";
 import { ProfileHeader } from "@/components/Profile/ProfileHeader";
 import { ProfileReports } from "@/components/Profile/ProfileReports";
 import { ProfileStats } from "@/components/Profile/ProfileStats";
-import { Card, CardContent } from "@/components/ui/card";
+import { CommetyHeader } from "@/components/ui/CommetyHeader";
 
 import { useProfile } from "@/hooks/useProfile";
 import { useUserReports } from "@/hooks/useUserReports";
@@ -53,36 +54,28 @@ export default function ProfilePage() {
   };
 
   return (
-    <main className="mx-auto flex w-full max-w-3xl flex-col gap-6 p-6">
+    <main className="mx-auto flex w-full max-w-3xl flex-col gap-8 p-6">
+      <CommetyHeader
+        title="Profilo"
+        subtitle="La tua reputazione"
+        leftSlot={
+          <Link
+            href="/mappa"
+            aria-label="Torna alla mappa"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full transition hover:bg-slate-100"
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </Link>
+        }
+      />
 
-      <div>
-        <Link
-          href="/mappa"
-          className="inline-flex items-center gap-2 rounded-xl border border-border px-4 py-2 text-sm font-medium transition hover:bg-muted"
-        >
-          ← Torna alla mappa
-        </Link>
-      </div>
+      <ProfileHeader profile={profileHeader} />
 
-      <Card>
-        <CardContent className="py-10">
-          <div className="space-y-10">
-            <ProfileHeader profile={profileHeader} />
+      <ProfileStats stats={stats} />
 
-            <div className="border-t border-border/50 pt-8">
-              <ProfileStats stats={stats} />
-            </div>
+      <ProfileReports reports={reports} />
 
-            <div className="border-t border-border/50 pt-8">
-              <ProfileReports reports={reports} />
-            </div>
-
-            <div className="border-t border-border/50 pt-8">
-              <ProfileGallery images={gallery} />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      <ProfileGallery images={gallery} />
     </main>
   );
 }

@@ -2,37 +2,37 @@ import {
   Calendar,
   ChevronRight,
   MapPin,
-} from "lucide-react"
+} from "lucide-react";
 
-import { Card, CardContent } from "@/components/ui/card"
-import { SectionHeader } from "@/components/ui/section-header"
-import { CategoryThemes } from "@/lib/themes/categories"
-import { Report } from "@/types/report"
+import { SectionHeader } from "@/components/ui/section-header";
+import { Surface } from "@/components/ui/Surface";
+import { CategoryThemes } from "@/lib/themes/categories";
+import { Report } from "@/types/report";
 
 interface ProfileReportsProps {
-  reports: Report[]
+  reports: Report[];
 }
 
 export function ProfileReports({
   reports,
 }: ProfileReportsProps) {
   return (
-    <Card>
-      <CardContent className="space-y-4">
-        <SectionHeader
-          title="Ultime segnalazioni"
-          actionLabel="Vedi tutte"
-        />
+    <section className="space-y-4">
+      <SectionHeader
+        title="Ultime segnalazioni"
+        actionLabel="Vedi tutte"
+      />
 
+      <Surface className="p-6">
         {reports.length === 0 ? (
           <div className="py-10 text-center text-sm text-muted-foreground">
             Nessuna segnalazione pubblicata.
           </div>
         ) : (
-          <div className="overflow-hidden rounded-lg border border-border">
+          <div className="overflow-hidden rounded-xl border border-border">
             {reports.map((report, index) => {
-              const category = CategoryThemes[report.type]
-              const Icon = category.icon
+              const category = CategoryThemes[report.type];
+              const Icon = category.icon;
 
               return (
                 <button
@@ -48,7 +48,9 @@ export function ProfileReports({
                     <div className="flex items-center gap-2">
                       <Icon
                         className="size-5"
-                        style={{ color: category.color }}
+                        style={{
+                          color: category.color,
+                        }}
                       />
 
                       <p className="font-medium">
@@ -77,11 +79,11 @@ export function ProfileReports({
 
                   <ChevronRight className="size-5 text-muted-foreground" />
                 </button>
-              )
+              );
             })}
           </div>
         )}
-      </CardContent>
-    </Card>
-  )
+      </Surface>
+    </section>
+  );
 }

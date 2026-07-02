@@ -1,27 +1,27 @@
-import Image from "next/image"
+import Image from "next/image";
 
-import { Card, CardContent } from "@/components/ui/card"
-import { SectionHeader } from "@/components/ui/section-header"
-import { ProfileGalleryItem } from "@/types/profile"
+import { SectionHeader } from "@/components/ui/section-header";
+import { Surface } from "@/components/ui/Surface";
+import { ProfileGalleryItem } from "@/types/profile";
 
 interface ProfileGalleryProps {
-  images: ProfileGalleryItem[]
+  images: ProfileGalleryItem[];
 }
 
 export function ProfileGallery({
   images,
 }: ProfileGalleryProps) {
-  const preview = images.slice(0, 6)
-  const remaining = Math.max(images.length - 6, 0)
+  const preview = images.slice(0, 6);
+  const remaining = Math.max(images.length - 6, 0);
 
   return (
-    <Card>
-      <CardContent className="space-y-4">
-        <SectionHeader
-          title="Foto"
-          actionLabel="Vedi tutte"
-        />
+    <section className="space-y-4">
+      <SectionHeader
+        title="Foto"
+        actionLabel="Vedi tutte"
+      />
 
+      <Surface className="p-6">
         {images.length === 0 ? (
           <div className="py-10 text-center text-sm text-muted-foreground">
             Nessuna foto disponibile.
@@ -30,7 +30,8 @@ export function ProfileGallery({
           <div className="grid grid-cols-3 gap-3">
             {preview.map((image, index) => {
               const isLast =
-                index === preview.length - 1 && remaining > 0
+                index === preview.length - 1 &&
+                remaining > 0;
 
               return (
                 <button
@@ -51,11 +52,11 @@ export function ProfileGallery({
                     </div>
                   )}
                 </button>
-              )
+              );
             })}
           </div>
         )}
-      </CardContent>
-    </Card>
-  )
+      </Surface>
+    </section>
+  );
 }
