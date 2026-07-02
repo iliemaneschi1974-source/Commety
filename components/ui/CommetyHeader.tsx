@@ -6,11 +6,12 @@ import { CommetyLogo } from "./CommetyLogo";
 import { Surface } from "./Surface";
 
 interface CommetyHeaderProps {
-  title: string;
+  title?: string;
   subtitle?: string;
   leftSlot?: ReactNode;
   rightSlot?: ReactNode;
   className?: string;
+  sticky?: boolean;
 }
 
 export function CommetyHeader({
@@ -19,11 +20,16 @@ export function CommetyHeader({
   leftSlot,
   rightSlot,
   className,
+  sticky = true,
 }: CommetyHeaderProps) {
   return (
     <header
       data-slot="commety-header"
-      className={cn("sticky top-4 z-40 w-full", className)}
+      className={cn(
+        "w-full",
+        sticky && "sticky top-4 z-40",
+        className
+      )}
     >
       <Surface as="section" className="mx-auto p-6">
         <div className="flex items-center justify-between">
@@ -38,17 +44,21 @@ export function CommetyHeader({
           </div>
         </div>
 
-        <div className="mt-6 space-y-1">
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900">
-            {title}
-          </h1>
+        {(title || subtitle) && (
+          <div className="mt-6 space-y-1">
+            {title && (
+              <h1 className="text-3xl font-bold tracking-tight text-slate-900">
+                {title}
+              </h1>
+            )}
 
-          {subtitle && (
-            <p className="text-sm text-slate-500">
-              {subtitle}
-            </p>
-          )}
-        </div>
+            {subtitle && (
+              <p className="text-sm text-slate-500">
+                {subtitle}
+              </p>
+            )}
+          </div>
+        )}
       </Surface>
     </header>
   );

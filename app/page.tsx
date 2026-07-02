@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { CommetyHeader } from "@/components/ui/CommetyHeader";
 
 export default function Home() {
   
@@ -8,21 +9,10 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-[#f5f5f5]">
       {/* HEADER */}
-     <header className="max-w-7xl mx-auto px-6 lg:px-8 py-6">
-  <div className="flex justify-center">
-    <Image
-      src="/logo.png"
-      alt="Commety"
-      width={220}
-      height={60}
-      priority
-      className="object-contain"
-    />
-  </div>
-</header>
+     <CommetyHeader className="mx-auto max-w-7xl px-6 pt-6 lg:px-8" />
 
       {/* HERO */}
-      <section className="max-w-7xl mx-auto px-6 lg:px-8 pb-16">
+      <section className="max-w-7xl mx-auto px-6 lg:px-8 pb-20">
         <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-12 items-center">
 
           {/* SINISTRA */}
@@ -97,7 +87,7 @@ export default function Home() {
       </section>
       <section
   id="come-funziona"
-  className="max-w-7xl mx-auto px-6 lg:px-8 py-24"
+  className="max-w-7xl mx-auto px-6 lg:px-8 py-16"
 >
   <div className="text-center mb-16">
     <h2 className="text-4xl lg:text-5xl font-extrabold text-[#08122E]">
@@ -225,7 +215,7 @@ export default function Home() {
 
 </div>
 </section>
-<section id="diverso" className="max-w-7xl mx-auto px-6 lg:px-8 py-24">
+<section id="diverso" className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
   <div className="text-center mb-16">
     <h2 className="text-4xl lg:text-5xl font-extrabold text-[#08122E]">
       Perché Commety è diverso
@@ -281,7 +271,7 @@ export default function Home() {
 </section>
 <section
   id="cta"
-  className="max-w-5xl mx-auto px-6 py-24 text-center"
+  className="max-w-5xl mx-auto px-6 pt-16 pb-20 text-center"
 >
   <h2 className="text-4xl lg:text-6xl font-extrabold text-[#08122E]">
     Pronto a scoprire cosa accade davvero intorno a te?
