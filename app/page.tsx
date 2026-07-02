@@ -26,12 +26,23 @@ export default function Home() {
 </button>
 
           {/* CTA Desktop */}
-          <a
-  href="#cta"
-  className="hidden lg:block bg-[#2563FF] text-white px-8 py-4 rounded-2xl font-semibold hover:bg-[#1f56e5] transition"
->
-  Entra nella lista d'attesa
-</a>
+          <div className="mt-10 flex flex-col sm:flex-row items-center lg:items-start gap-4">
+
+  <a
+    href="/mappa"
+    className="bg-[#2563FF] text-white px-10 py-5 rounded-2xl text-lg lg:text-xl font-semibold hover:bg-[#1f56e5] transition"
+  >
+    🗺️ Apri la mappa
+  </a>
+
+  <a
+    href="#cta"
+    className="border border-[#2563FF] text-[#2563FF] px-10 py-5 rounded-2xl text-lg lg:text-xl font-semibold hover:bg-blue-50 transition"
+  >
+    Ricevi aggiornamenti
+  </a>
+
+</div>
         </div>
       </header>
 {menuOpen && (

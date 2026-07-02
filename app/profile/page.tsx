@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import { ProfileGallery } from "@/components/Profile/ProfileGallery";
 import { ProfileHeader } from "@/components/Profile/ProfileHeader";
 import { ProfileReports } from "@/components/Profile/ProfileReports";
@@ -52,6 +54,16 @@ export default function ProfilePage() {
 
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-col gap-6 p-6">
+
+      <div>
+        <Link
+          href="/mappa"
+          className="inline-flex items-center gap-2 rounded-xl border border-border px-4 py-2 text-sm font-medium transition hover:bg-muted"
+        >
+          ← Torna alla mappa
+        </Link>
+      </div>
+
       <Card>
         <CardContent className="py-10">
           <div className="space-y-10">
