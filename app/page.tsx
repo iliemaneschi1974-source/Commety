@@ -1,15 +1,35 @@
 "use client";
+import {
+  Bike,
+  Car,
+  CloudRain,
+  Shield,
+  Trees,
+  Users,
+  Activity,
+  Globe,
+  UsersRound,
+  Bell,
+  BadgeCheck,
+  CirclePlus,
+  MapPin,
+} from "lucide-react";
 
+import { FeatureItem } from "@/components/ui/feature-item";
 import Image from "next/image";
-import { CommetyHeader } from "@/components/ui/CommetyHeader";
-
+import { CommetyLogo } from "@/components/ui/CommetyLogo";
+import { Surface } from "@/components/ui/Surface";
 export default function Home() {
   
 
   return (
     <main className="min-h-screen bg-[#f5f5f5]">
       {/* HEADER */}
-     <CommetyHeader className="mx-auto max-w-7xl px-6 pt-6 lg:px-8" />
+     <header className="max-w-7xl mx-auto px-6 lg:px-8 pt-8 pb-6">
+  <div className="flex justify-center">
+    <CommetyLogo priority />
+  </div>
+</header>
 
       {/* HERO */}
       <section className="max-w-7xl mx-auto px-6 lg:px-8 pb-20">
@@ -87,10 +107,10 @@ export default function Home() {
       </section>
       <section
   id="come-funziona"
-  className="max-w-7xl mx-auto px-6 lg:px-8 py-16"
+  className="mx-auto max-w-7xl px-6 py-16 lg:px-8"
 >
-  <div className="text-center mb-16">
-    <h2 className="text-4xl lg:text-5xl font-extrabold text-[#08122E]">
+  <div className="mb-14 text-center">
+    <h2 className="text-4xl font-extrabold text-[#08122E] lg:text-5xl">
       Come funziona?
     </h2>
 
@@ -99,69 +119,49 @@ export default function Home() {
     </p>
   </div>
 
-  <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+  <Surface className="p-8 lg:p-10">
+    <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
+      <FeatureItem
+        icon={
+          <MapPin className="h-10 w-10 text-sky-600" />
+        }
+        title="Osserva"
+        description="Guarda in tempo reale cosa sta accadendo vicino a te sulla mappa."
+      />
 
-    <div className="bg-white rounded-3xl p-8 shadow-sm">
-      <div className="text-5xl mb-4">📍</div>
+      <FeatureItem
+        icon={
+          <CirclePlus className="h-10 w-10 text-emerald-600" />
+        }
+        title="Segnala"
+        description="Invia una segnalazione in pochi secondi: meteo, traffico, eventi o pericoli."
+      />
 
-      <h3 className="text-2xl font-bold text-[#08122E]">
-        Osserva
-      </h3>
+      <FeatureItem
+        icon={
+          <BadgeCheck className="h-10 w-10 text-amber-500" />
+        }
+        title="Conferma"
+        description="La community verifica le segnalazioni rendendo le informazioni sempre più affidabili."
+      />
 
-      <p className="mt-3 text-slate-600">
-        Guarda in tempo reale cosa sta accadendo
-        vicino a te sulla mappa.
-      </p>
+      <FeatureItem
+        icon={
+          <Bell className="h-10 w-10 text-violet-600" />
+        }
+        title="Rimani informato"
+        description="Ricevi aggiornamenti e notifiche sugli eventi che ti interessano davvero."
+      />
     </div>
-
-    <div className="bg-white rounded-3xl p-8 shadow-sm">
-      <div className="text-5xl mb-4">➕</div>
-
-      <h3 className="text-2xl font-bold text-[#08122E]">
-        Segnala
-      </h3>
-
-      <p className="mt-3 text-slate-600">
-        Invia una segnalazione in pochi secondi:
-        meteo, traffico, eventi o pericoli.
-      </p>
-    </div>
-
-    <div className="bg-white rounded-3xl p-8 shadow-sm">
-      <div className="text-5xl mb-4">✅</div>
-
-      <h3 className="text-2xl font-bold text-[#08122E]">
-        Conferma
-      </h3>
-
-      <p className="mt-3 text-slate-600">
-        La community verifica le segnalazioni
-        rendendo le informazioni affidabili.
-      </p>
-    </div>
-
-    <div className="bg-white rounded-3xl p-8 shadow-sm">
-      <div className="text-5xl mb-4">🔔</div>
-
-      <h3 className="text-2xl font-bold text-[#08122E]">
-        Rimani informato
-      </h3>
-
-      <p className="mt-3 text-slate-600">
-        Ricevi aggiornamenti e alert
-        sugli eventi che ti interessano.
-      </p>
-    </div>
-
-  </div>
+  </Surface>
 </section>
 <section
   id="per-chi"
-  className="max-w-7xl mx-auto px-6 lg:px-8 py-24"
+  className="mx-auto max-w-7xl px-6 py-16 lg:px-8"
 >
-  <div className="text-center mb-16">
-    <h2 className="text-4xl lg:text-5xl font-extrabold text-[#08122E]">
-      Per chi è Commety
+  <div className="mb-14 text-center">
+    <h2 className="text-4xl font-extrabold text-[#08122E] lg:text-5xl">
+      Per chi è Commety?
     </h2>
 
     <p className="mt-4 text-xl text-slate-600">
@@ -169,56 +169,53 @@ export default function Home() {
     </p>
   </div>
 
-  <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
+  <Surface className="p-8 lg:p-10">
+    <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
+      <FeatureItem
+        icon={<CloudRain className="h-12 w-12 text-sky-600" />}
+        title="Appassionati meteo"
+        description="Segui temporali, piogge, vento e tutti i fenomeni atmosferici in tempo reale."
+      />
 
-  <div className="bg-white rounded-3xl p-8 text-center shadow-sm flex flex-col items-center">
-    <div className="text-5xl mb-4">🌧️</div>
-    <h3 className="text-xl font-bold text-[#08122E] min-h-[56px] flex items-center justify-center">
-      Appassionati meteo
-    </h3>
-  </div>
+      <FeatureItem
+        icon={<Bike className="h-12 w-12 text-orange-500" />}
+        title="Motociclisti"
+        description="Scopri incidenti, lavori e condizioni della strada prima di partire."
+      />
 
-  <div className="bg-white rounded-3xl p-8 text-center shadow-sm flex flex-col items-center">
-    <div className="text-5xl mb-4">🏍️</div>
-    <h3 className="text-xl font-bold text-[#08122E] min-h-[56px] flex items-center justify-center">
-      Motociclisti
-    </h3>
-  </div>
+      <FeatureItem
+        icon={<Trees className="h-12 w-12 text-emerald-600" />}
+        title="Escursionisti"
+        description="Controlla sentieri, meteo e possibili pericoli nelle aree naturali."
+      />
 
-  <div className="bg-white rounded-3xl p-8 text-center shadow-sm flex flex-col items-center">
-    <div className="text-5xl mb-4">🥾</div>
-    <h3 className="text-xl font-bold text-[#08122E] min-h-[56px] flex items-center justify-center">
-      Escursionisti
-    </h3>
-  </div>
+      <FeatureItem
+        icon={<Car className="h-12 w-12 text-indigo-600" />}
+        title="Automobilisti"
+        description="Ricevi informazioni su traffico, incidenti e viabilità lungo il percorso."
+      />
 
-  <div className="bg-white rounded-3xl p-8 text-center shadow-sm flex flex-col items-center">
-    <div className="text-5xl mb-4">🚗</div>
-    <h3 className="text-xl font-bold text-[#08122E] min-h-[56px] flex items-center justify-center">
-      Automobilisti
-    </h3>
-  </div>
+      <FeatureItem
+        icon={<Users className="h-12 w-12 text-pink-500" />}
+        title="Famiglie"
+        description="Rimani informato sugli eventi e sulle situazioni che riguardano la tua zona."
+      />
 
-  <div className="bg-white rounded-3xl p-8 text-center shadow-sm flex flex-col items-center">
-    <div className="text-5xl mb-4">👨‍👩‍👧‍👦</div>
-    <h3 className="text-xl font-bold text-[#08122E] min-h-[56px] flex items-center justify-center">
-      Famiglie
-    </h3>
-  </div>
-
-  <div className="bg-white rounded-3xl p-8 text-center shadow-sm flex flex-col items-center">
-    <div className="text-5xl mb-4">🛡️</div>
-    <h3 className="text-xl font-bold text-[#08122E] min-h-[56px] flex items-center justify-center">
-      Protezione Civile
-    </h3>
-  </div>
-
-</div>
+      <FeatureItem
+        icon={<Shield className="h-12 w-12 text-red-500" />}
+        title="Protezione Civile"
+        description="Uno strumento in più per monitorare rapidamente ciò che viene segnalato sul territorio."
+      />
+    </div>
+  </Surface>
 </section>
-<section id="diverso" className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
-  <div className="text-center mb-16">
-    <h2 className="text-4xl lg:text-5xl font-extrabold text-[#08122E]">
-      Perché Commety è diverso
+<section
+  id="diverso"
+  className="mx-auto max-w-7xl px-6 py-16 lg:px-8"
+>
+  <div className="mb-14 text-center">
+    <h2 className="text-4xl font-extrabold text-[#08122E] lg:text-5xl">
+      Perché Commety è diverso?
     </h2>
 
     <p className="mt-4 text-xl text-slate-600">
@@ -226,48 +223,27 @@ export default function Home() {
     </p>
   </div>
 
-  <div className="grid lg:grid-cols-3 gap-8">
+  <Surface className="p-8 lg:p-10">
+    <div className="grid gap-10 lg:grid-cols-3">
+      <FeatureItem
+        icon={<Activity className="h-12 w-12 text-sky-600" />}
+        title="Tempo reale"
+        description="Le informazioni arrivano direttamente dalle persone presenti sul territorio, nel momento esatto in cui accadono."
+      />
 
-    <div className="bg-white rounded-3xl p-8 shadow-sm">
-      <div className="text-5xl mb-6">⚡</div>
+      <FeatureItem
+        icon={<UsersRound className="h-12 w-12 text-emerald-600" />}
+        title="Verificato dalla community"
+        description="Le segnalazioni vengono confermate dagli altri utenti, aumentando affidabilità e qualità delle informazioni."
+      />
 
-      <h3 className="text-2xl font-bold text-[#08122E] mb-4">
-        Tempo reale
-      </h3>
-
-      <p className="text-slate-600 text-lg">
-        Le informazioni arrivano direttamente dalle persone
-        presenti sul territorio, nel momento in cui accadono.
-      </p>
+      <FeatureItem
+        icon={<Globe className="h-12 w-12 text-indigo-600" />}
+        title="Tutto in una sola mappa"
+        description="Meteo, viabilità, eventi e situazioni di pericolo raccolti in un'unica esperienza semplice e immediata."
+      />
     </div>
-
-    <div className="bg-white rounded-3xl p-8 shadow-sm">
-      <div className="text-5xl mb-6">👥</div>
-
-      <h3 className="text-2xl font-bold text-[#08122E] mb-4">
-        Verificato dalla community
-      </h3>
-
-      <p className="text-slate-600 text-lg">
-        Le segnalazioni vengono confermate dagli altri utenti,
-        aumentando affidabilità e qualità delle informazioni.
-      </p>
-    </div>
-
-    <div className="bg-white rounded-3xl p-8 shadow-sm">
-      <div className="text-5xl mb-6">🗺️</div>
-
-      <h3 className="text-2xl font-bold text-[#08122E] mb-4">
-        Tutto in una sola mappa
-      </h3>
-
-      <p className="text-slate-600 text-lg">
-        Meteo, viabilità, eventi e situazioni di pericolo
-        raccolti in un unico punto.
-      </p>
-    </div>
-
-  </div>
+  </Surface>
 </section>
 <section
   id="cta"
