@@ -1,101 +1,26 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+
 export default function Home() {
-  const [menuOpen, setMenuOpen] = useState(false);
+  
 
   return (
     <main className="min-h-screen bg-[#f5f5f5]">
       {/* HEADER */}
-      <header className="max-w-7xl mx-auto px-6 lg:px-8 py-6">
-        <div className="flex items-center justify-between">
-          {/* Desktop Menu */}
-          <nav className="hidden lg:flex gap-12 text-lg font-medium text-slate-800">
-            <a href="#come-funziona">Come funziona</a>
-            <a href="#per-chi">Per chi</a>
-            <a href="#diverso">Perchè è diverso</a>
-          </nav>
-
-          {/* Mobile */}
-          <button
-  onClick={() => setMenuOpen(true)}
-  className="lg:hidden bg-[#2563FF] text-white px-5 py-3 rounded-xl font-semibold"
->
-  ☰
-</button>
-
-          {/* CTA Desktop */}
-          <div className="mt-10 flex flex-col sm:flex-row items-center lg:items-start gap-4">
-
-  <a
-    href="/mappa"
-    className="bg-[#2563FF] text-white px-10 py-5 rounded-2xl text-lg lg:text-xl font-semibold hover:bg-[#1f56e5] transition"
-  >
-    🗺️ Apri la mappa
-  </a>
-
-  <a
-    href="#cta"
-    className="border border-[#2563FF] text-[#2563FF] px-10 py-5 rounded-2xl text-lg lg:text-xl font-semibold hover:bg-blue-50 transition"
-  >
-    Ricevi aggiornamenti
-  </a>
-
-</div>
-        </div>
-      </header>
-{menuOpen && (
-  <div className="fixed inset-0 z-50 bg-white flex flex-col">
-
-    <div className="flex justify-end p-6">
-      <button
-        onClick={() => setMenuOpen(false)}
-        className="text-4xl font-light"
-      >
-        ×
-      </button>
-    </div>
-
-    <div className="flex-1 flex flex-col items-center justify-center gap-10">
-
-      <a
-        href="#come-funziona"
-        onClick={() => setMenuOpen(false)}
-        className="text-3xl font-semibold"
-      >
-        Come funziona
-      </a>
-
-    
-
-      <a
-        href="#per-chi"
-        onClick={() => setMenuOpen(false)}
-        className="text-3xl font-semibold"
-      >
-        Per chi
-      </a>
-      <a
-        href="#diverso"
-        onClick={() => setMenuOpen(false)}
-        className="text-3xl font-semibold"
-      >
-        Perché è diverso
-      </a>
-
-      <a
-  href="#cta"
-  onClick={() => setMenuOpen(false)}
-  className="bg-[#2563FF] text-white px-8 py-4 rounded-2xl font-semibold hover:bg-[#1f56e5] transition"
->
-  Entra nella lista d'attesa
-</a>
-
-    </div>
-
+     <header className="max-w-7xl mx-auto px-6 lg:px-8 py-6">
+  <div className="flex justify-center">
+    <Image
+      src="/logo.png"
+      alt="Commety"
+      width={220}
+      height={60}
+      priority
+      className="object-contain"
+    />
   </div>
-)}
+</header>
+
       {/* HERO */}
       <section className="max-w-7xl mx-auto px-6 lg:px-8 pb-16">
         <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-12 items-center">
@@ -103,15 +28,8 @@ export default function Home() {
           {/* SINISTRA */}
           <div className="text-center lg:text-left">
 
-            {/* LOGO */}
-            <Image
-              src="/logo.png"
-              alt="Commety"
-              width={420}
-              height={110}
-              priority
-              className="mb-6 mx-auto lg:mx-0 w-[280px] md:w-[340px] lg:w-[420px] h-auto"
-            />
+            
+           
 
             {/* CLAIM */}
             <h1 className="text-5xl md:text-6xl lg:text-[78px] leading-[0.92] font-extrabold text-[#08122E]">
@@ -152,11 +70,15 @@ export default function Home() {
             </div>
 <br></br>
             {/* CTA */}
-            <a
-  href="#cta"
-className="mt-10 mx-auto lg:mx-0 w-fit bg-[#2563FF] text-white px-10 py-5 rounded-2xl text-lg lg:text-xl font-semibold hover:bg-[#1f56e5] transition">
-  Entra nella lista d'attesa
-</a>
+           
+<div className="mt-10 flex justify-center lg:justify-start">
+  <a
+    href="/mappa"
+    className="inline-flex items-center justify-center rounded-2xl bg-[#2563FF] px-10 py-5 text-lg lg:text-xl font-semibold text-white transition hover:bg-[#1f56e5]"
+  >
+    🗺️ Apri la mappa
+  </a>
+</div>
           </div>
 
           {/* DESTRA */}
@@ -366,34 +288,16 @@ className="mt-10 mx-auto lg:mx-0 w-fit bg-[#2563FF] text-white px-10 py-5 rounde
   </h2>
 
   <p className="mt-6 text-xl text-slate-600 max-w-2xl mx-auto">
-    Unisciti ai primi utenti che proveranno Commety e aiutaci a costruire
-    la più grande rete di segnalazioni in tempo reale.
+    Entra in Commety ed esplora la mappa delle segnalazioni in tempo reale
+    create dalla community.
   </p>
 
-  <form
-    action="https://formspree.io/f/xqeveage"
-    method="POST"
-    className="mt-10 max-w-xl mx-auto"
+  <a
+    href="/mappa"
+    className="mt-10 inline-flex items-center justify-center rounded-2xl bg-[#2563FF] px-10 py-5 text-xl font-semibold text-white transition hover:bg-[#1f56e5]"
   >
-    <input
-      type="email"
-      name="email"
-      required
-      placeholder="Inserisci la tua email"
-      className="w-full px-6 py-5 rounded-2xl border border-slate-300 text-lg focus:outline-none focus:ring-2 focus:ring-[#2563FF]"
-    />
-
-    <button
-      type="submit"
-      className="mt-4 w-full bg-[#2563FF] text-white px-10 py-5 rounded-2xl text-xl font-semibold hover:bg-[#1f56e5] transition"
-    >
-      Richiedi accesso anticipato
-    </button>
-  </form>
-
-  <p className="mt-4 text-sm text-slate-500">
-    Nessuno spam. Solo aggiornamenti sul lancio di Commety.
-  </p>
+    🗺️ Apri la mappa
+  </a>
 </section>
 <footer className="bg-[#08122E] text-white mt-20">
   <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
