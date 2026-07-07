@@ -1,59 +1,53 @@
-import { UserContent } from "@/core/domain/UserContent";
-
+import { ImageAnalysis } from "../../../domain/ImageAnalysis";
+import { UserContent } from "../../../domain/UserContent";
 import { ModerationEvidence } from "../ModerationEvidence";
-import { ImageDetector } from "@/core/engines/moderation/detectors/ImageDetector";
-import { TextDetector } from "@/core/engines/moderation/detectors/text/TextDetector";
-import { ModerationAnalyzer } from "./ModerationAnalyzer";
+import { ImageSafetyDetector } from "../detectors/image/safety/ImageSafetyDetector";
+import { LanguageDetector } from "../detectors/text/language/LanguageDetector";
+import { PrivacyDetector } from "../detectors/text/privacy/PrivacyDetector";
+import { SpamDetector } from "../detectors/text/spam/SpamDetector";
 
 /**
- * Analyzer composito che coordina tutti i detector
- * di moderazione disponibili.
- *
- * È l'unico punto di ingresso del framework di analisi
- * della moderazione.
+ * Coordina tutti i detector del Moderation Engine
+ * producendo un'unica collezione di evidenze.
  */
-export class CompositeModerationAnalyzer
-  implements ModerationAnalyzer
-{
-  constructor(
-    private readonly textDetectors: readonly TextDetector[],
-    private readonly imageDetectors: readonly ImageDetector[]
-  ) {}
+export class CompositeModerationAnalyzer {
+  private readonly spamDetector = new SpamDetector();
+
+  private readonly languageDetector =
+    new LanguageDetector();
+
+  private readonly privacyDetector =
+    new PrivacyDetector();
+
+  private readonly imageSafetyDetector =
+    new ImageSafetyDetector();
 
   analizza(
-    userContent: UserContent
+    contenuto: UserContent,
+    immagine?: ImageAnalysis
   ): readonly ModerationEvidence[] {
     const evidenze: ModerationEvidence[] = [];
 
-    this.analizzaTesto(userContent, evidenze);
-    this.analizzaImmagini(userContent, evidenze);
+    evidenze.push(
+      ...this.spamDetector.analizza(contenuto)
+    );
+
+    evidenze.push(
+      ...this.languageDetector.analizza(contenuto)
+    );
+
+    evidenze.push(
+      ...this.privacyDetector.analizza(contenuto)
+    );
+
+    if (immagine) {
+      evidenze.push(
+        ...this.imageSafetyDetector.analizza(
+          immagine
+        )
+      );
+    }
 
     return evidenze;
-  }
-
-  private analizzaTesto(
-    userContent: UserContent,
-    evidenze: ModerationEvidence[]
-  ): void {
-    if (!userContent.hasTesto()) {
-      return;
-    }
-
-    for (const detector of this.textDetectors) {
-      evidenze.push(...detector.analizza(userContent.testo!));
-    }
-  }
-
-  private analizzaImmagini(
-    userContent: UserContent,
-    evidenze: ModerationEvidence[]
-  ): void {
-    if (!userContent.hasImmagini()) {
-      return;
-    }
-
-    for (const detector of this.imageDetectors) {
-      evidenze.push(...detector.analizza(userContent.immagini));
-    }
   }
 }

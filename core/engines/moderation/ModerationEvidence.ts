@@ -43,20 +43,22 @@ export class ModerationEvidence {
 /**
  * Tipologie di evidenze supportate dal Moderation Engine.
  *
- * L'elenco potrà essere esteso senza modificare
- * il funzionamento del motore.
+ * Ogni evidenza descrive un fenomeno specifico del dominio.
+ * I nomi sono volutamente espliciti per evitare ambiguità
+ * tra testo, immagini, video e audio.
  */
 export type ModerationEvidenceType =
-  // Contenuti sensibili
-  | "PORNOGRAFIA"
-  | "NUDITA"
-  | "VIOLENZA"
-  | "SANGUE"
+  // Sicurezza immagini
+  | "IMMAGINE_PORNOGRAFICA"
+  | "IMMAGINE_CON_NUDITA"
+  | "IMMAGINE_VIOLENTA"
+  | "IMMAGINE_CRUENTA"
+  | "ARMI_RILEVATE"
+  | "MINORI_RILEVATI"
+  | "MALTRATTAMENTO_ANIMALI"
 
   // Linguaggio
   | "HATE_SPEECH"
-  | "PAROLACCE"
-  | "BESTEMMIE"
 
   // Spam
   | "SPAM"
@@ -64,23 +66,14 @@ export type ModerationEvidenceType =
   | "PAROLE_RIPETUTE"
   | "EMOJI_RIPETUTE"
   | "MAIUSCOLO_ECCESSIVO"
-  | "URL_PRESENTE"
-  | "EMAIL_PRESENTE"
-  | "NUMERO_TELEFONICO_PRESENTE"
+  | "LINK_MULTIPLI"
+  | "EMAIL_MULTIPLE"
+  | "NUMERI_TELEFONICI_MULTIPLI"
   | "PATTERN_PUBBLICITARIO"
   | "PAROLE_CHIAVE_SPAM"
 
   // Sicurezza
   | "PHISHING"
-
-  // Image Safety
-  | "IMMAGINE_PORNOGRAFICA"
-  | "IMMAGINE_CON_NUDITA"
-  | "MINORI_RILEVATI"
-  | "IMMAGINE_VIOLENTA"
-  | "IMMAGINE_CRUENTA"
-  | "ARMI_RILEVATE"
-  | "MALTRATTAMENTO_ANIMALI"
 
   // Promozione
   | "PUBBLICITA"
@@ -96,21 +89,18 @@ export type ModerationEvidenceType =
   | "IMMAGINE_DUPLICATA"
 
   // Privacy
-  | "VOLTO"
-  | "TARGA"
-  | "DATI_PERSONALI"
-  | "CODICE_FISCALE_PRESENTE"
-  | "IBAN_PRESENTE"
-  | "CARTA_PAGAMENTO_PRESENTE"
+  | "VOLTO_RILEVATO"
+  | "TARGA_RILEVATA"
+  | "DATI_PERSONALI_RILEVATI"
 
   // Coerenza
   | "CONTENUTO_NON_PERTINENTE"
 
-  // Contenuti multimediali
+  // Multimedia
   | "AUDIO_NON_CONFORME"
   | "VIDEO_NON_CONFORME"
 
-  // Generico
+  // Altro
   | "ALTRO";
 
 /**

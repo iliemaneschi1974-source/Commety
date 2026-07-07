@@ -7,8 +7,15 @@ export default defineConfig({
     environment: "node",
 
     include: [
-      "src/**/*.test.ts",
-      "src/**/*.spec.ts",
+      "**/*.test.ts",
+      "**/*.spec.ts",
+    ],
+
+    exclude: [
+      "**/node_modules/**",
+      "**/.next/**",
+      "**/dist/**",
+      "**/coverage/**",
     ],
 
     coverage: {
