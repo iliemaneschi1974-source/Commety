@@ -19,6 +19,7 @@ export class DefaultModerationPolicy implements ModerationPolicy {
       "IMMAGINE_VIOLENTA",
       "IMMAGINE_CRUENTA",
       "HATE_SPEECH",
+      "BESTEMMIE",
       "PHISHING",
     ]);
 

@@ -33,7 +33,7 @@ export class UrlPresenceRule implements SpamRule {
 
     return [
       new ModerationEvidence(
-        "URL_PRESENTE",
+        "LINK_MULTIPLI",
         "Rilevata la presenza di uno o più URL nel contenuto.",
         1.0,
         "TESTO"

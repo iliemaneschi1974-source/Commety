@@ -1,7 +1,4 @@
-import {
-  ModerationEvidence,
-  ModerationEvidenceSource,
-} from "@/core/engines/moderation/ModerationEvidence";
+import { ModerationEvidence } from "@/core/engines/moderation/ModerationEvidence";
 
 import { TextDetector } from "./TextDetector";
 
@@ -28,7 +25,7 @@ export class UrlDetector implements TextDetector {
 
     return [
       new ModerationEvidence(
-        "DATI_PERSONALI",
+        "LINK_MULTIPLI",
         "È stato rilevato almeno un URL nel testo.",
         1,
         "TESTO"

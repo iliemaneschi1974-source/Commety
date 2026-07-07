@@ -38,7 +38,7 @@ export class CodiceFiscalePresenceRule implements SpamRule {
 
     return [
       new ModerationEvidence(
-        "CODICE_FISCALE_PRESENTE",
+        "DATI_PERSONALI_RILEVATI",
         "Rilevata la presenza di un codice fiscale nel contenuto.",
         1.0,
         "TESTO"

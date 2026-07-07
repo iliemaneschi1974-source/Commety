@@ -1,6 +1,5 @@
 import {
   ModerationEvidence,
-  ModerationEvidenceSource,
 } from "@/core/engines/moderation/ModerationEvidence";
 
 import { TextDetector } from "./TextDetector";
@@ -28,7 +27,7 @@ export class EmailDetector implements TextDetector {
 
     return [
       new ModerationEvidence(
-        "DATI_PERSONALI",
+        "DATI_PERSONALI_RILEVATI",
         "È stato rilevato almeno un indirizzo email nel testo.",
         1,
         "TESTO"

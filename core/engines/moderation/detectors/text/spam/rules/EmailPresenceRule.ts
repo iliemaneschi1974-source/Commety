@@ -33,7 +33,7 @@ export class EmailPresenceRule implements SpamRule {
 
     return [
       new ModerationEvidence(
-        "EMAIL_PRESENTE",
+        "DATI_PERSONALI_RILEVATI",
         "Rilevata la presenza di uno o più indirizzi email nel contenuto.",
         1.0,
         "TESTO"

@@ -36,7 +36,7 @@ export class IbanPresenceRule implements SpamRule {
 
     return [
       new ModerationEvidence(
-        "IBAN_PRESENTE",
+        "DATI_PERSONALI_RILEVATI",
         "Rilevata la presenza di un codice IBAN nel contenuto.",
         1.0,
         "TESTO"

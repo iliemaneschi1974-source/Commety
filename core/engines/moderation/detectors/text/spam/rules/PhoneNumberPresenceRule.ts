@@ -33,7 +33,7 @@ export class PhoneNumberPresenceRule implements SpamRule {
 
     return [
       new ModerationEvidence(
-        "NUMERO_TELEFONICO_PRESENTE",
+        "DATI_PERSONALI_RILEVATI",
         "Rilevata la presenza di uno o più numeri di telefono nel contenuto.",
         1.0,
         "TESTO"

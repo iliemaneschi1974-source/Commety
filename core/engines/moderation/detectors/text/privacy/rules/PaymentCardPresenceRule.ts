@@ -41,7 +41,7 @@ export class PaymentCardPresenceRule implements SpamRule {
 
     return [
       new ModerationEvidence(
-        "CARTA_PAGAMENTO_PRESENTE",
+        "DATI_PERSONALI_RILEVATI",
         "Rilevata la presenza di un numero di carta di pagamento nel contenuto.",
         1.0,
         "TESTO"

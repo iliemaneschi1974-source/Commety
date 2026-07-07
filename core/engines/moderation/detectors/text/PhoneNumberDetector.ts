@@ -1,7 +1,4 @@
-import {
-  ModerationEvidence,
-  ModerationEvidenceSource,
-} from "@/core/engines/moderation/ModerationEvidence";
+import { ModerationEvidence } from "@/core/engines/moderation/ModerationEvidence";
 
 import { TextDetector } from "./TextDetector";
 
@@ -28,7 +25,7 @@ export class PhoneNumberDetector implements TextDetector {
 
     return [
       new ModerationEvidence(
-        "DATI_PERSONALI",
+        "DATI_PERSONALI_RILEVATI",
         "È stato rilevato almeno un numero di telefono nel testo.",
         1,
         "TESTO"

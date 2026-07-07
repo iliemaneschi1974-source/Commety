@@ -59,6 +59,8 @@ export type ModerationEvidenceType =
 
   // Linguaggio
   | "HATE_SPEECH"
+  | "BESTEMMIE"
+  | "PAROLACCE"
 
   // Spam
   | "SPAM"
@@ -96,11 +98,11 @@ export type ModerationEvidenceType =
   // Coerenza
   | "CONTENUTO_NON_PERTINENTE"
 
-  // Multimedia
+  // Contenuti multimediali
   | "AUDIO_NON_CONFORME"
   | "VIDEO_NON_CONFORME"
 
-  // Altro
+  // Generico
   | "ALTRO";
 
 /**
