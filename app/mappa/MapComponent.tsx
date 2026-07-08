@@ -30,10 +30,8 @@ import ReportsLayer from "@/components/Map/ReportsLayer";
 import UserLocation from "@/components/Map/UserLocation";
 
 import { useMapContext } from "@/contexts/MapContext";
-import {
-  createReport,
-  getReportById,
-} from "@/services/reports";
+import { getReportById } from "@/services/reports";
+import { submitReport } from "@/services/reportSubmission";
 
 // Fix marker Leaflet + Next.js
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -147,7 +145,7 @@ const reportId = sharedReportId;
     console.log("selectedPosition:", selectedPosition);
     console.log("userPosition:", userPosition);
 
-    await createReport({
+    await submitReport({
       ...data,
 
       lat: position[0],
