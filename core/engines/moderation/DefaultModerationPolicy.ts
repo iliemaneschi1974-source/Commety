@@ -11,36 +11,74 @@ import { ModerationPolicy } from "./ModerationPolicy";
  * Interpreta le evidenze prodotte dagli analyzer e determina
  * la decisione finale del Moderation Engine.
  */
-export class DefaultModerationPolicy implements ModerationPolicy {
+export class DefaultModerationPolicy
+  implements ModerationPolicy
+{
+  /**
+   * Violazioni che comportano il rifiuto
+   * immediato del contenuto.
+   */
   private static readonly VIOLAZIONI_BLOCCANTI =
     new Set<ModerationEvidenceType>([
+      // Sicurezza immagini
       "IMMAGINE_PORNOGRAFICA",
       "IMMAGINE_CON_NUDITA",
       "IMMAGINE_VIOLENTA",
       "IMMAGINE_CRUENTA",
+      // Qualità immagini
+"WATERMARK",
+"SCREENSHOT",
+"MEME",
+"IMMAGINE_AI",
+"IMMAGINE_DUPLICATA",
+"CONTENUTO_NON_PERTINENTE",
+
+      // Linguaggio
       "HATE_SPEECH",
       "BESTEMMIE",
+      "PAROLACCE",
+      // Qualità del testo
+"TESTO_NON_SIGNIFICATIVO",
+      // Spam
+      "SPAM",
+      "CARATTERI_RIPETUTI",
+      "PAROLE_RIPETUTE",
+      "EMOJI_RIPETUTE",
+      "MAIUSCOLO_ECCESSIVO",
+      "LINK_MULTIPLI",
+      "EMAIL_MULTIPLE",
+      "NUMERI_TELEFONICI_MULTIPLI",
+      "PATTERN_PUBBLICITARIO",
+      "PAROLE_CHIAVE_SPAM",
+      "PUBBLICITA",
+
+      // Privacy
+      "DATI_PERSONALI_RILEVATI",
+
+      // Sicurezza
       "PHISHING",
     ]);
 
+  /**
+   * Violazioni che richiedono una revisione
+   * manuale da parte della piattaforma.
+   */
   private static readonly VIOLAZIONI_REVISIONE =
     new Set<ModerationEvidenceType>([
       "VOLTO_RILEVATO",
       "TARGA_RILEVATA",
-      "DATI_PERSONALI_RILEVATI",
       "COPYRIGHT",
     ]);
 
+  /**
+   * Violazioni che limitano il contenuto.
+   *
+   * Attualmente la Policy v1.0 non utilizza
+   * questa categoria, che rimane disponibile
+   * per future evoluzioni del dominio.
+   */
   private static readonly VIOLAZIONI_LIMITANTI =
-    new Set<ModerationEvidenceType>([
-      "WATERMARK",
-      "SCREENSHOT",
-      "MEME",
-      "PUBBLICITA",
-      "IMMAGINE_AI",
-      "IMMAGINE_DUPLICATA",
-      "CONTENUTO_NON_PERTINENTE",
-    ]);
+    new Set<ModerationEvidenceType>();
 
   valuta(
     evidenze: readonly ModerationEvidence[]

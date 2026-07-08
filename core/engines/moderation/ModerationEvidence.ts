@@ -62,6 +62,12 @@ export type ModerationEvidenceType =
   | "BESTEMMIE"
   | "PAROLACCE"
 
+  // Qualità testo
+| "TESTO_NON_SIGNIFICATIVO"
+| "SOLO_EMOJI"
+| "SOLO_PUNTEGGIATURA"
+| "TESTO_TROPPO_BREVE"
+
   // Spam
   | "SPAM"
   | "CARATTERI_RIPETUTI"

@@ -33,23 +33,23 @@ describe("DefaultModerationPolicy", () => {
     ).toBe(true);
   });
 
-  it("richiede revisione manuale in presenza di dati personali", () => {
+  it("rifiuta in presenza di dati personali", () => {
     expect(
       policy
         .valuta([
           evidenza("DATI_PERSONALI_RILEVATI"),
         ])
-        .isRevisioneManuale()
+        .isRifiutato()
     ).toBe(true);
   });
 
-  it("limita il contenuto in presenza di un watermark", () => {
+  it("rifiuta il contenuto in presenza di un watermark", () => {
     expect(
       policy
         .valuta([
           evidenza("WATERMARK"),
         ])
-        .isLimitato()
+        .isRifiutato()
     ).toBe(true);
   });
 
@@ -65,12 +65,42 @@ describe("DefaultModerationPolicy", () => {
     ).toBe(true);
   });
 
-  it("dà priorità alla revisione rispetto alla limitazione", () => {
+  it("rifiuta quando sono presenti più violazioni bloccanti", () => {
     expect(
       policy
         .valuta([
           evidenza("WATERMARK"),
           evidenza("DATI_PERSONALI_RILEVATI"),
+        ])
+        .isRifiutato()
+    ).toBe(true);
+  });
+
+  it("richiede revisione manuale per un volto rilevato", () => {
+    expect(
+      policy
+        .valuta([
+          evidenza("VOLTO_RILEVATO"),
+        ])
+        .isRevisioneManuale()
+    ).toBe(true);
+  });
+
+  it("richiede revisione manuale per una targa rilevata", () => {
+    expect(
+      policy
+        .valuta([
+          evidenza("TARGA_RILEVATA"),
+        ])
+        .isRevisioneManuale()
+    ).toBe(true);
+  });
+
+  it("richiede revisione manuale per un possibile copyright", () => {
+    expect(
+      policy
+        .valuta([
+          evidenza("COPYRIGHT"),
         ])
         .isRevisioneManuale()
     ).toBe(true);

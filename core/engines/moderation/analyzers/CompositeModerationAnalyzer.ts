@@ -4,6 +4,7 @@ import { ModerationEvidence } from "../ModerationEvidence";
 import { ImageSafetyDetector } from "../detectors/image/safety/ImageSafetyDetector";
 import { LanguageDetector } from "../detectors/text/language/LanguageDetector";
 import { PrivacyDetector } from "../detectors/text/privacy/PrivacyDetector";
+import { QualityDetector } from "../detectors/text/quality/QualityDetector";
 import { SpamDetector } from "../detectors/text/spam/SpamDetector";
 
 /**
@@ -11,13 +12,17 @@ import { SpamDetector } from "../detectors/text/spam/SpamDetector";
  * producendo un'unica collezione di evidenze.
  */
 export class CompositeModerationAnalyzer {
-  private readonly spamDetector = new SpamDetector();
+  private readonly spamDetector =
+    new SpamDetector();
 
   private readonly languageDetector =
     new LanguageDetector();
 
   private readonly privacyDetector =
     new PrivacyDetector();
+
+  private readonly qualityDetector =
+    new QualityDetector();
 
   private readonly imageSafetyDetector =
     new ImageSafetyDetector();
@@ -38,6 +43,10 @@ export class CompositeModerationAnalyzer {
 
     evidenze.push(
       ...this.privacyDetector.analizza(contenuto)
+    );
+
+    evidenze.push(
+      ...this.qualityDetector.analizza(contenuto)
     );
 
     if (immagine) {
