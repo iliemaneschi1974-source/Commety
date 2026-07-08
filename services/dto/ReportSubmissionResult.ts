@@ -14,10 +14,12 @@
  * ============================================================================
  */
 
+import { ModerationMessage } from "@/services/moderation/ModerationMessage";
+
 export class ReportSubmissionResult {
   private constructor(
     public readonly success: boolean,
-    public readonly message?: string
+    public readonly moderationMessage?: ModerationMessage
   ) {}
 
   /**
@@ -31,11 +33,11 @@ export class ReportSubmissionResult {
    * La pubblicazione non è stata completata.
    */
   static failure(
-    message: string
+    moderationMessage: ModerationMessage
   ): ReportSubmissionResult {
     return new ReportSubmissionResult(
       false,
-      message
+      moderationMessage
     );
   }
 }

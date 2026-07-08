@@ -1,24 +1,30 @@
 import { describe, expect, it } from "vitest";
 
 import { ReportSubmissionResult } from "../dto/ReportSubmissionResult";
+import { ModerationMessage } from "../moderation/ModerationMessage";
 
 describe("ReportSubmissionResult", () => {
   it("crea un risultato di successo", () => {
     const result = ReportSubmissionResult.success();
 
     expect(result.success).toBe(true);
-    expect(result.message).toBeUndefined();
+    expect(result.moderationMessage).toBeUndefined();
   });
 
   it("crea un risultato di errore", () => {
+    const message = new ModerationMessage(
+      "Errore di moderazione",
+      "La segnalazione contiene dati non consentiti."
+    );
+
     const result =
       ReportSubmissionResult.failure(
-        "Errore di moderazione"
+        message
       );
 
     expect(result.success).toBe(false);
-    expect(result.message).toBe(
-      "Errore di moderazione"
+    expect(result.moderationMessage).toBe(
+      message
     );
   });
 });

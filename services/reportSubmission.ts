@@ -2,6 +2,7 @@ import { UserContent } from "@/core/domain/UserContent";
 
 import { core } from "@/services/core";
 import { ReportSubmissionResult } from "@/services/dto/ReportSubmissionResult";
+import { ModerationMessageResolver } from "@/services/moderation/ModerationMessageResolver";
 import { createReport } from "@/services/reports";
 
 import { CreateReportInput } from "@/types/report";
@@ -14,6 +15,9 @@ import { CreateReportInput } from "@/types/report";
  * di orchestrazione dell'intero flusso
  * di pubblicazione.
  */
+const moderationMessageResolver =
+  new ModerationMessageResolver();
+
 export async function submitReport(
   input: CreateReportInput
 ): Promise<ReportSubmissionResult> {
@@ -22,20 +26,36 @@ export async function submitReport(
     []
   );
 
-  const decisione = core.moderate(contenuto);
+  const risultato =
+    core.moderate(contenuto);
 
   console.info(
     "[Moderation]",
-    decisione.value
+    risultato.decision.value
   );
 
-  if (decisione.isRifiutato()) {
+  if (risultato.isRejected()) {
+    console.info(
+  "[Moderation Evidences]",
+  risultato.evidences.map(
+    (evidenza) => evidenza.tipo
+  )
+);
+    const message =
+      moderationMessageResolver.resolve(
+        risultato.evidences
+      );
+
+
     console.warn(
-      "[Moderation] Segnalazione rifiutata."
+      "[Moderation]",
+      message.title,
+      "-",
+      message.description
     );
 
     return ReportSubmissionResult.failure(
-      "La segnalazione non rispetta le regole della community."
+      message
     );
   }
 

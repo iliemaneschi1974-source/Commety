@@ -1,6 +1,6 @@
 import { ImageAnalysis } from "../../domain/ImageAnalysis";
 import { UserContent } from "../../domain/UserContent";
-import { ModerationDecision } from "./ModerationDecision";
+import { ModerationResult } from "./ModerationResult";
 
 /**
  * Definisce il contratto del Moderation Engine.
@@ -12,7 +12,7 @@ import { ModerationDecision } from "./ModerationDecision";
  * - eseguire gli analyzer;
  * - raccogliere le evidenze;
  * - applicare la ModerationPolicy;
- * - restituire la decisione finale.
+ * - restituire il risultato completo della moderazione.
  */
 export interface ModerationEngine {
   /**
@@ -20,10 +20,10 @@ export interface ModerationEngine {
    *
    * @param contenuto Contenuto da analizzare.
    * @param immagine Eventuale analisi dell'immagine associata.
-   * @returns Decisione finale della moderazione.
+   * @returns Risultato completo della moderazione.
    */
   modera(
     contenuto: UserContent,
     immagine?: ImageAnalysis
-  ): ModerationDecision;
+  ): ModerationResult;
 }

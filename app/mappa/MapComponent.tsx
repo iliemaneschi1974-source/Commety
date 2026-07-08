@@ -1,5 +1,6 @@
 "use client";
 import { useAuth } from "@/contexts/AuthContext";
+import MessageDialog from "@/components/ui/MessageDialog";
 import { Report } from "@/types/report";
 import ReportBottomSheet from "@/components/Map/ReportBottomSheet";
 import {
@@ -73,7 +74,14 @@ const { user } = useAuth();
 
 const [sheetOpen, setSheetOpen] =
   useState(false);
+const [messageDialogOpen, setMessageDialogOpen] =
+  useState(false);
 
+const [messageDialogTitle, setMessageDialogTitle] =
+  useState("");
+
+const [messageDialogDescription, setMessageDialogDescription] =
+  useState("");
 useEffect(() => {
   if (!navigator.geolocation) {
     console.warn("Geolocalizzazione non supportata");
@@ -135,32 +143,61 @@ const reportId = sharedReportId;
   openSharedReport();
 }, [sharedReportId]);
 
- const handleCreateReport = async (
+const handleCreateReport = async (
   data: ReportFormData
 ) => {
   try {
     const position =
       selectedPosition ?? userPosition;
 
-    console.log("selectedPosition:", selectedPosition);
-    console.log("userPosition:", userPosition);
+    console.log(
+      "selectedPosition:",
+      selectedPosition
+    );
 
-    await submitReport({
-      ...data,
+    console.log(
+      "userPosition:",
+      userPosition
+    );
 
-      lat: position[0],
-      lng: position[1],
+    const result =
+      await submitReport({
+        ...data,
 
-      userId: user?.uid,
+        lat: position[0],
+        lng: position[1],
 
-      username: user?.profile.username,
+        userId: user?.uid,
 
-      displayName:
-        user?.profile.displayName,
+        username:
+          user?.profile.username,
 
-      avatarUrl:
-        user?.profile.avatarUrl,
-    });
+        displayName:
+          user?.profile.displayName,
+
+        avatarUrl:
+          user?.profile.avatarUrl,
+      });
+      
+
+    if (!result.success) {
+      
+
+
+
+
+      setMessageDialogTitle(
+        result.moderationMessage!.title
+      );
+
+      setMessageDialogDescription(
+        result.moderationMessage!.description
+      );
+
+      setMessageDialogOpen(true);
+
+      return;
+    }
 
     setSelectedPosition(null);
 
@@ -236,6 +273,14 @@ const reportId = sharedReportId;
       }, 350);
     }
   }}
+/>
+<MessageDialog
+  open={messageDialogOpen}
+  title={messageDialogTitle}
+  message={messageDialogDescription}
+  onClose={() =>
+    setMessageDialogOpen(false)
+  }
 />
     </main>
   );

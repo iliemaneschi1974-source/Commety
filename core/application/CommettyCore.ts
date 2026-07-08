@@ -29,7 +29,7 @@ import { DefaultProtectionEngine } from "../engines/protection/DefaultProtection
 import type { ModerationEngine } from "../engines/moderation/ModerationEngine";
 import { DefaultModerationEngine } from "../engines/moderation/DefaultModerationEngine";
 import { DefaultModerationPolicy } from "../engines/moderation/DefaultModerationPolicy";
-import { ModerationDecision } from "../engines/moderation/ModerationDecision";
+import { ModerationResult } from "../engines/moderation/ModerationResult";
 
 export class CommettyCore {
   constructor(
@@ -58,7 +58,7 @@ export class CommettyCore {
   moderate(
     contenuto: UserContent,
     immagine?: ImageAnalysis
-  ): ModerationDecision {
+  ): ModerationResult {
     return this.moderationEngine.modera(
       contenuto,
       immagine

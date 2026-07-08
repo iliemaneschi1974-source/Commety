@@ -10,21 +10,23 @@ const engine = new DefaultModerationEngine(
 
 describe("DefaultModerationEngine", () => {
   it("approva un contenuto pulito", () => {
-    const decision = engine.modera(
+    const result = engine.modera(
       new UserContent(
         "Traffico rallentato sulla Tangenziale.",
         []
       )
     );
 
-    expect(decision.isApprovato()).toBe(true);
+    expect(result.isApproved()).toBe(true);
+    expect(result.evidences).toHaveLength(0);
   });
 
   it("approva un contenuto vuoto", () => {
-    const decision = engine.modera(
+    const result = engine.modera(
       new UserContent()
     );
 
-    expect(decision.isApprovato()).toBe(true);
+    expect(result.isApproved()).toBe(true);
+    expect(result.evidences).toHaveLength(0);
   });
 });
