@@ -45,29 +45,39 @@ export async function createReport(
 
   const { images, ...reportData } = input;
 
+  const sanitizedReportData =
+    Object.fromEntries(
+      Object.entries(reportData).filter(
+        ([, value]) => value !== undefined
+      )
+    );
+
   const {
     expiresAt,
     maxExpiresAt,
   } = calculateReportExpiration(input.type);
 
-  const reportRef = await addDoc(reportsCollection, {
-    ...reportData,
+  const reportRef = await addDoc(
+    reportsCollection,
+    {
+      ...sanitizedReportData,
 
-    address: location.address,
-    city: location.city,
+      address: location.address,
+      city: location.city,
 
-    status: "ACTIVE",
-    confirmations: 0,
-    commentsCount: 0,
-    images: [],
+      status: "ACTIVE",
+      confirmations: 0,
+      commentsCount: 0,
+      images: [],
 
-    createdAt: serverTimestamp(),
-    updatedAt: serverTimestamp(),
-    lastActivityAt: serverTimestamp(),
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+      lastActivityAt: serverTimestamp(),
 
-    expiresAt,
-    maxExpiresAt,
-  });
+      expiresAt,
+      maxExpiresAt,
+    }
+  );
 
   console.log("✅ Report creato:", reportRef.id);
 
