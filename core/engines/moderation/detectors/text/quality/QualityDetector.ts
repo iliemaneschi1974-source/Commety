@@ -1,7 +1,10 @@
 import { UserContent } from "../../../../../domain/UserContent";
 import { ModerationEvidence } from "../../../ModerationEvidence";
 
+import { EmojiOnlyRule } from "./rules/EmojiOnlyRule";
 import { GibberishRule } from "./rules/GibberishRule";
+import { PunctuationOnlyRule } from "./rules/PunctuationOnlyRule";
+import { TooShortTextRule } from "./rules/TooShortTextRule";
 import { QualityRule } from "./QualityRule";
 
 /**
@@ -10,6 +13,9 @@ import { QualityRule } from "./QualityRule";
  */
 export class QualityDetector {
   private readonly rules: readonly QualityRule[] = [
+    new TooShortTextRule(),
+    new PunctuationOnlyRule(),
+    new EmojiOnlyRule(),
     new GibberishRule(),
   ];
 

@@ -37,8 +37,11 @@ export class DefaultModerationPolicy
       "HATE_SPEECH",
       "BESTEMMIE",
       "PAROLACCE",
-      // Qualità del testo
+     // Qualità del testo
 "TESTO_NON_SIGNIFICATIVO",
+"SOLO_EMOJI",
+"SOLO_PUNTEGGIATURA",
+"TESTO_TROPPO_BREVE",
       // Spam
       "SPAM",
       "CARATTERI_RIPETUTI",
