@@ -22,7 +22,8 @@ export async function submitReport(
   input: CreateReportInput
 ): Promise<ReportSubmissionResult> {
   const contenuto = new UserContent(
-    `${input.title}\n${input.description}`,
+    input.title,
+    input.description,
     []
   );
 
@@ -36,16 +37,16 @@ export async function submitReport(
 
   if (risultato.isRejected()) {
     console.info(
-  "[Moderation Evidences]",
-  risultato.evidences.map(
-    (evidenza) => evidenza.tipo
-  )
-);
+      "[Moderation Evidences]",
+      risultato.evidences.map(
+        (evidenza) => evidenza.tipo
+      )
+    );
+
     const message =
       moderationMessageResolver.resolve(
         risultato.evidences
       );
-
 
     console.warn(
       "[Moderation]",

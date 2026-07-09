@@ -39,10 +39,10 @@ describe("GibberishRule", () => {
     expect(evidenze).toHaveLength(0);
   });
 
-  it("ignora una sola parola", () => {
+  it("ignora una parola significativa", () => {
     const evidenze = rule.analizza(
       new UserContent(
-        "sjjkdkjdkd",
+        "Incidente",
         []
       )
     );

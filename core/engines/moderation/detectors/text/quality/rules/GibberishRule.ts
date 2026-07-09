@@ -1,18 +1,20 @@
 import { UserContent } from "../../../../../../domain/UserContent";
+import { DefaultTextQualityScorer } from "../../../../../../shared/text/DefaultTextQualityScorer";
 import { ModerationEvidence } from "../../../../ModerationEvidence";
 import { QualityRule } from "../QualityRule";
 
 /**
- * Rileva testi palesemente privi di significato.
+ * Rileva testi privi di significato.
  *
- * La regola utilizza semplici euristiche
- * deterministiche, senza ricorrere ad AI.
+ * La regola non implementa alcun algoritmo
+ * di analisi: delega completamente la
+ * valutazione al Text Quality Engine.
  */
 export class GibberishRule
   implements QualityRule
 {
-  private static readonly VOWELS =
-    /[aeiouàèéìòóù]/i;
+  private readonly scorer =
+    new DefaultTextQualityScorer();
 
   analizza(
     contenuto: UserContent
@@ -21,22 +23,12 @@ export class GibberishRule
       return [];
     }
 
-    const parole = contenuto.testo!
-      .trim()
-      .split(/\s+/)
-      .filter((p) => p.length >= 5);
-
-    if (parole.length < 2) {
-      return [];
-    }
-
-    const tutteSenzaVocali =
-      parole.every(
-        (parola) =>
-          !GibberishRule.VOWELS.test(parola)
+    const score =
+      this.scorer.score(
+        contenuto.testo!
       );
 
-    if (!tutteSenzaVocali) {
+    if (!score.isPoor()) {
       return [];
     }
 
