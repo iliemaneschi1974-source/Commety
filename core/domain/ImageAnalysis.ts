@@ -76,6 +76,24 @@ export class ImageAnalysis {
     public readonly meme: number = 0,
 
     /**
+     * Probabilità che siano presenti
+     * uno o più volti riconoscibili.
+     */
+    public readonly volti: number = 0,
+
+    /**
+     * Probabilità che siano presenti
+     * una o più targhe di veicoli.
+     */
+    public readonly targhe: number = 0,
+
+    /**
+     * Probabilità che siano presenti
+     * documenti contenenti dati personali.
+     */
+    public readonly documenti: number = 0,
+
+    /**
      * Descrizione testuale sintetica
      * dell'immagine prodotta dal provider.
      *

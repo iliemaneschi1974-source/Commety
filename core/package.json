@@ -1,0 +1,9 @@
+{
+  "name": "@commety/core",
+  "version": "1.0.0",
+  "description": "Commetty Core Domain Library",
+  "private": true,
+  "main": "index.ts",
+  "types": "index.ts",
+  "license": "UNLICENSED"
+}
