@@ -34,9 +34,9 @@ export function useUserReports() {
 
   const gallery = useMemo<ProfileGalleryItem[]>(() => {
     return reports.flatMap((report) =>
-      report.images.map((imageUrl, index) => ({
+      report.images.map((image, index) => ({
         id: `${report.id}-${index}`,
-        imageUrl,
+        imageUrl: image.url,
         reportId: report.id,
       }))
     );
