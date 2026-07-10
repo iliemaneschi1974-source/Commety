@@ -6,6 +6,7 @@ import {
 } from "firebase/storage";
 
 import { storage } from "@/lib/firebase";
+import { ReportImageReference } from "@/types/report";
 
 /**
  * Carica una singola immagine nello Storage.
@@ -13,29 +14,45 @@ import { storage } from "@/lib/firebase";
 export async function uploadImage(
   file: File,
   reportId: string
-): Promise<string> {
+): Promise<ReportImageReference> {
+
   const filename =
     `${crypto.randomUUID()}.jpg`;
 
+  const storagePath =
+    `reports/${reportId}/${filename}`;
+
   const storageRef = ref(
     storage,
-    `reports/${reportId}/${filename}`
+    storagePath
   );
 
   await uploadBytes(storageRef, file);
 
-  return getDownloadURL(storageRef);
+  const url =
+    await getDownloadURL(storageRef);
+
+  return {
+    storagePath,
+    url,
+  };
+
 }
 
 /**
  * Elimina una foto dallo Storage.
  */
 export async function deleteImage(
-  imageUrl: string
+  image: ReportImageReference
 ): Promise<void> {
-  const imageRef = ref(storage, imageUrl);
+
+  const imageRef = ref(
+    storage,
+    image.storagePath
+  );
 
   await deleteObject(imageRef);
+
 }
 
 /**
@@ -44,29 +61,33 @@ export async function deleteImage(
 export async function uploadImages(
   files: File[],
   reportId: string
-): Promise<string[]> {
+): Promise<ReportImageReference[]> {
+
   return Promise.all(
     files.map((file) =>
       uploadImage(file, reportId)
     )
   );
+
 }
 
 /**
- * Elimina più immagini dallo Storage.
+ * Elimina più immagini.
  *
  * Se l'elenco è vuoto termina immediatamente.
  */
 export async function deleteImages(
-  imageUrls: string[]
+  images: ReportImageReference[]
 ): Promise<void> {
-  if (imageUrls.length === 0) {
+
+  if (images.length === 0) {
     return;
   }
 
   await Promise.all(
-    imageUrls.map((imageUrl) =>
-      deleteImage(imageUrl)
+    images.map((image) =>
+      deleteImage(image)
     )
   );
+
 }

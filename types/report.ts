@@ -13,6 +13,29 @@ export type ReportStatus =
   | "EXPIRED"
   | "HIDDEN";
 
+/**
+ * Riferimento ad un'immagine
+ * archiviata su Firebase Storage.
+ */
+export interface ReportImageReference {
+
+  /**
+   * Percorso dell'oggetto
+   * all'interno di Firebase Storage.
+   *
+   * Esempio:
+   * reports/{reportId}/{imageId}.jpg
+   */
+  storagePath: string;
+
+  /**
+   * URL pubblico utilizzato
+   * dal frontend per la visualizzazione.
+   */
+  url: string;
+
+}
+
 export interface Report {
   id: string;
 
@@ -63,10 +86,9 @@ export interface Report {
   avatarUrl?: string;
 
   /**
-   * URL pubblici delle immagini salvate
-   * su Firebase Storage.
+   * Immagini associate alla segnalazione.
    */
-  images: string[];
+  images: ReportImageReference[];
 
   confirmations: number;
 

@@ -24,6 +24,7 @@ import { uploadImages } from "@/services/storage";
 import {
   CreateReportInput,
   Report,
+  ReportImageReference,
 } from "@/types/report";
 
 const reportsCollection = collection(db, "reports");
@@ -81,28 +82,37 @@ export async function createReport(
 
   console.log("✅ Report creato:", reportRef.id);
 
-  let imageUrls: string[] = [];
+  let uploadedImages: ReportImageReference[] =
+    [];
 
   if (images.length > 0) {
-    console.log("⬆️ Inizio upload immagini...");
-
-    imageUrls = await uploadImages(
-      images,
-      reportRef.id
+    console.log(
+      "⬆️ Inizio upload immagini..."
     );
 
-    console.log("✅ URL restituiti:", imageUrls);
+    uploadedImages =
+      await uploadImages(
+        images,
+        reportRef.id
+      );
+
+    console.log(
+      "✅ Immagini caricate:",
+      uploadedImages
+    );
 
     await updateDoc(reportRef, {
-      images: imageUrls,
+      images: uploadedImages,
       updatedAt: serverTimestamp(),
     });
 
     console.log(
-      "✅ Firestore aggiornato con gli URL"
+      "✅ Firestore aggiornato con i riferimenti delle immagini"
     );
   } else {
-    console.warn("⚠️ Nessuna immagine ricevuta");
+    console.warn(
+      "⚠️ Nessuna immagine ricevuta"
+    );
   }
 
   if (input.userId) {
@@ -183,15 +193,14 @@ export function listenReports(
   return onSnapshot(
     q,
     (snapshot: QuerySnapshot<DocumentData>) => {
-      const reports: Report[] = snapshot.docs.map(
-        (document) => ({
+      const reports: Report[] =
+        snapshot.docs.map((document) => ({
           id: document.id,
           ...(document.data() as Omit<
             Report,
             "id"
           >),
-        })
-      );
+        }));
 
       callback(reports);
     },
@@ -221,15 +230,14 @@ export function listenUserReports(
   return onSnapshot(
     q,
     (snapshot: QuerySnapshot<DocumentData>) => {
-      const reports: Report[] = snapshot.docs.map(
-        (document) => ({
+      const reports: Report[] =
+        snapshot.docs.map((document) => ({
           id: document.id,
           ...(document.data() as Omit<
             Report,
             "id"
           >),
-        })
-      );
+        }));
 
       callback(reports);
     },

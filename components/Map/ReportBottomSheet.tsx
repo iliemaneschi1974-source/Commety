@@ -94,7 +94,7 @@ async function handleShare() {
 
   <div className="mt-4">
     <img
-  src={report.images[0]}
+  src={report.images[0].url}
   onClick={() => {
     setCurrentImage(0);
     setViewerOpen(true);
@@ -123,7 +123,7 @@ async function handleShare() {
       {report.images.map((image, index) => (
         <img
           key={index}
-          src={image}
+          src={image.url}
           onClick={() => {
     setCurrentImage(index);
     setViewerOpen(true);
@@ -251,7 +251,7 @@ async function handleShare() {
 </div>
 
 <ImageViewer
-  images={report.images}
+  images={report.images.map((image) => image.url)}
   currentIndex={currentImage}
   open={viewerOpen}
   onClose={() => setViewerOpen(false)}
