@@ -1,0 +1,1 @@
+{"version":3,"file":"ReputationEngine.d.ts","sourceRoot":"","sources":["../../../engines/reputation/ReputationEngine.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,iBAAiB,EAAE,MAAM,qBAAqB,CAAC;AACxD,OAAO,EAAE,gBAAgB,EAAE,MAAM,oBAAoB,CAAC;AAEtD;;;;;GAKG;AACH,MAAM,WAAW,gBAAgB;IAC/B;;;OAGG;IACH,MAAM,CACJ,OAAO,EAAE,SAAS,gBAAgB,EAAE,GACnC,iBAAiB,CAAC;CACtB"}

@@ -1,4 +1,4 @@
-import { ModerationEvidence } from "@/core/engines/moderation/ModerationEvidence";
+import { ModerationEvidence } from "../../ModerationEvidence";
 
 import { TextDetector } from "./TextDetector";
 

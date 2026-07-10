@@ -1,6 +1,6 @@
 import {
   ModerationEvidence,
-} from "@/core/engines/moderation/ModerationEvidence";
+} from "../../ModerationEvidence";
 
 import { TextDetector } from "./TextDetector";
 

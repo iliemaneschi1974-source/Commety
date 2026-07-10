@@ -1,0 +1,1 @@
+{"version":3,"file":"Incident.d.ts","sourceRoot":"","sources":["../../domain/Incident.ts"],"names":[],"mappings":"AAAA;;;;;;;;;;;;;GAaG;AAEH,MAAM,MAAM,cAAc,GACtB,YAAY,GACZ,UAAU,GACV,UAAU,GACV,WAAW,GACX,QAAQ,GACR,WAAW,GACX,UAAU,GACV,UAAU,CAAC;AAEf,MAAM,WAAW,QAAQ;IAEvB;;OAEG;IACH,QAAQ,CAAC,EAAE,EAAE,MAAM,CAAC;IAEpB;;OAEG;IACH,QAAQ,CAAC,MAAM,EAAE,cAAc,CAAC;CAEjC"}

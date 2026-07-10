@@ -1,4 +1,4 @@
-import { UserContent } from "@/core/domain/UserContent";
+import { UserContent } from "../../../domain/UserContent";
 
 import { ModerationEvidence } from "../ModerationEvidence";
 

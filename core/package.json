@@ -3,7 +3,13 @@
   "version": "1.0.0",
   "description": "Commetty Core Domain Library",
   "private": true,
-  "main": "index.ts",
-  "types": "index.ts",
-  "license": "UNLICENSED"
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  },
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "typescript": "^5"
+  }
 }

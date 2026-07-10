@@ -1,0 +1,1 @@
+{"version":3,"file":"VowelRatioEvaluator.d.ts","sourceRoot":"","sources":["../../../../shared/text/evaluators/VowelRatioEvaluator.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,uBAAuB,EAAE,MAAM,4BAA4B,CAAC;AACrE,OAAO,EAAE,oBAAoB,EAAE,MAAM,yBAAyB,CAAC;AAE/D;;;;;;;;;;;GAWG;AACH,qBAAa,mBACX,YAAW,oBAAoB;IAE/B,QAAQ,CACN,KAAK,EAAE,MAAM,GACZ,uBAAuB;CAyC3B"}
