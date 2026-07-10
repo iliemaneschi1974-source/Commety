@@ -1,13 +1,14 @@
 import * as logger from "firebase-functions/logger";
 import { defineSecret } from "firebase-functions/params";
 import { onDocumentUpdated } from "firebase-functions/v2/firestore";
-
+import { ReportModerationUpdater } from "./ReportModerationUpdater";
 import { OpenAIClient } from "../ai/client/OpenAIClient";
 import { ReportImageReference } from "../ai/dto/ReportImageReference";
 import { AIPipeline } from "../ai/pipeline/AIPipeline";
 import { ReportAIAnalysisUpdater } from "../firestore/ReportAIAnalysisUpdater";
 import { StorageImageDownloader } from "../storage/StorageImageDownloader";
-
+import { ModerationRequest } from "../application/ModerationRequest";
+import { ModerationService } from "../application/ModerationService";
 /**
  * Secret OpenAI.
  */
@@ -123,6 +124,36 @@ export const reportUpdatedTrigger =
 
         const processingTimeMs =
           Date.now() - startedAt;
+          /**
+ * STEP 3
+ * Avvia il Moderation Engine.
+ */
+const moderationRequest =
+  new ModerationRequest(
+    after.title ?? "",
+    after.description ?? "",
+    afterImages.map(
+      (image) => image.url
+    ),
+    analysis
+  );
+
+const moderationService =
+  new ModerationService();
+
+const moderationResult =
+  moderationService.execute(
+    moderationRequest
+  );
+
+logger.info(
+  "Moderation completed.",
+  {
+    reportId: event.params.reportId,
+    decision: moderationResult.decision,
+    evidences: moderationResult.evidences,
+  }
+);
 
         /**
          * STEP 3
@@ -136,6 +167,17 @@ export const reportUpdatedTrigger =
           analysis,
           processingTimeMs
         );
+        /**
+ * STEP 4
+ * Salva il risultato della moderazione.
+ */
+const moderationUpdater =
+  new ReportModerationUpdater();
+
+await moderationUpdater.save(
+  event.params.reportId,
+  moderationResult
+);
 
         logger.info(
           "AI analysis completed.",
