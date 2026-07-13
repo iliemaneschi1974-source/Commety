@@ -2,9 +2,11 @@
   "name": "@commety/core",
   "version": "1.0.0",
   "description": "Commetty Core Domain Library",
-  "private": true,
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc -p tsconfig.json"
   },

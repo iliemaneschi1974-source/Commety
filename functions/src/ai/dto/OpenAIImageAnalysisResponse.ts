@@ -47,4 +47,39 @@ export interface OpenAIImageAnalysisResponse {
    */
   descrizione: string;
 
+  /**
+   * Analisi della coerenza tra
+   * contenuto utente e immagine.
+   *
+   * Questi valori sono prodotti
+   * dalla pipeline AI e verranno
+   * interpretati dal Core.
+   */
+  consistency: {
+
+    /**
+     * Similarità tra descrizione utente
+     * e immagine.
+     */
+    descriptionSimilarity: number;
+
+    /**
+     * Similarità tra titolo utente
+     * e immagine.
+     */
+    titleSimilarity: number;
+
+    /**
+     * Similarità tra categoria
+     * e immagine.
+     */
+    categorySimilarity: number;
+
+    /**
+     * Affidabilità della valutazione.
+     */
+    confidence: number;
+
+  };
+
 }

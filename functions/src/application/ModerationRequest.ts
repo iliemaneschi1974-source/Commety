@@ -18,6 +18,11 @@ export class ModerationRequest {
   constructor(
 
     /**
+     * Categoria della segnalazione.
+     */
+    public readonly category: string,
+
+    /**
      * Titolo della segnalazione.
      */
     public readonly title: string,

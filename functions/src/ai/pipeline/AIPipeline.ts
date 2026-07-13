@@ -1,8 +1,8 @@
 import OpenAI from "openai";
 
 import { OpenAIImageAnalysisResponse } from "../dto/OpenAIImageAnalysisResponse";
+import { VisionAnalysisRequest } from "../dto/VisionAnalysisRequest";
 import { OpenAIVisionService } from "../services/OpenAIVisionService";
-import { ImageContent } from "../../storage/ImageContent";
 
 /**
  * Pipeline principale dell'intelligenza artificiale.
@@ -36,11 +36,11 @@ export class AIPipeline {
    * Avvia la pipeline AI della segnalazione.
    */
   async execute(
-    immagini: readonly ImageContent[]
+    request: VisionAnalysisRequest
   ): Promise<OpenAIImageAnalysisResponse> {
 
     return this.visionService.analyze(
-      immagini
+      request
     );
 
   }

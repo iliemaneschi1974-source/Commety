@@ -1,7 +1,7 @@
 import OpenAI from "openai";
 
-import { ImageContent } from "../../storage/ImageContent";
 import { OpenAIImageAnalysisResponse } from "../dto/OpenAIImageAnalysisResponse";
+import { VisionAnalysisRequest } from "../dto/VisionAnalysisRequest";
 import { OpenAIVisionRequestBuilder } from "../mapping/OpenAIVisionRequestBuilder";
 import { OpenAIResponseParser } from "../parser/OpenAIResponseParser";
 import { ImageAnalysisService } from "./ImageAnalysisService";
@@ -24,28 +24,28 @@ export class OpenAIImageAnalysisService
   ) {}
 
   /**
-   * Analizza una o più immagini
+   * Analizza una segnalazione
    * tramite OpenAI Vision.
    */
   async analyze(
-    immagini: readonly ImageContent[]
+    request: VisionAnalysisRequest
   ): Promise<OpenAIImageAnalysisResponse> {
 
-    const request =
+    const openAiRequest =
       this.requestBuilder.build(
-        immagini
+        request
       );
 
     console.info(
       "Sending images to OpenAI Vision...",
       {
-        images: immagini.length,
+        images: request.images.length,
       }
     );
 
     const response =
       await this.client.responses.create(
-        request
+        openAiRequest
       );
 
     if (!("output_text" in response)) {

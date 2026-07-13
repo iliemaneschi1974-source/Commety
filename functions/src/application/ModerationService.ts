@@ -2,6 +2,7 @@ import {
   DefaultModerationEngine,
   DefaultModerationPolicy,
   ImageAnalysis,
+  ModerationContext,
   ModerationResult,
   UserContent,
 } from "@commety/core";
@@ -14,13 +15,14 @@ import { ModerationRequest } from "./ModerationRequest";
  * MODERATION SERVICE
  * ----------------------------------------------------------------------------
  *
- * Application Service responsabile
- * dell'orchestrazione della moderazione.
+ * Application Service responsabile dell'orchestrazione
+ * della moderazione dei contenuti analizzati dalla AI.
  *
  * Coordina:
  *
+ * - conversione DTO → Domain;
  * - costruzione del UserContent;
- * - conversione DTO → ImageAnalysis;
+ * - costruzione del ModerationContext;
  * - esecuzione del Moderation Engine.
  *
  * Non contiene logica di business.
@@ -34,8 +36,7 @@ export class ModerationService {
     );
 
   /**
-   * Avvia la moderazione completa
-   * di una segnalazione.
+   * Esegue la moderazione della segnalazione.
    */
   execute(
     request: ModerationRequest
@@ -53,9 +54,14 @@ export class ModerationService {
         request.analysis
       );
 
+    const context =
+      new ModerationContext(
+        userContent,
+        imageAnalysis
+      );
+
     return this.engine.modera(
-      userContent,
-      imageAnalysis
+      context
     );
 
   }

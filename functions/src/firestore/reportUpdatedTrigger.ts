@@ -1,14 +1,20 @@
 import * as logger from "firebase-functions/logger";
 import { defineSecret } from "firebase-functions/params";
 import { onDocumentUpdated } from "firebase-functions/v2/firestore";
+
 import { ReportModerationUpdater } from "./ReportModerationUpdater";
+import { ReportAIAnalysisUpdater } from "../firestore/ReportAIAnalysisUpdater";
+
 import { OpenAIClient } from "../ai/client/OpenAIClient";
 import { ReportImageReference } from "../ai/dto/ReportImageReference";
+import { VisionAnalysisRequest } from "../ai/dto/VisionAnalysisRequest";
 import { AIPipeline } from "../ai/pipeline/AIPipeline";
-import { ReportAIAnalysisUpdater } from "../firestore/ReportAIAnalysisUpdater";
+
 import { StorageImageDownloader } from "../storage/StorageImageDownloader";
+
 import { ModerationRequest } from "../application/ModerationRequest";
 import { ModerationService } from "../application/ModerationService";
+
 /**
  * Secret OpenAI.
  */
@@ -44,7 +50,7 @@ export const reportUpdatedTrigger =
           : 0;
 
       const afterImages =
-        Array.isArray(before.images)
+        Array.isArray(after.images)
           ? after.images as ReportImageReference[]
           : [];
 
@@ -107,6 +113,13 @@ export const reportUpdatedTrigger =
         const pipeline =
           new AIPipeline(client);
 
+        const visionRequest: VisionAnalysisRequest = {
+          title: after.title ?? "",
+          description: after.description ?? "",
+          category: after.category ?? "",
+          images: imageContents,
+        };
+
         logger.info(
           "Sending images to OpenAI Vision...",
           {
@@ -119,17 +132,19 @@ export const reportUpdatedTrigger =
 
         const analysis =
           await pipeline.execute(
-            imageContents
+            visionRequest
           );
 
         const processingTimeMs =
           Date.now() - startedAt;
-          /**
- * STEP 3
- * Avvia il Moderation Engine.
- */
-const moderationRequest =
+
+        /**
+         * STEP 3
+         * Avvia il Moderation Engine.
+         */
+        const moderationRequest =
   new ModerationRequest(
+    after.category ?? "",
     after.title ?? "",
     after.description ?? "",
     afterImages.map(
@@ -138,25 +153,25 @@ const moderationRequest =
     analysis
   );
 
-const moderationService =
-  new ModerationService();
+        const moderationService =
+          new ModerationService();
 
-const moderationResult =
-  moderationService.execute(
-    moderationRequest
-  );
+        const moderationResult =
+          moderationService.execute(
+            moderationRequest
+          );
 
-logger.info(
-  "Moderation completed.",
-  {
-    reportId: event.params.reportId,
-    decision: moderationResult.decision,
-    evidences: moderationResult.evidences,
-  }
-);
+        logger.info(
+          "Moderation completed.",
+          {
+            reportId: event.params.reportId,
+            decision: moderationResult.decision,
+            evidences: moderationResult.evidences,
+          }
+        );
 
         /**
-         * STEP 3
+         * STEP 4
          * Salva l'analisi AI.
          */
         const updater =
@@ -167,17 +182,18 @@ logger.info(
           analysis,
           processingTimeMs
         );
-        /**
- * STEP 4
- * Salva il risultato della moderazione.
- */
-const moderationUpdater =
-  new ReportModerationUpdater();
 
-await moderationUpdater.save(
-  event.params.reportId,
-  moderationResult
-);
+        /**
+         * STEP 5
+         * Salva il risultato della moderazione.
+         */
+        const moderationUpdater =
+          new ReportModerationUpdater();
+
+        await moderationUpdater.save(
+          event.params.reportId,
+          moderationResult
+        );
 
         logger.info(
           "AI analysis completed.",

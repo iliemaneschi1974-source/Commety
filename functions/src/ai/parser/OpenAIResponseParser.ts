@@ -74,6 +74,22 @@ export class OpenAIResponseParser {
       descrizione:
         parsed.descrizione ?? "",
 
+      consistency: {
+
+        descriptionSimilarity:
+          parsed.consistency?.descriptionSimilarity ?? 0,
+
+        titleSimilarity:
+          parsed.consistency?.titleSimilarity ?? 0,
+
+        categorySimilarity:
+          parsed.consistency?.categorySimilarity ?? 0,
+
+        confidence:
+          parsed.consistency?.confidence ?? 0,
+
+      },
+
     };
 
   }

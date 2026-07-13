@@ -1,6 +1,8 @@
 import { ImageAnalysis } from "../../domain/ImageAnalysis";
 import { UserContent } from "../../domain/UserContent";
-import { CompositeModerationAnalyzer } from "./analyzers/CompositeModerationAnalyzer";
+
+import { ModerationAnalysisPipeline } from "./ModerationAnalysisPipeline";
+import { ModerationContext } from "./ModerationContext";
 import { ModerationEngine } from "./ModerationEngine";
 import { ModerationPolicy } from "./ModerationPolicy";
 import { ModerationResult } from "./ModerationResult";
@@ -9,6 +11,7 @@ import { ModerationResult } from "./ModerationResult";
  * Implementazione predefinita del Moderation Engine.
  *
  * Coordina l'intero processo di moderazione:
+ *
  * - esegue tutti gli analyzer;
  * - raccoglie le evidenze;
  * - delega la decisione finale alla ModerationPolicy;
@@ -17,19 +20,49 @@ import { ModerationResult } from "./ModerationResult";
 export class DefaultModerationEngine
   implements ModerationEngine
 {
-  private readonly analyzer =
-    new CompositeModerationAnalyzer();
+  private readonly analysisPipeline =
+  new ModerationAnalysisPipeline();
 
   constructor(
     private readonly policy: ModerationPolicy
   ) {}
 
+  /**
+   * Nuova API.
+   */
+  modera(
+    context: ModerationContext
+  ): ModerationResult;
+
+  /**
+   * API legacy.
+   */
   modera(
     contenuto: UserContent,
     immagine?: ImageAnalysis
+  ): ModerationResult;
+
+  /**
+   * Implementazione.
+   */
+  modera(
+    arg1: ModerationContext | UserContent,
+    arg2?: ImageAnalysis
   ): ModerationResult {
+
+    const context =
+      arg1 instanceof ModerationContext
+        ? arg1
+        : new ModerationContext(
+            arg1,
+            arg2
+          );
+
     const evidenze =
-      this.analyzer.analizza(contenuto, immagine);
+      this.analysisPipeline.analizza(
+        context.userContent,
+        context.imageAnalysis
+      );
 
     const decisione =
       this.policy.valuta(evidenze);
@@ -38,5 +71,7 @@ export class DefaultModerationEngine
       decisione,
       evidenze
     );
+
   }
+
 }

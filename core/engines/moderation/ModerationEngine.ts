@@ -1,5 +1,7 @@
 import { ImageAnalysis } from "../../domain/ImageAnalysis";
 import { UserContent } from "../../domain/UserContent";
+
+import { ModerationContext } from "./ModerationContext";
 import { ModerationResult } from "./ModerationResult";
 
 /**
@@ -7,23 +9,25 @@ import { ModerationResult } from "./ModerationResult";
  *
  * Il Moderation Engine rappresenta il punto di ingresso
  * dell'intero processo di moderazione dei contenuti.
- *
- * L'implementazione concreta è responsabile di:
- * - eseguire gli analyzer;
- * - raccogliere le evidenze;
- * - applicare la ModerationPolicy;
- * - restituire il risultato completo della moderazione.
  */
 export interface ModerationEngine {
+
   /**
-   * Modera il contenuto fornito dall'utente.
+   * Nuova API basata sul contesto.
+   */
+  modera(
+    context: ModerationContext
+  ): ModerationResult;
+
+  /**
+   * API legacy.
    *
-   * @param contenuto Contenuto da analizzare.
-   * @param immagine Eventuale analisi dell'immagine associata.
-   * @returns Risultato completo della moderazione.
+   * Verrà rimossa dopo la migrazione completa
+   * al ModerationContext.
    */
   modera(
     contenuto: UserContent,
     immagine?: ImageAnalysis
   ): ModerationResult;
+
 }

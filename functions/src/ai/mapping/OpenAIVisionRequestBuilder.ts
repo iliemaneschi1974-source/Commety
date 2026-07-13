@@ -1,8 +1,8 @@
 import OpenAI from "openai";
 
-import { ImageContent } from "../../storage/ImageContent";
-import { IMAGE_ANALYSIS_PROMPT } from "../prompts/image-analysis.prompt";
+import { VisionAnalysisRequest } from "../dto/VisionAnalysisRequest";
 import { ImageContentMapper } from "./ImageContentMapper";
+import { VisionPromptBuilder } from "../prompts/VisionPromptBuilder";
 
 /**
  * Costruisce la richiesta completa
@@ -14,21 +14,31 @@ export class OpenAIVisionRequestBuilder {
   private readonly mapper =
     new ImageContentMapper();
 
+  private readonly promptBuilder =
+    new VisionPromptBuilder();
+
   /**
    * Costruisce la richiesta completa
-   * per l'analisi delle immagini.
+   * per l'analisi della segnalazione.
    */
   build(
-    images: readonly ImageContent[]
+    request: VisionAnalysisRequest
   ): OpenAI.Responses.ResponseCreateParams {
 
+    const prompt =
+      this.promptBuilder.build(
+        request
+      );
+
     const dataUris =
-      this.mapper.toDataUris(images);
+      this.mapper.toDataUris(
+        request.images
+      );
 
     const content: OpenAI.Responses.ResponseInputContent[] = [
       {
         type: "input_text",
-        text: IMAGE_ANALYSIS_PROMPT,
+        text: prompt,
       },
       ...dataUris.map((uri) => ({
         type: "input_image" as const,
@@ -40,7 +50,9 @@ export class OpenAIVisionRequestBuilder {
     return {
 
       model: "gpt-5-mini",
+
       stream: false,
+
       input: [
         {
           role: "user",

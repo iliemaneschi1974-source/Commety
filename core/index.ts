@@ -19,6 +19,7 @@
 
 export * from "./domain/ImageAnalysis";
 export * from "./domain/UserContent";
+export * from "./domain/ContentConsistencyAnalysis";
 
 /* ============================================================================
  * MODERATION ENGINE
@@ -26,6 +27,7 @@ export * from "./domain/UserContent";
 
 export * from "./engines/moderation/ModerationEngine";
 export * from "./engines/moderation/DefaultModerationEngine";
+export * from "./engines/moderation/ModerationContext";
 export * from "./engines/moderation/ModerationResult";
 export * from "./engines/moderation/ModerationDecision";
 export * from "./engines/moderation/ModerationEvidence";
