@@ -27,7 +27,7 @@ export class MemeRule extends AbstractImageRule {
     return [
       this.creaEvidence(
         "MEME",
-        "Meme rilevato.",
+        "Immagine classificata come Meme.",
         analisi.meme
       )
     ];

@@ -27,7 +27,7 @@ export class FaceRule extends AbstractImageRule {
     return [
       this.creaEvidence(
         "VOLTO_RILEVATO",
-        "Volto riconoscibile rilevato.",
+        "Volto chiaramente riconoscibile rilevato.",
         analisi.volti
       )
     ];

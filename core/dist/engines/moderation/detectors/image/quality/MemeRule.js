@@ -20,7 +20,7 @@ class MemeRule extends AbstractImageRule_1.AbstractImageRule {
             return [];
         }
         return [
-            this.creaEvidence("MEME", "Meme rilevato.", analisi.meme)
+            this.creaEvidence("MEME", "Immagine classificata come Meme.", analisi.meme)
         ];
     }
 }

@@ -1,0 +1,1 @@
+{"version":3,"file":"QualityRule.d.ts","sourceRoot":"","sources":["../../../../../../engines/moderation/detectors/text/quality/QualityRule.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,WAAW,EAAE,MAAM,mCAAmC,CAAC;AAChE,OAAO,EAAE,kBAAkB,EAAE,MAAM,6BAA6B,CAAC;AAEjE;;;;;;GAMG;AACH,MAAM,WAAW,WAAW;IAC1B;;;;;OAKG;IACH,QAAQ,CACN,SAAS,EAAE,WAAW,GACrB,SAAS,kBAAkB,EAAE,CAAC;CAClC"}

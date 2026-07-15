@@ -15,6 +15,50 @@ import { ModerationMessage } from "./ModerationMessage";
  * ============================================================================
  */
 export class ModerationMessageResolver {
+
+  /**
+   * Messaggio unico mostrato
+   * per qualsiasi violazione
+   * relativa alle immagini.
+   */
+  private static readonly IMAGE_MODERATION_MESSAGE =
+    new ModerationMessage(
+      "Attenzione!",
+      "L'immagine non è coerente con il titolo e la descrizione della tua segnalazione o viola le regole di Commetty."
+    );
+
+  /**
+   * Tutte le evidenze riconducibili
+   * alla moderazione delle immagini.
+   *
+   * Indipendentemente dalla regola che
+   * ha prodotto il blocco, l'utente
+   * riceverà sempre lo stesso messaggio.
+   */
+  private static readonly IMAGE_EVIDENCES =
+    new Set<ModerationEvidence["tipo"]>([
+      "IMMAGINE_PORNOGRAFICA",
+      "IMMAGINE_CON_NUDITA",
+      "IMMAGINE_VIOLENTA",
+      "IMMAGINE_CRUENTA",
+      "ARMI_RILEVATE",
+      "MINORI_RILEVATI",
+      "MALTRATTAMENTO_ANIMALI",
+
+      "WATERMARK",
+      "SCREENSHOT",
+      "MEME",
+      "IMMAGINE_AI",
+      "IMMAGINE_DUPLICATA",
+
+      "VOLTO_RILEVATO",
+      "TARGA_RILEVATA",
+      "DATI_PERSONALI_RILEVATI",
+
+      "CONTENUTO_NON_PERTINENTE",
+      "IMMAGINE_NON_COERENTE",
+    ]);
+
   /**
    * Catalogo dei messaggi di moderazione.
    */
@@ -238,6 +282,25 @@ export class ModerationMessageResolver {
   resolve(
     evidenze: readonly ModerationEvidence[]
   ): ModerationMessage {
+
+    /**
+     * Tutte le violazioni riguardanti
+     * le immagini producono lo stesso
+     * messaggio utente.
+     */
+    for (const evidenza of evidenze) {
+      if (
+        ModerationMessageResolver.IMAGE_EVIDENCES.has(
+          evidenza.tipo
+        )
+      ) {
+        return ModerationMessageResolver.IMAGE_MODERATION_MESSAGE;
+      }
+    }
+
+    /**
+     * Gestione delle altre evidenze.
+     */
     for (const evidenza of evidenze) {
       const message =
         ModerationMessageResolver.MESSAGES.get(
@@ -254,4 +317,5 @@ export class ModerationMessageResolver {
       "La segnalazione non rispetta le regole della community."
     );
   }
+
 }

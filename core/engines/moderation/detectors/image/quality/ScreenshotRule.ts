@@ -1,11 +1,7 @@
+import { ImageAnalysis } from "../../../../../domain/ImageAnalysis";
 import { ModerationEvidence } from "../../../ModerationEvidence";
-import {
-  ModerationEvidenceSource,
-  ModerationEvidenceType,
-} from "../../../ModerationEvidence";
 import { AbstractImageRule } from "../AbstractImageRule";
 import { ImageModerationThresholds } from "../ImageModerationThresholds";
-import { ImageAnalysis } from "../../../../../domain/ImageAnalysis";
 
 /**
  * Rileva la presenza di screenshot
@@ -24,17 +20,19 @@ export class ScreenshotRule extends AbstractImageRule {
     analisi: ImageAnalysis
   ): readonly ModerationEvidence[] {
 
-    if (analisi.screenshot < ImageModerationThresholds.SCREENSHOT) {
+    if (
+      analisi.screenshot <
+      ImageModerationThresholds.SCREENSHOT
+    ) {
       return [];
     }
 
     return [
-      new ModerationEvidence(
-        "SCREENSHOT" as ModerationEvidenceType,
-        "Screenshot rilevato.",
-        analisi.screenshot,
-        "IMMAGINE" as ModerationEvidenceSource
-      ),
+      this.creaEvidence(
+        "SCREENSHOT",
+        "Screenshot digitale rilevato.",
+        analisi.screenshot
+      )
     ];
 
   }

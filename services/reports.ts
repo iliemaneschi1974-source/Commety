@@ -67,7 +67,18 @@ export async function createReport(
       city: location.city,
 
       status: "ACTIVE",
-      confirmations: 0,
+
+/**
+ * La segnalazione nasce sempre
+ * non visibile.
+ *
+ * Sarà esclusivamente il backend,
+ * al termine della moderazione,
+ * a decidere se renderla pubblica.
+ */
+isVisible: false,
+
+confirmations: 0,
       commentsCount: 0,
       images: [],
 
@@ -162,10 +173,11 @@ export async function getActiveReports(): Promise<
   Report[]
 > {
   const q = query(
-    reportsCollection,
-    where("status", "==", "ACTIVE"),
-    orderBy("createdAt", "desc")
-  );
+  reportsCollection,
+  where("status", "==", "ACTIVE"),
+  where("isVisible", "==", true),
+  orderBy("createdAt", "desc")
+);
 
   const snapshot = await getDocs(q);
 
@@ -185,10 +197,11 @@ export function listenReports(
   callback: (reports: Report[]) => void
 ) {
   const q = query(
-    reportsCollection,
-    where("status", "==", "ACTIVE"),
-    orderBy("createdAt", "desc")
-  );
+  reportsCollection,
+  where("status", "==", "ACTIVE"),
+  where("isVisible", "==", true),
+  orderBy("createdAt", "desc")
+);
 
   return onSnapshot(
     q,

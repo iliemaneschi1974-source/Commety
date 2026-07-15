@@ -1,6 +1,6 @@
 import { ImageAnalysis } from "../../../../../domain/ImageAnalysis";
 import { UserContent } from "../../../../../domain/UserContent";
-
+import { ContentConsistencyAnalysis } from "../../../../../domain/ContentConsistencyAnalysis";
 import { ModerationEvidence } from "../../../ModerationEvidence";
 
 /**
@@ -15,7 +15,8 @@ export interface ImageTextConsistencyRule {
    */
   analizza(
     contenuto: UserContent,
-    immagine: ImageAnalysis
+    immagine: ImageAnalysis,
+    consistency?: ContentConsistencyAnalysis
   ): readonly ModerationEvidence[];
 
 }

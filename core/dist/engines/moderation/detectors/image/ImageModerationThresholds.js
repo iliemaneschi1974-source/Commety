@@ -79,6 +79,16 @@ class ImageModerationThresholds {
      * la presenza di documenti.
      */
     static DOCUMENTI = 0.85;
+    /**
+   * Probabilità minima affinché
+   * un'immagine sia considerata
+   * semanticamente coerente con
+   * titolo e descrizione del report.
+   *
+   * Valori inferiori producono
+   * un'evidenza di immagine non coerente.
+   */
+    static IMAGE_CONSISTENCY = 0.70;
     constructor() {
         // Classe di utilità.
     }

@@ -1,9 +1,11 @@
 import { ImageAnalysis } from "../../domain/ImageAnalysis";
 import { UserContent } from "../../domain/UserContent";
-
+import { ContentConsistencyAnalysis } from "../../domain/ContentConsistencyAnalysis";
 import { ImageTextConsistencyAnalyzer } from "./analyzers/image/ImageTextConsistencyAnalyzer";
 import { ModerationEvidence } from "./ModerationEvidence";
-import { ImageSafetyDetector } from "./detectors/image/safety/ImageSafetyDetector";
+
+import { ImageModerationDetector } from "./detectors/image/ImageModerationDetector";
+
 import { LanguageDetector } from "./detectors/text/language/LanguageDetector";
 import { PrivacyDetector } from "./detectors/text/privacy/PrivacyDetector";
 import { QualityDetector } from "./detectors/text/quality/QualityDetector";
@@ -41,15 +43,23 @@ export class ModerationAnalysisPipeline {
   private readonly qualityDetector =
     new QualityDetector();
 
-  private readonly imageSafetyDetector =
-    new ImageSafetyDetector();
+  /**
+   * Punto di ingresso della moderazione immagini.
+   */
+  private readonly imageModerationDetector =
+    new ImageModerationDetector();
 
+  /**
+   * Analizzatore di coerenza
+   * tra testo e immagini.
+   */
   private readonly imageTextConsistencyAnalyzer =
     new ImageTextConsistencyAnalyzer();
 
   analizza(
     contenuto: UserContent,
-    immagine?: ImageAnalysis
+    immagine?: ImageAnalysis,
+    consistency?: ContentConsistencyAnalysis
   ): readonly ModerationEvidence[] {
 
     const evidenze: ModerationEvidence[] = [];
@@ -72,16 +82,23 @@ export class ModerationAnalysisPipeline {
 
     if (immagine) {
 
+      /**
+       * Moderazione completa delle immagini.
+       */
       evidenze.push(
-        ...this.imageSafetyDetector.analizza(
+        ...this.imageModerationDetector.analizza(
           immagine
         )
       );
 
+      /**
+       * Coerenza tra testo e immagini.
+       */
       evidenze.push(
         ...this.imageTextConsistencyAnalyzer.analizza(
           contenuto,
-          immagine
+          immagine,
+          consistency
         )
       );
 

@@ -27,7 +27,7 @@ export class DocumentRule extends AbstractImageRule {
     return [
       this.creaEvidence(
         "DATI_PERSONALI_RILEVATI",
-        "Documento contenente dati personali rilevato.",
+        "Documento contenente dati personali chiaramente leggibilirilevato.",
         analisi.documenti
       )
     ];

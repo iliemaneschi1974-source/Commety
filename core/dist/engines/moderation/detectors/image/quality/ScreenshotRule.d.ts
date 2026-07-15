@@ -1,6 +1,6 @@
+import { ImageAnalysis } from "../../../../../domain/ImageAnalysis";
 import { ModerationEvidence } from "../../../ModerationEvidence";
 import { AbstractImageRule } from "../AbstractImageRule";
-import { ImageAnalysis } from "../../../../../domain/ImageAnalysis";
 /**
  * Rileva la presenza di screenshot
  * all'interno delle immagini.

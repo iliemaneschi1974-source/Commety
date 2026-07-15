@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ModerationAnalysisPipeline = void 0;
 const ImageTextConsistencyAnalyzer_1 = require("./analyzers/image/ImageTextConsistencyAnalyzer");
-const ImageSafetyDetector_1 = require("./detectors/image/safety/ImageSafetyDetector");
+const ImageModerationDetector_1 = require("./detectors/image/ImageModerationDetector");
 const LanguageDetector_1 = require("./detectors/text/language/LanguageDetector");
 const PrivacyDetector_1 = require("./detectors/text/privacy/PrivacyDetector");
 const QualityDetector_1 = require("./detectors/text/quality/QualityDetector");
@@ -30,17 +30,30 @@ class ModerationAnalysisPipeline {
     languageDetector = new LanguageDetector_1.LanguageDetector();
     privacyDetector = new PrivacyDetector_1.PrivacyDetector();
     qualityDetector = new QualityDetector_1.QualityDetector();
-    imageSafetyDetector = new ImageSafetyDetector_1.ImageSafetyDetector();
+    /**
+     * Punto di ingresso della moderazione immagini.
+     */
+    imageModerationDetector = new ImageModerationDetector_1.ImageModerationDetector();
+    /**
+     * Analizzatore di coerenza
+     * tra testo e immagini.
+     */
     imageTextConsistencyAnalyzer = new ImageTextConsistencyAnalyzer_1.ImageTextConsistencyAnalyzer();
-    analizza(contenuto, immagine) {
+    analizza(contenuto, immagine, consistency) {
         const evidenze = [];
         evidenze.push(...this.spamDetector.analizza(contenuto));
         evidenze.push(...this.languageDetector.analizza(contenuto));
         evidenze.push(...this.privacyDetector.analizza(contenuto));
         evidenze.push(...this.qualityDetector.analizza(contenuto));
         if (immagine) {
-            evidenze.push(...this.imageSafetyDetector.analizza(immagine));
-            evidenze.push(...this.imageTextConsistencyAnalyzer.analizza(contenuto, immagine));
+            /**
+             * Moderazione completa delle immagini.
+             */
+            evidenze.push(...this.imageModerationDetector.analizza(immagine));
+            /**
+             * Coerenza tra testo e immagini.
+             */
+            evidenze.push(...this.imageTextConsistencyAnalyzer.analizza(contenuto, immagine, consistency));
         }
         return evidenze;
     }

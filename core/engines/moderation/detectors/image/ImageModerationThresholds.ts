@@ -89,6 +89,16 @@ export class ImageModerationThresholds {
    * la presenza di documenti.
    */
   public static readonly DOCUMENTI = 0.85;
+    /**
+   * Probabilità minima affinché
+   * un'immagine sia considerata
+   * semanticamente coerente con
+   * titolo e descrizione del report.
+   *
+   * Valori inferiori producono
+   * un'evidenza di immagine non coerente.
+   */
+  public static readonly IMAGE_CONSISTENCY = 0.70;
 
   private constructor() {
     // Classe di utilità.

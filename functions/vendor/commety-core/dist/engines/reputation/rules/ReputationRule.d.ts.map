@@ -1,0 +1,1 @@
+{"version":3,"file":"ReputationRule.d.ts","sourceRoot":"","sources":["../../../../engines/reputation/rules/ReputationRule.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,iBAAiB,EAAE,MAAM,sBAAsB,CAAC;AACzD,OAAO,EAAE,kBAAkB,EAAE,MAAM,uBAAuB,CAAC;AAE3D;;;;;;;;;;;GAWG;AACH,MAAM,WAAW,cAAc;IAC7B;;;;;;OAMG;IACH,QAAQ,CACN,QAAQ,EAAE,iBAAiB,GAC1B,SAAS,kBAAkB,EAAE,CAAC;CAClC"}

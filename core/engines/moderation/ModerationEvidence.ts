@@ -103,6 +103,7 @@ export type ModerationEvidenceType =
 
   // Coerenza
   | "CONTENUTO_NON_PERTINENTE"
+  | "IMMAGINE_NON_COERENTE"
 
   // Contenuti multimediali
   | "AUDIO_NON_CONFORME"

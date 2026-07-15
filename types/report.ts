@@ -53,8 +53,18 @@ export interface Report {
 
   status: ReportStatus;
 
-  createdAt?: Timestamp;
-  updatedAt?: Timestamp;
+/**
+ * Indica se la segnalazione
+ * è visibile pubblicamente sulla mappa.
+ *
+ * La visibilità è controllata
+ * esclusivamente dal backend dopo
+ * la moderazione.
+ */
+isVisible: boolean;
+
+createdAt?: Timestamp;
+updatedAt?: Timestamp;
 
   /**
    * Ultima attività registrata sulla segnalazione.

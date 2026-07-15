@@ -1,0 +1,1 @@
+{"version":3,"file":"DefaultPublicationPolicy.d.ts","sourceRoot":"","sources":["../../../engines/publication/DefaultPublicationPolicy.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,iBAAiB,EAAE,MAAM,qBAAqB,CAAC;AAExD;;;;;GAKG;AACH,qBAAa,wBACX,YAAW,iBAAiB;IAE5B,mBAAmB,IAAI,MAAM;IAI7B,kCAAkC,IAAI,MAAM;IAI5C,wBAAwB,IAAI,MAAM;IAIlC,kBAAkB,IAAI,MAAM;CAG7B"}

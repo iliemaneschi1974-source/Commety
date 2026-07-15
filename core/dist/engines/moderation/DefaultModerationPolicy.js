@@ -26,6 +26,7 @@ class DefaultModerationPolicy {
         "IMMAGINE_AI",
         "IMMAGINE_DUPLICATA",
         "CONTENUTO_NON_PERTINENTE",
+        "IMMAGINE_NON_COERENTE",
         // Linguaggio
         "HATE_SPEECH",
         "BESTEMMIE",

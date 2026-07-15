@@ -20,7 +20,7 @@ class AIImageRule extends AbstractImageRule_1.AbstractImageRule {
             return [];
         }
         return [
-            this.creaEvidence("IMMAGINE_AI", "Immagine generata tramite Intelligenza Artificiale.", analisi.aiGenerated)
+            this.creaEvidence("IMMAGINE_AI", "Immagine probabilmente generata tramite Intelligenza Artificiale.", analisi.aiGenerated)
         ];
     }
 }

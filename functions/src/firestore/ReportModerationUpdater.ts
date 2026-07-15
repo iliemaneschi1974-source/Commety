@@ -27,23 +27,32 @@ export class ReportModerationUpdater {
       .doc(reportId)
       .update({
 
+        /**
+         * La visibilità pubblica viene
+         * decisa esclusivamente dal
+         * Moderation Engine.
+         */
+        isVisible:
+          result.decision.isApprovato() ||
+          result.decision.isLimitato(),
+
         moderation: {
 
-  decision: result.decision.value,
+          decision: result.decision.value,
 
-  evidences: result.evidences.map(
-    (evidence) => ({
-      type: evidence.tipo,
-      description: evidence.descrizione,
-      confidence: evidence.confidenza,
-      source: evidence.origine,
-    })
-  ),
+          evidences: result.evidences.map(
+            (evidence) => ({
+              type: evidence.tipo,
+              description: evidence.descrizione,
+              confidence: evidence.confidenza,
+              source: evidence.origine,
+            })
+          ),
 
-  analyzedAt:
-    FieldValue.serverTimestamp(),
+          analyzedAt:
+            FieldValue.serverTimestamp(),
 
-},
+        },
 
       });
 

@@ -20,7 +20,7 @@ class FaceRule extends AbstractImageRule_1.AbstractImageRule {
             return [];
         }
         return [
-            this.creaEvidence("VOLTO_RILEVATO", "Volto riconoscibile rilevato.", analisi.volti)
+            this.creaEvidence("VOLTO_RILEVATO", "Volto chiaramente riconoscibile rilevato.", analisi.volti)
         ];
     }
 }

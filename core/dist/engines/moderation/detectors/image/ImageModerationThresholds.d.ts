@@ -76,6 +76,16 @@ export declare class ImageModerationThresholds {
      * la presenza di documenti.
      */
     static readonly DOCUMENTI = 0.85;
+    /**
+   * Probabilità minima affinché
+   * un'immagine sia considerata
+   * semanticamente coerente con
+   * titolo e descrizione del report.
+   *
+   * Valori inferiori producono
+   * un'evidenza di immagine non coerente.
+   */
+    static readonly IMAGE_CONSISTENCY = 0.7;
     private constructor();
 }
 //# sourceMappingURL=ImageModerationThresholds.d.ts.map

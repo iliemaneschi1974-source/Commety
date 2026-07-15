@@ -1,5 +1,6 @@
 import { ImageAnalysis } from "../../domain/ImageAnalysis";
 import { UserContent } from "../../domain/UserContent";
+import { ContentConsistencyAnalysis } from "../../domain/ContentConsistencyAnalysis";
 import { ModerationEvidence } from "./ModerationEvidence";
 /**
  * ============================================================================
@@ -24,8 +25,15 @@ export declare class ModerationAnalysisPipeline {
     private readonly languageDetector;
     private readonly privacyDetector;
     private readonly qualityDetector;
-    private readonly imageSafetyDetector;
+    /**
+     * Punto di ingresso della moderazione immagini.
+     */
+    private readonly imageModerationDetector;
+    /**
+     * Analizzatore di coerenza
+     * tra testo e immagini.
+     */
     private readonly imageTextConsistencyAnalyzer;
-    analizza(contenuto: UserContent, immagine?: ImageAnalysis): readonly ModerationEvidence[];
+    analizza(contenuto: UserContent, immagine?: ImageAnalysis, consistency?: ContentConsistencyAnalysis): readonly ModerationEvidence[];
 }
 //# sourceMappingURL=ModerationAnalysisPipeline.d.ts.map

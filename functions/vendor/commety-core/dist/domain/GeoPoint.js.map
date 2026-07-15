@@ -1,0 +1,1 @@
+{"version":3,"file":"GeoPoint.js","sourceRoot":"","sources":["../../domain/GeoPoint.ts"],"names":[],"mappings":";;AAaA,oCAQC;AAXD;;GAEG;AACH,SAAgB,YAAY,CAC1B,KAAe,EACf,MAAgB;IAEhB,OAAO,CACL,KAAK,CAAC,QAAQ,KAAK,MAAM,CAAC,QAAQ;QAClC,KAAK,CAAC,SAAS,KAAK,MAAM,CAAC,SAAS,CACrC,CAAC;AACJ,CAAC"}

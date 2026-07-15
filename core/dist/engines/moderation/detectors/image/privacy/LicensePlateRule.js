@@ -20,7 +20,7 @@ class LicensePlateRule extends AbstractImageRule_1.AbstractImageRule {
             return [];
         }
         return [
-            this.creaEvidence("TARGA_RILEVATA", "Targa di veicolo rilevata.", analisi.targhe)
+            this.creaEvidence("TARGA_RILEVATA", "Targa chiaramente leggibile rilevata.", analisi.targhe)
         ];
     }
 }

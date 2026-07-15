@@ -27,7 +27,7 @@ export class AIImageRule extends AbstractImageRule {
     return [
       this.creaEvidence(
         "IMMAGINE_AI",
-        "Immagine generata tramite Intelligenza Artificiale.",
+        "Immagine probabilmente generata tramite Intelligenza Artificiale.",
         analisi.aiGenerated
       )
     ];

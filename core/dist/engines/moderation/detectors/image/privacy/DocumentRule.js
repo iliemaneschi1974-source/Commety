@@ -20,7 +20,7 @@ class DocumentRule extends AbstractImageRule_1.AbstractImageRule {
             return [];
         }
         return [
-            this.creaEvidence("DATI_PERSONALI_RILEVATI", "Documento contenente dati personali rilevato.", analisi.documenti)
+            this.creaEvidence("DATI_PERSONALI_RILEVATI", "Documento contenente dati personali chiaramente leggibilirilevato.", analisi.documenti)
         ];
     }
 }

@@ -1,0 +1,1 @@
+{"version":3,"file":"DefaultTrustPolicy.js","sourceRoot":"","sources":["../../../../engines/protection/trust/DefaultTrustPolicy.ts"],"names":[],"mappings":";;;AAEA;;;GAGG;AACH,MAAa,kBAAkB;IAC7B,kBAAkB;QAChB,OAAO,IAAI,CAAC;IACd,CAAC;IAED,iBAAiB;QACf,OAAO,IAAI,CAAC;IACd,CAAC;IAED,gBAAgB;QACd,OAAO,IAAI,CAAC;IACd,CAAC;CACF;AAZD,gDAYC"}

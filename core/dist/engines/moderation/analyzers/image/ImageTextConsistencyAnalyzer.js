@@ -13,10 +13,10 @@ class ImageTextConsistencyAnalyzer {
     rules = [
         new DescriptionConsistencyRule_1.DescriptionConsistencyRule(),
     ];
-    analizza(contenuto, immagine) {
+    analizza(contenuto, immagine, consistency) {
         const evidenze = [];
         for (const rule of this.rules) {
-            evidenze.push(...rule.analizza(contenuto, immagine));
+            evidenze.push(...rule.analizza(contenuto, immagine, consistency));
         }
         return evidenze;
     }

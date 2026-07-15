@@ -1,6 +1,6 @@
 import { ImageAnalysis } from "../../../../domain/ImageAnalysis";
 import { UserContent } from "../../../../domain/UserContent";
-
+import { ContentConsistencyAnalysis } from "../../../../domain/ContentConsistencyAnalysis";
 import { ModerationEvidence } from "../../ModerationEvidence";
 
 import { ImageTextConsistencyRule } from "./rules/ImageTextConsistencyRule";
@@ -24,7 +24,8 @@ export class ImageTextConsistencyAnalyzer {
 
   analizza(
     contenuto: UserContent,
-    immagine: ImageAnalysis
+    immagine: ImageAnalysis,
+    consistency?: ContentConsistencyAnalysis
   ): readonly ModerationEvidence[] {
 
     const evidenze: ModerationEvidence[] = [];
@@ -34,7 +35,8 @@ export class ImageTextConsistencyAnalyzer {
       evidenze.push(
         ...rule.analizza(
           contenuto,
-          immagine
+          immagine,
+          consistency
         )
       );
 

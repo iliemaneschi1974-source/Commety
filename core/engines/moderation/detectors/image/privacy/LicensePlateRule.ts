@@ -27,7 +27,7 @@ export class LicensePlateRule extends AbstractImageRule {
     return [
       this.creaEvidence(
         "TARGA_RILEVATA",
-        "Targa di veicolo rilevata.",
+        "Targa chiaramente leggibile rilevata.",
         analisi.targhe
       )
     ];
