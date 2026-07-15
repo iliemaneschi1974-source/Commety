@@ -2,8 +2,8 @@ import {
   ProfileGalleryItem,
   ProfileHeaderData,
   ProfileStatsData,
-} from "@/types/profile"
-import { Report } from "@/types/report"
+} from "@/types/profile";
+import { Report } from "@/types/report";
 
 export const profileHeaderMock: ProfileHeaderData = {
   avatarUrl: "",
@@ -14,14 +14,14 @@ export const profileHeaderMock: ProfileHeaderData = {
   level: 12,
   currentXp: 540,
   nextLevelXp: 800,
-}
+};
 
 export const profileStatsMock: ProfileStatsData = {
   reports: 154,
   confirmations: 1284,
   comments: 312,
   photos: 486,
-}
+};
 
 export const profileReportsMock: Report[] = [
   {
@@ -34,6 +34,7 @@ export const profileReportsMock: Report[] = [
     city: "Roma",
     address: "Roma",
     status: "ACTIVE",
+    isVisible: true,
     userId: "demo-user",
     username: "IlieManeschi",
     images: [],
@@ -50,6 +51,7 @@ export const profileReportsMock: Report[] = [
     city: "Fondi",
     address: "Fondi",
     status: "ACTIVE",
+    isVisible: true,
     userId: "demo-user",
     username: "IlieManeschi",
     images: [],
@@ -66,13 +68,14 @@ export const profileReportsMock: Report[] = [
     city: "Latina",
     address: "Latina",
     status: "ACTIVE",
+    isVisible: true,
     userId: "demo-user",
     username: "IlieManeschi",
     images: [],
     confirmations: 42,
     commentsCount: 11,
   },
-]
+];
 
 export const profileGalleryMock: ProfileGalleryItem[] = [
   {
@@ -99,4 +102,4 @@ export const profileGalleryMock: ProfileGalleryItem[] = [
     id: "6",
     imageUrl: "https://picsum.photos/400?6",
   },
-]
+];
