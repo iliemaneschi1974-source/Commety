@@ -35,10 +35,10 @@ export const metadata: Metadata = {
     type: "website",
 
     images: [
-  {
-    url: `${appUrl}/og-image.png`,
-    width: 1200,
-    height: 630,
+   {
+    url: `${appUrl}/og-image-square.png`,
+    width: 400,
+    height: 400,
     alt: "Commety",
   },
 ],
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Commety",
     description: "Scopri cosa sta succedendo vicino a te.",
-    images: ["/og-image.png"],
+    images: [`${appUrl}/og-image-square.png`],
   },
 };
 
