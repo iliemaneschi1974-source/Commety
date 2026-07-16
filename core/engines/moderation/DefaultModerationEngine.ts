@@ -21,7 +21,7 @@ export class DefaultModerationEngine
   implements ModerationEngine
 {
   private readonly analysisPipeline =
-  new ModerationAnalysisPipeline();
+    new ModerationAnalysisPipeline();
 
   constructor(
     private readonly policy: ModerationPolicy
@@ -61,7 +61,8 @@ export class DefaultModerationEngine
     const evidenze =
       this.analysisPipeline.analizza(
         context.userContent,
-        context.imageAnalysis
+        context.imageAnalysis,
+        context.contentConsistency
       );
 
     const decisione =

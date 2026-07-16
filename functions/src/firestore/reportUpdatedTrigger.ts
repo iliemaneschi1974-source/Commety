@@ -160,41 +160,21 @@ export const reportUpdatedTrigger =
     analysis
   );
 
-        logger.info(
-  "Creating ModerationService.",
-  {
-    reportId: event.params.reportId,
-  }
-);
+        
 
 const moderationService =
   new ModerationService();
 
-logger.info(
-  "ModerationService created.",
-  {
-    reportId: event.params.reportId,
-  }
-);
 
-logger.info(
-  "About to invoke ModerationService.",
-  {
-    reportId: event.params.reportId,
-  }
-);
+
+
 
 const moderationResult =
   moderationService.execute(
     moderationRequest
   );
 
-        logger.info(
-          "ModerationService returned.",
-          {
-            reportId: event.params.reportId,
-          }
-        );
+        
 
         logger.info(
           "Moderation completed.",

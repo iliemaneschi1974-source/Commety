@@ -9,27 +9,32 @@ import { PlatformCheckResult } from "../../../model/PlatformCheckResult";
  * CORE DIST CHECK
  * ----------------------------------------------------------------------------
  *
- * Verifica che la cartella dist del Commetty Core
- * sia presente.
+ * Verifica che il Commetty Core sia stato
+ * compilato correttamente.
  *
+ * Controlla la presenza della cartella dist
+ * e dei file di entry point.
  * ============================================================================
  */
 export class CoreDistCheck
   implements PlatformCheck {
 
   public readonly name =
-    "Core dist";
+    "Core compilato";
 
   execute(): PlatformCheckResult {
 
-    const distPath =
-      path.resolve(
-        process.cwd(),
+    const root =
+      process.cwd();
+
+    const dist =
+      path.join(
+        root,
         "core",
         "dist"
       );
 
-    if (!fs.existsSync(distPath)) {
+    if (!fs.existsSync(dist)) {
 
       return new PlatformCheckResult(
 
@@ -45,13 +50,57 @@ export class CoreDistCheck
 
     }
 
+    const indexJs =
+      path.join(
+        dist,
+        "index.js"
+      );
+
+    if (!fs.existsSync(indexJs)) {
+
+      return new PlatformCheckResult(
+
+        this.name,
+
+        false,
+
+        "File core/dist/index.js non trovato.",
+
+        "Ricompilare il Core."
+
+      );
+
+    }
+
+    const indexTypes =
+      path.join(
+        dist,
+        "index.d.ts"
+      );
+
+    if (!fs.existsSync(indexTypes)) {
+
+      return new PlatformCheckResult(
+
+        this.name,
+
+        false,
+
+        "File core/dist/index.d.ts non trovato.",
+
+        "Ricompilare il Core."
+
+      );
+
+    }
+
     return new PlatformCheckResult(
 
       this.name,
 
       true,
 
-      "Cartella core/dist presente."
+      "Core compilato correttamente."
 
     );
 

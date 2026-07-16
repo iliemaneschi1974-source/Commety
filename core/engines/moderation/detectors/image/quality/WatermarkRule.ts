@@ -20,21 +20,13 @@ export class WatermarkRule extends AbstractImageRule {
     analisi: ImageAnalysis
   ): readonly ModerationEvidence[] {
 
-    console.log(
-      "[WatermarkRule]",
-      {
-        watermark: analisi.watermark,
-        threshold: ImageModerationThresholds.WATERMARK,
-      }
-    );
+    
 
     if (analisi.watermark < ImageModerationThresholds.WATERMARK) {
       return [];
     }
 
-    console.log(
-      "[WatermarkRule] Evidence generated"
-    );
+   
 
     return [
       this.creaEvidence(

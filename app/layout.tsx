@@ -3,8 +3,11 @@ import { Inter } from "next/font/google";
 
 import "./globals.css";
 
+import ProcessingOverlay from "@/components/ProcessingOverlay/ProcessingOverlay";
+
 import { AuthProvider } from "@/contexts/AuthContext";
 import { MapProvider } from "@/contexts/MapContext";
+import { ProcessingOverlayProvider } from "@/contexts/ProcessingOverlayContext";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -30,7 +33,13 @@ export default function RootLayout({
       <body className="min-h-full font-sans antialiased">
         <AuthProvider>
           <MapProvider>
-            {children}
+            <ProcessingOverlayProvider>
+
+              {children}
+
+              <ProcessingOverlay />
+
+            </ProcessingOverlayProvider>
           </MapProvider>
         </AuthProvider>
       </body>

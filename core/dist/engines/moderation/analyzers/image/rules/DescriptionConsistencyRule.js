@@ -26,7 +26,7 @@ class DescriptionConsistencyRule {
             return [];
         }
         return [
-            new ModerationEvidence_1.ModerationEvidence("IMMAGINE_NON_COERENTE", "L'immagine non risulta coerente con il contenuto della segnalazione.", consistency.confidence, "AI")
+            new ModerationEvidence_1.ModerationEvidence("IMMAGINE_NON_COERENTE", "L'immagine non risulta coerente con il contenuto della segnalazione.", 1, "AI")
         ];
     }
 }

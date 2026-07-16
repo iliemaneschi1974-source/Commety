@@ -16,14 +16,9 @@ class WatermarkRule extends AbstractImageRule_1.AbstractImageRule {
      * Analizza una singola immagine.
      */
     analizza(analisi) {
-        console.log("[WatermarkRule]", {
-            watermark: analisi.watermark,
-            threshold: ImageModerationThresholds_1.ImageModerationThresholds.WATERMARK,
-        });
         if (analisi.watermark < ImageModerationThresholds_1.ImageModerationThresholds.WATERMARK) {
             return [];
         }
-        console.log("[WatermarkRule] Evidence generated");
         return [
             this.creaEvidence("WATERMARK", "Watermark chiaramente visibile rilevato.", analisi.watermark)
         ];

@@ -27,7 +27,7 @@ class DefaultModerationEngine {
         const context = arg1 instanceof ModerationContext_1.ModerationContext
             ? arg1
             : new ModerationContext_1.ModerationContext(arg1, arg2);
-        const evidenze = this.analysisPipeline.analizza(context.userContent, context.imageAnalysis);
+        const evidenze = this.analysisPipeline.analizza(context.userContent, context.imageAnalysis, context.contentConsistency);
         const decisione = this.policy.valuta(evidenze);
         return new ModerationResult_1.ModerationResult(decisione, evidenze);
     }

@@ -24,7 +24,7 @@ const rule = new FaceRule_1.FaceRule();
     });
     (0, vitest_1.it)("produce una evidenza sopra la soglia", () => {
         const analysis = new ImageAnalysis_1.ImageAnalysis(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.90);
-        const expected = new ModerationEvidence_1.ModerationEvidence("VOLTO_RILEVATO", "Volto riconoscibile rilevato.", 0.90, "IMMAGINE");
+        const expected = new ModerationEvidence_1.ModerationEvidence("VOLTO_RILEVATO", "Volto chiaramente riconoscibile rilevato.", 0.90, "IMMAGINE");
         const result = rule.analizza(analysis);
         (0, vitest_1.expect)(result).toHaveLength(1);
         (0, vitest_1.expect)(result[0].equals(expected)).toBe(true);

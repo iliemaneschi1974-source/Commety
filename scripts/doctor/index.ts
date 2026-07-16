@@ -1,5 +1,9 @@
 import { PlatformDoctor } from "./PlatformDoctor";
+
 import { NodeCheck } from "./checks/NodeCheck";
+
+import { CoreModule } from "./modules/core/CoreModule";
+
 import { ConsolePrinter } from "./printer/ConsolePrinter";
 
 /**
@@ -15,10 +19,17 @@ import { ConsolePrinter } from "./printer/ConsolePrinter";
  * ============================================================================
  */
 
-const doctor = new PlatformDoctor([
-  new NodeCheck(),
-]);
+const doctor =
+  new PlatformDoctor([
 
-const result = doctor.execute();
+    new NodeCheck(),
 
-new ConsolePrinter().print(result);
+    new CoreModule(),
+
+  ]);
+
+const result =
+  doctor.execute();
+
+new ConsolePrinter()
+  .print(result);

@@ -1,16 +1,18 @@
 import { PlatformCheck } from "../../checks/PlatformCheck";
 import { PlatformCheckResult } from "../../model/PlatformCheckResult";
 
+import { CoreDistCheck } from "./checks/CoreDistCheck";
+
 /**
  * ============================================================================
- * CORE CHECK
+ * CORE MODULE
  * ----------------------------------------------------------------------------
  *
- * Coordina tutti i controlli relativi
+ * Modulo del Platform Doctor dedicato
  * al Commetty Core.
  *
- * Non contiene direttamente logica
- * di verifica.
+ * Coordina tutti i controlli relativi
+ * al Core.
  * ============================================================================
  */
 export class CoreModule
@@ -19,7 +21,30 @@ export class CoreModule
   public readonly name =
     "Commetty Core";
 
+  private readonly checks:
+    readonly PlatformCheck[] = [
+
+      new CoreDistCheck(),
+
+    ];
+
   execute(): PlatformCheckResult {
+
+    const results =
+      this.checks.map(
+        (check) => check.execute()
+      );
+
+    const failed =
+      results.find(
+        (result) => !result.success
+      );
+
+    if (failed) {
+
+      return failed;
+
+    }
 
     return new PlatformCheckResult(
 
@@ -27,7 +52,7 @@ export class CoreModule
 
       true,
 
-      "Controllo non ancora implementato."
+      "Tutti i controlli del Core superati."
 
     );
 

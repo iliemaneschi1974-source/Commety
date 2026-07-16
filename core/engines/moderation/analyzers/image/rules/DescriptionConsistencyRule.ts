@@ -23,6 +23,7 @@ export class DescriptionConsistencyRule
     consistency?: ContentConsistencyAnalysis
   ): readonly ModerationEvidence[] {
 
+
     if (!contenuto.hasTesto()) {
       return [];
     }
@@ -37,6 +38,7 @@ export class DescriptionConsistencyRule
 
     const soglia =
       ImageModerationThresholds.IMAGE_CONSISTENCY;
+      
 
     if (
       consistency.descriptionSimilarity >= soglia &&
@@ -47,20 +49,13 @@ export class DescriptionConsistencyRule
     }
 
     return [
-
-      new ModerationEvidence(
-
-        "IMMAGINE_NON_COERENTE",
-
-        "L'immagine non risulta coerente con il contenuto della segnalazione.",
-
-        consistency.confidence,
-
-        "AI"
-
-      )
-
-    ];
+  new ModerationEvidence(
+    "IMMAGINE_NON_COERENTE",
+    "L'immagine non risulta coerente con il contenuto della segnalazione.",
+    1,
+    "AI"
+  )
+];
 
   }
 

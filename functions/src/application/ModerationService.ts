@@ -1,7 +1,7 @@
 import * as logger from "firebase-functions/logger";
 
 import {
-
+  ContentConsistencyAnalysis,
   DefaultModerationEngine,
   DefaultModerationPolicy,
   ImageAnalysis,
@@ -62,9 +62,7 @@ export class ModerationService {
         request.images
       );
 
-    logger.info(
-      "UserContent created successfully."
-    );
+    
    
 
     const imageAnalysis: ImageAnalysis =
@@ -72,63 +70,42 @@ export class ModerationService {
         request.analysis
       );
 
-    
+    const consistency =
+  new ContentConsistencyAnalysis(
 
-    logger.info(
-      "Mapped ImageAnalysis",
-      {
-        pornografia: imageAnalysis.pornografia,
-        nudita: imageAnalysis.nudita,
-        violenza: imageAnalysis.violenza,
-        watermark: imageAnalysis.watermark,
-        volti: imageAnalysis.volti,
-        targhe: imageAnalysis.targhe,
-        documenti: imageAnalysis.documenti,
-        meme: imageAnalysis.meme,
-        screenshot: imageAnalysis.screenshot,
-        aiGenerated: imageAnalysis.aiGenerated,
-      }
-    );
+    request.analysis.consistency.descriptionSimilarity,
 
-    logger.info(
-      "ImageAnalysis mapped successfully."
-    );
+    request.analysis.consistency.titleSimilarity,
+
+    request.analysis.consistency.categorySimilarity,
+
+    request.analysis.consistency.confidence
+
+  );
+  
+
+   
+
+   
 
     
 
     const context =
-      new ModerationContext(
-        userContent,
-        imageAnalysis
-        
-      );
+  new ModerationContext(
+    userContent,
+    imageAnalysis,
+    consistency
+  );
+  
 
-    logger.info(
-      "ModerationContext created successfully."
-    );
+    
 
     const result =
       this.engine.modera(
         context
       );
 
-    logger.info(
-      "Moderation result",
-      {
-        decision: result.decision.value,
-        evidences: result.evidences.map(
-          (e) => e.tipo
-        ),
-      }
-    );
-
-    logger.info(
-      "Leaving ModerationService",
-      {
-        decision: result.decision.value,
-        evidences: result.evidences.length,
-      }
-    );
+    
 
     return result;
 

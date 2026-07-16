@@ -47,13 +47,14 @@ describe("FaceRule", () => {
     );
 
     const expected = new ModerationEvidence(
-      "VOLTO_RILEVATO",
-      "Volto riconoscibile rilevato.",
-      0.90,
-      "IMMAGINE"
-    );
+  "VOLTO_RILEVATO",
+  "Volto chiaramente riconoscibile rilevato.",
+  0.90,
+  "IMMAGINE"
+);
 
     const result = rule.analizza(analysis);
+    
 
     expect(result).toHaveLength(1);
     expect(result[0].equals(expected)).toBe(true);

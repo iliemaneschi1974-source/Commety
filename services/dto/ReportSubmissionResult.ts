@@ -17,16 +17,47 @@
 import { ModerationMessage } from "@/services/moderation/ModerationMessage";
 
 export class ReportSubmissionResult {
+
   private constructor(
+
+    /**
+     * Indica se la richiesta di pubblicazione
+     * è stata accettata.
+     *
+     * Non rappresenta l'esito della moderazione.
+     */
     public readonly success: boolean,
+
+    /**
+     * Identificativo della segnalazione appena creata.
+     *
+     * Verrà utilizzato dal frontend per attendere
+     * il completamento della moderazione asincrona.
+     */
+    public readonly reportId?: string,
+
+    /**
+     * Messaggio destinato all'utente.
+     *
+     * Utilizzato esclusivamente nei casi
+     * di errore lato frontend.
+     */
     public readonly moderationMessage?: ModerationMessage
+
   ) {}
 
   /**
-   * La pubblicazione è stata completata con successo.
+   * La segnalazione è stata creata.
    */
-  static success(): ReportSubmissionResult {
-    return new ReportSubmissionResult(true);
+  static success(
+    reportId: string
+  ): ReportSubmissionResult {
+
+    return new ReportSubmissionResult(
+      true,
+      reportId
+    );
+
   }
 
   /**
@@ -35,9 +66,13 @@ export class ReportSubmissionResult {
   static failure(
     moderationMessage: ModerationMessage
   ): ReportSubmissionResult {
+
     return new ReportSubmissionResult(
       false,
+      undefined,
       moderationMessage
     );
+
   }
+
 }

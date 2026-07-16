@@ -2,6 +2,10 @@
 import { useAuth } from "@/contexts/AuthContext";
 import MessageDialog from "@/components/ui/MessageDialog";
 import { Report } from "@/types/report";
+import { useProcessingOverlay } from "@/hooks/useProcessingOverlay";
+import {
+  listenModerationDecision,
+} from "@/services/reportModeration";
 import ReportBottomSheet from "@/components/Map/ReportBottomSheet";
 import {
   useEffect,
@@ -54,6 +58,8 @@ export default function MapComponent() {
     zoom,
     flyTo,
   } = useMapContext();
+  const processingOverlay =
+  useProcessingOverlay();
 const { user } = useAuth();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -198,7 +204,44 @@ const handleCreateReport = async (
 
       return;
     }
+    if (!result.reportId) {
+  return;
+}
+processingOverlay.showProcessing();
+const unsubscribe =
+  listenModerationDecision(
+    result.reportId,
+    (event) => {
 
+      unsubscribe();
+
+      if (
+        event.decision === "APPROVATO"
+      ) {
+
+        processingOverlay.showSuccess();
+
+        setTimeout(() => {
+          processingOverlay.hide();
+        }, 2000);
+
+        return;
+      }
+
+      processingOverlay.hide();
+
+      setMessageDialogTitle(
+        "Segnalazione non pubblicata"
+      );
+
+      setMessageDialogDescription(
+        "L'immagine caricata non soddisfa i requisiti di pubblicazione di Commetty. Ti invitiamo a caricarne una diversa."
+      );
+
+      setMessageDialogOpen(true);
+
+    }
+  );
     setSelectedPosition(null);
 
     setOpen(false);
