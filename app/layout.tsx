@@ -15,11 +15,12 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL(
+const appUrl =
   process.env.NEXT_PUBLIC_APP_URL ??
-    "https://commety.vercel.app"
-),
+  "https://commety.vercel.app";
+
+export const metadata: Metadata = {
+  metadataBase: new URL(appUrl),
 
   title: "Commety",
 
@@ -28,7 +29,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Commety",
     description: "Scopri cosa sta succedendo vicino a te.",
-    url: "https://commety.it",
+    url: appUrl,
     siteName: "Commety",
     locale: "it_IT",
     type: "website",
@@ -65,11 +66,9 @@ export default function RootLayout({
         <AuthProvider>
           <MapProvider>
             <ProcessingOverlayProvider>
-
               {children}
 
               <ProcessingOverlay />
-
             </ProcessingOverlayProvider>
           </MapProvider>
         </AuthProvider>
