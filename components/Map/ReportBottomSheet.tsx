@@ -221,31 +221,30 @@ async function handleShare() {
 
         <div className="mt-6 grid grid-cols-2 gap-3">
 
-          <Button
-            onClick={toggle}
-            disabled={loading}
-            variant={confirmed ? "secondary" : "default"}
-          >
-            {loading
-              ? "⏳ Conferma..."
-              : confirmed
-                ? "✅ Confermato"
-                : "👍 Conferma"}
-          </Button>
-
-          <Button
-            variant="outline"
-          >
-            💬 Commenta
-          </Button>
-        <Button
-    variant="outline"
-    onClick={handleShare}
-    className="col-span-2"
+  <Button
+    onClick={toggle}
+    disabled={loading}
+    variant={confirmed ? "secondary" : "default"}
   >
-    📤 Condividi
+    {loading
+      ? "⏳ Conferma..."
+      : confirmed
+        ? "✅ Confermato"
+        : "👍 Conferma"}
   </Button>
-        </div>
+
+  <Button
+  onClick={handleShare}
+  className="
+    bg-blue-600
+    text-white
+    hover:bg-blue-700
+  "
+>
+  📤 Condividi
+</Button>
+
+</div>
 
         <Comments reportId={report.id} />
 </div>

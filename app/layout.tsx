@@ -16,8 +16,39 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+  process.env.NEXT_PUBLIC_APP_URL ??
+    "https://commety.vercel.app"
+),
+
   title: "Commety",
-  description: "Community Map",
+
+  description: "Scopri cosa sta succedendo vicino a te.",
+
+  openGraph: {
+    title: "Commety",
+    description: "Scopri cosa sta succedendo vicino a te.",
+    url: "https://commety.it",
+    siteName: "Commety",
+    locale: "it_IT",
+    type: "website",
+
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Commety",
+      },
+    ],
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "Commety",
+    description: "Scopri cosa sta succedendo vicino a te.",
+    images: ["/og-image.png"],
+  },
 };
 
 export default function RootLayout({
