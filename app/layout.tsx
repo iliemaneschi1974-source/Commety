@@ -17,7 +17,7 @@ const inter = Inter({
 
 const appUrl =
   process.env.NEXT_PUBLIC_APP_URL ??
-  "https://commety.vercel.app";
+  "https://commety.it";
 
 export const metadata: Metadata = {
   metadataBase: new URL(appUrl),
@@ -35,20 +35,20 @@ export const metadata: Metadata = {
     type: "website",
 
     images: [
-   {
-    url: `${appUrl}/og-image-square.png`,
-    width: 400,
-    height: 400,
-    alt: "Commety",
-  },
-],
+      {
+        url: `${appUrl}/images/branding/og-home.png`,
+        width: 1200,
+        height: 630,
+        alt: "Commety",
+      },
+    ],
   },
 
   twitter: {
     card: "summary_large_image",
     title: "Commety",
     description: "Scopri cosa sta succedendo vicino a te.",
-    images: [`${appUrl}/og-image-square.png`],
+    images: [`${appUrl}/images/branding/og-home.png`],
   },
 };
 
