@@ -307,15 +307,17 @@ const unsubscribe =
   report={selectedReport}
   open={sheetOpen}
   onClose={() => {
-    setSheetOpen(false);
-    setSelectedReport(null);
+  setSheetOpen(false);
+  setSelectedReport(null);
 
-    if (sharedReportId) {
-      setTimeout(() => {
-        router.replace("/mappa");
-      }, 350);
-    }
-  }}
+  if (openedFromSharedLink.current) {
+    openedFromSharedLink.current = false;
+
+    setTimeout(() => {
+      router.replace("/mappa");
+    }, 350);
+  }
+}}
 />
 <MessageDialog
   open={messageDialogOpen}
