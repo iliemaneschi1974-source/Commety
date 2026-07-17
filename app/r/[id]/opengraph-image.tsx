@@ -3,6 +3,9 @@ import { ImageResponse } from "next/og";
 import ReportOpenGraphImage from "@/components/opengraph-image/ReportOpenGraphImage";
 import { mapReportToOpenGraphModel } from "@/lib/opengraphMapper";
 import { getServerReportById } from "@/services/serverReports";
+export const dynamic = "force-dynamic";
+
+export const runtime = "nodejs";
 
 export const size = {
   width: 1200,
