@@ -1,53 +1,18 @@
 import L, { DivIcon } from "leaflet";
 import { renderToStaticMarkup } from "react-dom/server";
-import {
-  CloudRain,
-  Car,
-  TriangleAlert,
-  PartyPopper,
-  Umbrella,
-} from "lucide-react";
 
 import { ReportCategory } from "@/types/report";
+import { REPORT_CATEGORY_CONFIG } from "@/lib/reportCategoryConfig";
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 
-import { ReactElement } from "react";
-
-export interface MarkerConfig {
-  color: string;
-  icon: ReactElement;
-}
-
-export const MARKER_CONFIG: Record<ReportCategory, MarkerConfig> = {
-  meteo: {
-    color: "#2563FF",
-    icon: <CloudRain size={20} color="white" />,
-  },
-
-  traffico: {
-    color: "#F59E0B",
-    icon: <Car size={20} color="white" />,
-  },
-
-  pericolo: {
-    color: "#EF4444",
-    icon: <TriangleAlert size={20} color="white" />,
-  },
-
-  evento: {
-    color: "#8B5CF6",
-    icon: <PartyPopper size={20} color="white" />,
-  },
-
-  mare: {
-    color: "#06B6D4",
-    icon: <Umbrella size={20} color="white" />,
-  },
-};
-
+/**
+ * Restituisce il marker Leaflet
+ * utilizzando la configurazione ufficiale
+ * delle categorie di Commety.
+ */
 export function getMarkerIcon(type: ReportCategory): DivIcon {
-  const config = MARKER_CONFIG[type];
+  const config = REPORT_CATEGORY_CONFIG[type];
 
   return L.divIcon({
     className: "commety-marker",
