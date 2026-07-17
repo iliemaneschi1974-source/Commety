@@ -64,5 +64,5 @@ export default async function ReportRedirectPage({
 }: ReportRedirectPageProps) {
   const { id } = await params;
 
-  redirect(`/?r=${encodeURIComponent(id)}`);
+  redirect(`/mappa?report=${encodeURIComponent(id)}`);
 }
