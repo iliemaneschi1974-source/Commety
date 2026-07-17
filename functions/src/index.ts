@@ -1,7 +1,10 @@
 import { setGlobalOptions } from "firebase-functions/v2";
 
+import { reportCreatedTrigger } from "./firestore/reportCreatedTrigger";
 import { reportUpdatedTrigger } from "./firestore/reportUpdatedTrigger";
+
 import { testOpenAI } from "./http/testOpenAI";
+
 import { expirationScheduler } from "./schedulers/expirationScheduler";
 
 /**
@@ -15,6 +18,11 @@ setGlobalOptions({
  * Scheduler del Lifecycle Engine.
  */
 export { expirationScheduler };
+
+/**
+ * Trigger della moderazione testuale.
+ */
+export { reportCreatedTrigger };
 
 /**
  * Trigger della AI Pipeline.

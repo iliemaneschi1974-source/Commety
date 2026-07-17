@@ -10,7 +10,6 @@ import {
   UserContent,
 } from "@commety/core";
 
-
 import { OpenAIImageAnalysisMapper } from "../ai/mapping/OpenAIImageAnalysisMapper";
 import { ModerationRequest } from "./ModerationRequest";
 
@@ -20,7 +19,7 @@ import { ModerationRequest } from "./ModerationRequest";
  * ----------------------------------------------------------------------------
  *
  * Application Service responsabile dell'orchestrazione
- * della moderazione dei contenuti analizzati dalla AI.
+ * della moderazione dei contenuti.
  *
  * Coordina:
  *
@@ -38,6 +37,42 @@ export class ModerationService {
     new DefaultModerationEngine(
       new DefaultModerationPolicy()
     );
+
+  /**
+   * Esegue la moderazione di una segnalazione
+   * esclusivamente testuale.
+   */
+  executeTextOnly(
+    category: string,
+    title: string,
+    description: string
+  ): ModerationResult {
+
+    logger.info(
+      "Entering ModerationService (text only)",
+      {
+        category,
+        title,
+      }
+    );
+
+    const userContent =
+      new UserContent(
+        title,
+        description,
+        []
+      );
+
+    const context =
+      new ModerationContext(
+        userContent
+      );
+
+    return this.engine.modera(
+      context
+    );
+
+  }
 
   /**
    * Esegue la moderazione della segnalazione.
@@ -62,50 +97,30 @@ export class ModerationService {
         request.images
       );
 
-    
-   
-
     const imageAnalysis: ImageAnalysis =
       OpenAIImageAnalysisMapper.from(
         request.analysis
       );
 
     const consistency =
-  new ContentConsistencyAnalysis(
-
-    request.analysis.consistency.descriptionSimilarity,
-
-    request.analysis.consistency.titleSimilarity,
-
-    request.analysis.consistency.categorySimilarity,
-
-    request.analysis.consistency.confidence
-
-  );
-  
-
-   
-
-   
-
-    
+      new ContentConsistencyAnalysis(
+        request.analysis.consistency.descriptionSimilarity,
+        request.analysis.consistency.titleSimilarity,
+        request.analysis.consistency.categorySimilarity,
+        request.analysis.consistency.confidence
+      );
 
     const context =
-  new ModerationContext(
-    userContent,
-    imageAnalysis,
-    consistency
-  );
-  
-
-    
+      new ModerationContext(
+        userContent,
+        imageAnalysis,
+        consistency
+      );
 
     const result =
       this.engine.modera(
         context
       );
-
-    
 
     return result;
 

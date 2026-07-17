@@ -204,10 +204,27 @@ const handleCreateReport = async (
 
       return;
     }
-    if (!result.reportId) {
+    setSelectedPosition(null);
+setOpen(false);
+
+if (!result.reportId) {
   return;
 }
+
+/**
+ * Nessuna immagine:
+ * la segnalazione è già pubblicata.
+ */
+if (data.images.length === 0) {
+  return;
+}
+
+/**
+ * Sono presenti immagini:
+ * attendiamo la moderazione AI.
+ */
 processingOverlay.showProcessing();
+
 const unsubscribe =
   listenModerationDecision(
     result.reportId,
@@ -242,9 +259,6 @@ const unsubscribe =
 
     }
   );
-    setSelectedPosition(null);
-
-    setOpen(false);
   } catch (error) {
     console.error(
       "Errore durante la creazione della segnalazione:",
