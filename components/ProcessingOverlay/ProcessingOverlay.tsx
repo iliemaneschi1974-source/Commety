@@ -28,6 +28,7 @@ export default function ProcessingOverlay() {
 
   let title = "";
   let description = "";
+  const isError = state === "ERROR";
 
   switch (state) {
 
@@ -77,10 +78,20 @@ export default function ProcessingOverlay() {
           w-full
           max-w-md
           rounded-3xl
-          bg-white
+          relative
+          overflow-hidden
+          border
+          border-white/15
+          bg-[linear-gradient(135deg,#071a3c_0%,#0F2D5F_42%,#1b4b87_62%,#0a2553_100%)]
           p-8
-          shadow-2xl
+          shadow-[0_18px_45px_rgba(2,16,42,0.45)]
           text-center
+          before:pointer-events-none
+          before:absolute
+          before:inset-0
+          before:bg-[linear-gradient(115deg,transparent_25%,rgba(255,255,255,0.18)_48%,transparent_62%)]
+          [&>*]:relative
+          [&>*]:z-10
         "
       >
 
@@ -93,7 +104,7 @@ export default function ProcessingOverlay() {
               h-12
               w-12
               animate-spin
-              text-[#2563FF]
+              text-white
             "
           />
 
@@ -116,11 +127,12 @@ export default function ProcessingOverlay() {
         )}
 
         <h2
-          className="
+          className={`
             mb-4
             text-2xl
             font-bold
-          "
+            ${isError ? "text-red-400" : "text-white"}
+          `}
         >
           {title}
         </h2>
@@ -129,7 +141,7 @@ export default function ProcessingOverlay() {
           className="
             text-sm
             leading-6
-            text-slate-600
+            text-white/90
           "
         >
           {description}

@@ -6,6 +6,7 @@ import BottomSheet from "@/components/ui/BottomSheet";
 import { Button } from "@/components/ui/button";
 import Comments from "@/components/Map/Comments";
 import ImageViewer from "@/components/Map/ImageViewer";
+import MessageDialog from "@/components/ui/MessageDialog";
 import { useConfirmation } from "@/hooks/useConfirmation";
 import { Report } from "@/types/report";
 import { buildShareData } from "@/lib/share";
@@ -37,6 +38,7 @@ export default function ReportBottomSheet({
   } = useConfirmation(report?.id);
 const [viewerOpen, setViewerOpen] = useState(false);
 const [currentImage, setCurrentImage] = useState(0);
+const [shareMessageOpen, setShareMessageOpen] = useState(false);
 
   if (!report) return null;
   const currentReport = report;
@@ -56,7 +58,7 @@ async function handleShare() {
 
     await navigator.clipboard.writeText(shareData.url);
 
-    alert("✅ Link copiato negli appunti");
+    setShareMessageOpen(true);
   } catch (error) {
     console.error(error);
   }
@@ -268,6 +270,14 @@ async function handleShare() {
         : prev + 1
     )
   }
+/>
+
+<MessageDialog
+  open={shareMessageOpen}
+  title="Link copiato"
+  message="Il link della segnalazione è stato copiato negli appunti."
+  variant="info"
+  onClose={() => setShareMessageOpen(false)}
 />
 
 </BottomSheet>

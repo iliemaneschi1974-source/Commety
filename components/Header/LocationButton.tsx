@@ -2,19 +2,18 @@
 
 import { useState } from "react";
 import { Loader2, LocateFixed } from "lucide-react";
+
+import MessageDialog from "@/components/ui/MessageDialog";
 import { useMapContext } from "@/contexts/MapContext";
 
 export default function LocationButton() {
-  const {
-    flyTo,
-    setUserLocation,
-  } = useMapContext();
-
+  const { flyTo, setUserLocation } = useMapContext();
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   function handleLocation() {
     if (!navigator.geolocation) {
-      alert("La geolocalizzazione non è supportata.");
+      setErrorMessage("La geolocalizzazione non è supportata.");
       return;
     }
 
@@ -27,17 +26,13 @@ export default function LocationButton() {
           position.coords.longitude,
         ];
 
-        // Salviamo la posizione reale dell'utente
         setUserLocation(coords);
-
-        // Centriamo la mappa
         flyTo(coords, 17);
-
         setLoading(false);
       },
       () => {
         setLoading(false);
-        alert("Impossibile ottenere la posizione.");
+        setErrorMessage("Impossibile ottenere la posizione.");
       },
       {
         enableHighAccuracy: true,
@@ -47,33 +42,24 @@ export default function LocationButton() {
   }
 
   return (
-    <button
-      onClick={handleLocation}
-      className="
-        w-14
-        h-14
-        rounded-2xl
-        border
-        border-white/20
-        bg-[linear-gradient(135deg,#071a3c_0%,#0F2D5F_45%,#1b4b87_100%)]
-        text-white
-        shadow-[0_10px_24px_rgba(2,16,42,0.34)]
-        hover:brightness-110
-        active:scale-95
-        transition-all
-        flex
-        items-center
-        justify-center
-      "
-    >
-      {loading ? (
-        <Loader2
-          size={22}
-          className="animate-spin"
-        />
-      ) : (
-        <LocateFixed size={22} />
-      )}
-    </button>
+    <>
+      <button
+        onClick={handleLocation}
+        className="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/20 bg-[linear-gradient(135deg,#071a3c_0%,#0F2D5F_45%,#1b4b87_100%)] text-white shadow-[0_10px_24px_rgba(2,16,42,0.34)] transition-all hover:brightness-110 active:scale-95"
+      >
+        {loading ? (
+          <Loader2 size={22} className="animate-spin" />
+        ) : (
+          <LocateFixed size={22} />
+        )}
+      </button>
+
+      <MessageDialog
+        open={Boolean(errorMessage)}
+        title="Geolocalizzazione non disponibile"
+        message={errorMessage}
+        onClose={() => setErrorMessage("")}
+      />
+    </>
   );
 }

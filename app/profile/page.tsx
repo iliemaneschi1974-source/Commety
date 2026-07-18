@@ -1,13 +1,12 @@
 "use client";
 
-import { ChevronLeft } from "lucide-react";
+import { Map } from "lucide-react";
 import Link from "next/link";
 
 import { ProfileGallery } from "@/components/Profile/ProfileGallery";
 import { ProfileHeader } from "@/components/Profile/ProfileHeader";
 import { ProfileReports } from "@/components/Profile/ProfileReports";
 import { ProfileStats } from "@/components/Profile/ProfileStats";
-import { CommetyHeader } from "@/components/ui/CommetyHeader";
 
 import { useProfile } from "@/hooks/useProfile";
 import { useUserReports } from "@/hooks/useUserReports";
@@ -55,20 +54,6 @@ export default function ProfilePage() {
 
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-col gap-8 p-6">
-      <CommetyHeader
-        title="Profilo"
-        subtitle="La tua reputazione"
-        leftSlot={
-          <Link
-            href="/mappa"
-            aria-label="Torna alla mappa"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full transition hover:bg-slate-100"
-          >
-            <ChevronLeft className="h-5 w-5" />
-          </Link>
-        }
-      />
-
       <ProfileHeader profile={profileHeader} />
 
       <ProfileStats stats={stats} />
@@ -76,6 +61,15 @@ export default function ProfilePage() {
       <ProfileReports reports={reports} />
 
       <ProfileGallery images={gallery} />
+
+      <Link
+        href="/mappa"
+        aria-label="Torna alla mappa"
+        title="Torna alla mappa"
+        className="fixed bottom-6 right-6 z-40 flex h-16 w-16 items-center justify-center rounded-full border border-white/25 bg-[linear-gradient(135deg,#071a3c_0%,#0F2D5F_45%,#1b4b87_100%)] text-white shadow-[0_12px_28px_rgba(2,16,42,0.38)] transition hover:scale-105 hover:brightness-110 active:scale-95"
+      >
+        <Map className="size-7" aria-hidden="true" />
+      </Link>
     </main>
   );
 }

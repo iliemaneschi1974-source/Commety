@@ -19,23 +19,17 @@ export default function Toast({
   const config = {
     success: {
       icon: CheckCircle2,
-      bg: "bg-emerald-50",
-      border: "border-emerald-200",
-      text: "text-emerald-700",
+      accent: "text-emerald-300",
     },
 
     error: {
       icon: XCircle,
-      bg: "bg-red-50",
-      border: "border-red-200",
-      text: "text-red-700",
+      accent: "text-red-400",
     },
 
     info: {
       icon: Info,
-      bg: "bg-blue-50",
-      border: "border-blue-200",
-      text: "text-blue-700",
+      accent: "text-sky-300",
     },
   };
 
@@ -52,15 +46,15 @@ export default function Toast({
 
         rounded-2xl
         border
+        border-white/15
+
+        bg-[linear-gradient(135deg,#071a3c_0%,#0F2D5F_45%,#1b4b87_100%)]
+        text-white
 
         px-4
         py-3
 
-        shadow-xl
-
-        ${current.bg}
-        ${current.border}
-        ${current.text}
+        shadow-[0_12px_28px_rgba(2,16,42,0.38)]
 
         backdrop-blur-xl
       `}
@@ -68,6 +62,7 @@ export default function Toast({
       <Icon
         size={20}
         strokeWidth={2.5}
+        className={current.accent}
       />
 
       <span className="font-medium">
