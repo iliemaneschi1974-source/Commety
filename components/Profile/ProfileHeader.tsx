@@ -1,5 +1,6 @@
 import Image from "next/image";
-import { MapPin } from "lucide-react";
+import { Check, MapPin, Pencil, X } from "lucide-react";
+import { useState } from "react";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { InfoRow } from "@/components/ui/info-row";
@@ -8,7 +9,10 @@ import { ProfileHeaderData } from "@/types/profile";
 
 interface ProfileHeaderProps {
   profile: ProfileHeaderData;
+  onSaveNickname: (nickname: string) => Promise<void>;
 }
+
+const MAX_NICKNAME_LENGTH = 30;
 
 function formatJoinDate(date: string) {
   if (!date) {
@@ -30,7 +34,12 @@ function formatJoinDate(date: string) {
 
 export function ProfileHeader({
   profile,
+  onSaveNickname,
 }: ProfileHeaderProps) {
+  const [editingNickname, setEditingNickname] = useState(false);
+  const [nickname, setNickname] = useState(profile.nickname);
+  const [savingNickname, setSavingNickname] = useState(false);
+  const [nicknameError, setNicknameError] = useState("");
   const progress =
     profile.xpForNextLevel !== null
       ? Math.min(
@@ -51,6 +60,33 @@ export function ProfileHeader({
 
   const joinedAt =
     formatJoinDate(profile.joinedAt);
+
+  async function handleSaveNickname() {
+    const trimmedNickname = nickname.trim();
+
+    if (!trimmedNickname) {
+      setNicknameError("Inserisci un nome utente.");
+      return;
+    }
+
+    try {
+      setSavingNickname(true);
+      setNicknameError("");
+      await onSaveNickname(trimmedNickname);
+      setEditingNickname(false);
+    } catch (error) {
+      console.error("Errore aggiornamento nome utente:", error);
+      setNicknameError("Non è stato possibile salvare il nome utente.");
+    } finally {
+      setSavingNickname(false);
+    }
+  }
+
+  function handleCancelNicknameEdit() {
+    setNickname(profile.nickname);
+    setNicknameError("");
+    setEditingNickname(false);
+  }
 
   return (
     <div
@@ -75,9 +111,66 @@ export function ProfileHeader({
       </Avatar>
 
       <div className="flex flex-col items-center gap-2 text-center">
-        <h1 className="text-3xl font-bold tracking-tight">
-          {profile.nickname}
-        </h1>
+        {editingNickname ? (
+          <div className="w-full max-w-xs">
+            <div className="flex items-center gap-2">
+              <input
+                value={nickname}
+                maxLength={MAX_NICKNAME_LENGTH}
+                onChange={(event) => setNickname(event.target.value)}
+                className="min-w-0 flex-1 rounded-xl border border-white/70 bg-white/95 px-3 py-2 text-center text-lg font-bold text-[#0F2D5F] outline-none focus:border-white focus:ring-4 focus:ring-white/20"
+                aria-label="Nome utente"
+                autoFocus
+              />
+
+              <button
+                type="button"
+                onClick={handleSaveNickname}
+                disabled={savingNickname}
+                aria-label="Salva nome utente"
+                className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500 text-white transition hover:bg-emerald-600 disabled:opacity-50"
+              >
+                <Check className="size-5" />
+              </button>
+
+              <button
+                type="button"
+                onClick={handleCancelNicknameEdit}
+                disabled={savingNickname}
+                aria-label="Annulla modifica nome utente"
+                className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-red-500 text-white transition hover:bg-red-600 disabled:opacity-50"
+              >
+                <X className="size-5" />
+              </button>
+            </div>
+
+            <p className="mt-2 text-xs text-white/75">
+              {nickname.length} / {MAX_NICKNAME_LENGTH} caratteri
+            </p>
+
+            {nicknameError && (
+              <p className="mt-1 text-xs text-red-300" role="alert">
+                {nicknameError}
+              </p>
+            )}
+          </div>
+        ) : (
+          <div className="flex items-center gap-2">
+            <h1 className="text-3xl font-bold tracking-tight">
+              {profile.nickname}
+            </h1>
+
+            <button
+              type="button"
+              onClick={() => setEditingNickname(true)}
+              aria-label="Modifica nome utente"
+              title="Modifica nome utente"
+              className="flex size-9 items-center justify-center rounded-full bg-white/15 text-white transition hover:bg-white/25 active:scale-95"
+            >
+              <Pencil className="size-4" />
+            </button>
+          </div>
+        )}
 
         <InfoRow
           icon={<MapPin className="size-4" />}

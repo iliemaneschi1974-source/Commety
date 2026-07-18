@@ -38,7 +38,11 @@ import { getReportById } from "@/services/reports";
 import { submitReport } from "@/services/reportSubmission";
 
 // Fix marker Leaflet + Next.js
-delete (L.Icon.Default.prototype as any)._getIconUrl;
+delete (
+  L.Icon.Default.prototype as {
+    _getIconUrl?: string;
+  }
+)._getIconUrl;
 
 L.Icon.Default.mergeOptions({
   iconRetinaUrl:
@@ -56,6 +60,8 @@ export default function MapComponent() {
     center,
     zoom,
     flyTo,
+    userLocation,
+    setUserLocation,
   } = useMapContext();
   const processingOverlay =
   useProcessingOverlay();
@@ -86,6 +92,10 @@ const [messageDialogTitle, setMessageDialogTitle] =
 const [messageDialogDescription, setMessageDialogDescription] =
   useState("");
 useEffect(() => {
+  if (userLocation || sharedReportId) {
+    return;
+  }
+
   if (!navigator.geolocation) {
     console.warn("Geolocalizzazione non supportata");
     return;
@@ -99,16 +109,17 @@ useEffect(() => {
       ];
 
       setUserPosition(coords);
+      setUserLocation(coords);
 
-if (!openedFromSharedLink.current) {
-  flyTo(coords, 15);
-}
+      if (!openedFromSharedLink.current) {
+        flyTo(coords, 15);
+      }
     },
     () => {
       console.warn("Posizione non autorizzata");
     }
   );
-}, []);
+}, [flyTo, setUserLocation, sharedReportId, userLocation]);
 
 useEffect(() => {
   if (!sharedReportId) {
@@ -143,11 +154,11 @@ const reportId = sharedReportId;
   }
 
   openSharedReport();
-}, [sharedReportId]);
+}, [sharedReportId, flyTo]);
 
 const handleCreateReport = async (
   data: ReportFormData
-) => {
+): Promise<boolean> => {
   try {
     const position =
       selectedPosition ?? userPosition;
@@ -198,13 +209,13 @@ const handleCreateReport = async (
 
       setMessageDialogOpen(true);
 
-      return;
+      return false;
     }
-    setSelectedPosition(null);
-setOpen(false);
 
-if (!result.reportId) {
-  return;
+const reportId = result.reportId;
+
+if (!reportId) {
+  return false;
 }
 
 /**
@@ -212,7 +223,7 @@ if (!result.reportId) {
  * la segnalazione è già pubblicata.
  */
 if (data.images.length === 0) {
-  return;
+  return true;
 }
 
 /**
@@ -221,9 +232,9 @@ if (data.images.length === 0) {
  */
 processingOverlay.showProcessing();
 
-const unsubscribe =
-  listenModerationDecision(
-    result.reportId,
+return new Promise((resolve) => {
+  const unsubscribe = listenModerationDecision(
+    reportId,
     (event) => {
 
       unsubscribe();
@@ -238,6 +249,7 @@ const unsubscribe =
           processingOverlay.hide();
         }, 2000);
 
+        resolve(true);
         return;
       }
 
@@ -253,13 +265,16 @@ const unsubscribe =
 
       setMessageDialogOpen(true);
 
+      resolve(false);
     }
   );
+});
   } catch (error) {
     console.error(
       "Errore durante la creazione della segnalazione:",
       error
     );
+    return false;
   }
 };
   return (
@@ -310,7 +325,10 @@ const unsubscribe =
 
       <ReportForm
         open={open}
-        onClose={() => setOpen(false)}
+        onClose={() => {
+          setSelectedPosition(null);
+          setOpen(false);
+        }}
         onSubmit={handleCreateReport}
       />
       <ReportBottomSheet

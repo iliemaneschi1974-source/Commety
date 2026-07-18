@@ -10,10 +10,12 @@ import { ProfileStats } from "@/components/Profile/ProfileStats";
 
 import { useProfile } from "@/hooks/useProfile";
 import { useUserReports } from "@/hooks/useUserReports";
+import { updateUser } from "@/services/users";
 
 export default function ProfilePage() {
   const {
     loading,
+    user,
     profileHeader,
     profileStats,
   } = useProfile();
@@ -52,9 +54,25 @@ export default function ProfilePage() {
     photos: photosCount,
   };
 
+  async function handleSaveNickname(nickname: string) {
+    if (!user) {
+      return;
+    }
+
+    await updateUser(user.uid, {
+      profile: {
+        ...user.profile,
+        displayName: nickname,
+      },
+    });
+  }
+
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-col gap-8 p-6">
-      <ProfileHeader profile={profileHeader} />
+      <ProfileHeader
+        profile={profileHeader}
+        onSaveNickname={handleSaveNickname}
+      />
 
       <ProfileStats stats={stats} />
 

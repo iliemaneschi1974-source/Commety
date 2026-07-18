@@ -16,6 +16,7 @@ export default function RecenterMap() {
   const previousCenter = useRef<[number, number] | null>(null);
   const previousZoom = useRef<number | null>(null);
   const previousBounds = useRef<string | null>(null);
+  const isInitialPosition = useRef(true);
 
   useEffect(() => {
     if (bounds) {
@@ -53,6 +54,15 @@ export default function RecenterMap() {
       previousCenter.current[1] === center[1] &&
       previousZoom.current === zoom
     ) {
+      return;
+    }
+
+    if (isInitialPosition.current) {
+      isInitialPosition.current = false;
+      previousCenter.current = center;
+      previousZoom.current = zoom;
+      previousBounds.current = null;
+      map.setView(center, zoom, { animate: false });
       return;
     }
 

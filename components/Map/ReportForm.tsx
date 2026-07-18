@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import ImagePicker from "@/components/Map/ImagePicker";
 import { ReportCategory } from "@/types/report";
@@ -15,7 +15,7 @@ export interface ReportFormData {
 interface ReportFormProps {
   open: boolean;
   onClose: () => void;
-  onSubmit: (data: ReportFormData) => Promise<void> | void;
+  onSubmit: (data: ReportFormData) => Promise<boolean> | boolean;
 }
 
 const INITIAL_FORM: ReportFormData = {
@@ -35,15 +35,14 @@ export default function ReportForm({
 
   const [submitting, setSubmitting] = useState(false);
 
-  useEffect(() => {
-    if (!open) {
-      setForm(INITIAL_FORM);
-      setSubmitting(false);
-    }
-  }, [open]);
-
   if (!open) {
     return null;
+  }
+
+  function handleClose() {
+    setForm(INITIAL_FORM);
+    setSubmitting(false);
+    onClose();
   }
 
   async function handleSubmit() {
@@ -54,16 +53,16 @@ export default function ReportForm({
     try {
       setSubmitting(true);
 
-      await onSubmit({
+      const shouldClose = await onSubmit({
         type: form.type,
         title: form.title.trim(),
         description: form.description.trim(),
         images: form.images,
       });
 
-      setForm(INITIAL_FORM);
-
-      onClose();
+      if (shouldClose) {
+        handleClose();
+      }
     } finally {
       setSubmitting(false);
     }
@@ -71,14 +70,14 @@ export default function ReportForm({
 
   return (
     <div className="fixed inset-0 z-[2000] flex items-center justify-center bg-black/40 p-4">
-      <div className="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl">
+      <div className="relative w-full max-w-md overflow-hidden rounded-3xl border border-white/15 bg-[linear-gradient(135deg,#071a3c_0%,#0F2D5F_42%,#1b4b87_62%,#0a2553_100%)] p-6 text-white shadow-[0_18px_45px_rgba(2,16,42,0.45)] before:pointer-events-none before:absolute before:inset-0 before:bg-[linear-gradient(115deg,transparent_25%,rgba(255,255,255,0.18)_48%,transparent_62%)] [&>*]:relative [&>*]:z-10">
 
-        <h2 className="mb-6 text-2xl font-bold">
+        <h2 className="mb-6 text-center text-2xl font-bold">
           Nuova segnalazione
         </h2>
 
         <select
-          className="mb-4 w-full rounded-xl border p-3"
+          className="mb-4 w-full rounded-xl border border-white/70 bg-white/95 p-3 text-slate-900 shadow-sm outline-none focus:border-white focus:ring-4 focus:ring-white/20"
           value={form.type}
           onChange={(e) =>
             setForm((prev) => ({
@@ -97,7 +96,7 @@ export default function ReportForm({
         <input
           type="text"
           placeholder="Titolo"
-          className="mb-4 w-full rounded-xl border p-3"
+          className="mb-4 w-full rounded-xl border border-white/70 bg-white/95 p-3 text-slate-900 shadow-sm outline-none placeholder:text-slate-400 focus:border-white focus:ring-4 focus:ring-white/20"
           value={form.title}
           onChange={(e) =>
             setForm((prev) => ({
@@ -109,7 +108,7 @@ export default function ReportForm({
 
         <textarea
           placeholder="Descrizione"
-          className="mb-4 h-32 w-full resize-none rounded-xl border p-3"
+          className="mb-4 h-32 w-full resize-none rounded-xl border border-white/70 bg-white/95 p-3 text-slate-900 shadow-sm outline-none placeholder:text-slate-400 focus:border-white focus:ring-4 focus:ring-white/20"
           value={form.description}
           onChange={(e) =>
             setForm((prev) => ({
@@ -133,9 +132,9 @@ export default function ReportForm({
 
           <button
             type="button"
-            onClick={onClose}
+            onClick={handleClose}
             disabled={submitting}
-            className="flex-1 rounded-xl border py-3 font-medium transition hover:bg-slate-100 disabled:opacity-50"
+            className="flex-1 rounded-xl border border-red-300/70 bg-red-500 py-3 font-medium text-white shadow-sm transition hover:bg-red-600 disabled:opacity-50"
           >
             Annulla
           </button>
@@ -147,7 +146,7 @@ export default function ReportForm({
               submitting ||
               !form.title.trim()
             }
-            className="flex-1 rounded-xl bg-[#2563FF] py-3 font-medium text-white transition hover:bg-[#1d4ed8] disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex-1 rounded-xl border border-emerald-300/70 bg-emerald-500 py-3 font-medium text-white shadow-sm transition hover:bg-emerald-600 disabled:cursor-not-allowed disabled:bg-emerald-700/70"
           >
             {submitting
               ? "Pubblicazione..."

@@ -74,7 +74,7 @@ export default function ImagePicker({
   return (
     <div className="mb-6">
 
-      <label className="mb-3 block text-sm font-medium text-slate-700">
+      <label className="mb-3 block text-sm font-medium text-white/90">
         Foto
       </label>
 
@@ -104,7 +104,7 @@ export default function ImagePicker({
           onClick={() =>
             cameraInputRef.current?.click()
           }
-          className="rounded-xl border-2 border-dashed border-blue-300 bg-blue-50 p-4 font-medium text-blue-700 transition hover:bg-blue-100 disabled:opacity-50"
+          className="rounded-xl border-2 border-dashed border-white/40 bg-white/15 p-4 font-medium text-white transition hover:bg-white/25 disabled:opacity-50"
         >
           📷
           <br />
@@ -117,7 +117,7 @@ export default function ImagePicker({
           onClick={() =>
             galleryInputRef.current?.click()
           }
-          className="rounded-xl border-2 border-dashed border-slate-300 p-4 font-medium transition hover:bg-slate-100 disabled:opacity-50"
+          className="rounded-xl border-2 border-dashed border-white/40 bg-white/10 p-4 font-medium text-white transition hover:bg-white/20 disabled:opacity-50"
         >
           🖼️
           <br />
@@ -127,7 +127,7 @@ export default function ImagePicker({
       </div>
 
       {compressing && (
-        <p className="mt-3 text-sm text-slate-500">
+        <p className="mt-3 text-sm text-white/80">
           Ottimizzazione immagine...
         </p>
       )}
