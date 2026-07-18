@@ -8,6 +8,7 @@ import {
   useMemo,
   useState,
 } from "react";
+import { playPublicationChime } from "@/lib/sounds";
 
 /**
  * Stati possibili dell'overlay.
@@ -54,6 +55,7 @@ export function ProcessingOverlayProvider({
   const showSuccess =
     useCallback(() => {
       setState("SUCCESS");
+      playPublicationChime();
     }, []);
 
   const showError =

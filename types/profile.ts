@@ -11,6 +11,8 @@ export interface ProfileHeaderData {
   currentLevelXp: number
   xpForNextLevel: number | null
   remainingXp: number
+  reliabilityTier: string
+  reliabilityLabel: string
 }
 
 export interface ProfileStatsData {

@@ -14,7 +14,10 @@ import { db } from "@/lib/firebase";
 import { getCurrentUser } from "@/services/auth";
 import { getDeviceId } from "@/services/device";
 import { registerReportActivity } from "@/services/reportLifecycle";
-import { incrementReceivedConfirmations } from "@/services/reputation";
+import {
+  adjustReliabilityScore,
+  incrementReceivedConfirmations,
+} from "@/services/reputation";
 
 /**
  * Restituisce l'identificativo della conferma.
@@ -91,7 +94,7 @@ export async function toggleConfirmation(
     confirmationId
   );
 
-  const created = await runTransaction(
+  const result = await runTransaction(
     db,
     async (transaction) => {
       const reportSnapshot =
@@ -119,7 +122,10 @@ export async function toggleConfirmation(
           ),
         });
 
-        return false;
+        return {
+          created: false,
+          reportOwnerId: reportData.userId as string | undefined,
+        };
       }
 
       transaction.set(confirmationRef, {
@@ -140,11 +146,26 @@ export async function toggleConfirmation(
         confirmations: current + 1,
       });
 
-      return true;
+      return {
+        created: true,
+        reportOwnerId: reportData.userId as string | undefined,
+      };
     }
   );
 
-  if (!created) {
+  const isEligibleForReliability =
+    Boolean(firebaseUser?.uid) &&
+    Boolean(result.reportOwnerId) &&
+    firebaseUser?.uid !== result.reportOwnerId;
+
+  if (isEligibleForReliability && result.reportOwnerId) {
+    await adjustReliabilityScore(
+      result.reportOwnerId,
+      result.created ? 2 : -2
+    );
+  }
+
+  if (!result.created) {
     return false;
   }
 

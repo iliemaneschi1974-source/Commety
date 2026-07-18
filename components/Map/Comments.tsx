@@ -4,6 +4,7 @@ import { KeyboardEvent, useState } from "react";
 
 import CommentCard from "@/components/Map/CommentCard";
 import { Button } from "@/components/ui/button";
+import MessageDialog from "@/components/ui/MessageDialog";
 import { useComments } from "@/hooks/useComments";
 import { getDeviceId } from "@/services/device";
 
@@ -22,6 +23,10 @@ export default function Comments({
   } = useComments(reportId);
 
   const [text, setText] = useState("");
+  const [moderationMessage, setModerationMessage] = useState<{
+    title: string;
+    description: string;
+  } | null>(null);
 
   const deviceId = getDeviceId();
 
@@ -30,7 +35,17 @@ export default function Comments({
 
     if (!value) return;
 
-    await create(value);
+    const result = await create(value);
+
+    if (!result?.success) {
+      if (result?.moderationMessage) {
+        setModerationMessage({
+          title: result.moderationMessage.title,
+          description: result.moderationMessage.description,
+        });
+      }
+      return;
+    }
 
     setText("");
   }
@@ -97,6 +112,16 @@ export default function Comments({
           {loading ? "Invio..." : "Invia"}
         </Button>
       </div>
+
+      <MessageDialog
+        open={moderationMessage !== null}
+        title={moderationMessage?.title ?? "Commento non pubblicato"}
+        message={
+          moderationMessage?.description ??
+          "Il commento non rispetta le regole della community."
+        }
+        onClose={() => setModerationMessage(null)}
+      />
     </div>
   );
 }

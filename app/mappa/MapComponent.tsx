@@ -223,6 +223,12 @@ if (!reportId) {
  * la segnalazione è già pubblicata.
  */
 if (data.images.length === 0) {
+  processingOverlay.showSuccess();
+
+  setTimeout(() => {
+    processingOverlay.hide();
+  }, 2000);
+
   return true;
 }
 

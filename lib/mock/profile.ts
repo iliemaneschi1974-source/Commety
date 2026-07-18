@@ -16,6 +16,8 @@ export const profileHeaderMock: ProfileHeaderData = {
   currentLevelXp: 40,
   xpForNextLevel: 300,
   remainingXp: 260,
+  reliabilityTier: "AFFIDABILE",
+  reliabilityLabel: "Affidabile",
 };
 
 export const profileStatsMock: ProfileStatsData = {

@@ -5,10 +5,10 @@ import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 
 import {
-  createComment,
   deleteComment,
   listenComments,
 } from "@/services/comments";
+import { submitComment } from "@/services/commentSubmission";
 
 import { Comment } from "@/types/comment";
 
@@ -20,7 +20,6 @@ export function useComments(reportId?: string) {
 
   useEffect(() => {
     if (!reportId) {
-      setComments([]);
       return;
     }
 
@@ -41,7 +40,7 @@ export function useComments(reportId?: string) {
       setLoading(true);
 
       try {
-        await createComment({
+        return await submitComment({
           reportId,
           text: text.trim(),
 
@@ -61,6 +60,7 @@ export function useComments(reportId?: string) {
           "Errore creazione commento:",
           error
         );
+        return undefined;
       } finally {
         setLoading(false);
       }

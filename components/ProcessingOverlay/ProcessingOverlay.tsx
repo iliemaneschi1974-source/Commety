@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2 } from "lucide-react";
+import { CheckCircle2, Loader2 } from "lucide-react";
 
 import { useProcessingOverlay } from "@/hooks/useProcessingOverlay";
 
@@ -112,8 +112,8 @@ export default function ProcessingOverlay() {
 
         {state === "SUCCESS" && (
 
-          <div className="mb-6 text-5xl">
-            ✅
+          <div className="commety-success-mark mb-6">
+            <CheckCircle2 className="size-11" strokeWidth={2.5} />
           </div>
 
         )}

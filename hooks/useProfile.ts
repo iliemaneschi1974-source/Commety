@@ -4,6 +4,7 @@ import { useMemo } from "react";
 
 import { useAuth } from "@/contexts/AuthContext";
 import { getReputationProgress } from "@/lib/reputation";
+import { getReliabilityProfile } from "@/lib/reliability";
 
 import {
   ProfileGalleryItem,
@@ -21,6 +22,9 @@ export function useProfile() {
 
     const reputation = getReputationProgress(
       user.reputation.xp
+    );
+    const reliability = getReliabilityProfile(
+      user.reputation.score
     );
 
     return {
@@ -45,6 +49,10 @@ export function useProfile() {
       xpForNextLevel: reputation.xpForNextLevel,
 
       remainingXp: reputation.remainingXp,
+
+      reliabilityTier: reliability.tier,
+
+      reliabilityLabel: reliability.label,
     };
   }, [user]);
 

@@ -2,11 +2,13 @@ import {
   doc,
   getDoc,
   increment,
+  runTransaction,
   serverTimestamp,
   updateDoc,
 } from "firebase/firestore";
 
 import { db } from "@/lib/firebase";
+import { getReliabilityProfile } from "@/lib/reliability";
 import { getReputationProgress, XP } from "@/lib/reputation";
 
 import { UserDocument } from "@/types/firestore-user";
@@ -110,5 +112,31 @@ export async function incrementReceivedConfirmations(
 
     "metadata.updatedAt":
       serverTimestamp(),
+  });
+}
+
+/** Aggiorna l'affidabilit\u00e0 dell'autore di una segnalazione. */
+export async function adjustReliabilityScore(
+  uid: string,
+  amount: number
+) {
+  const userRef = doc(db, "users", uid);
+  await runTransaction(db, async (transaction) => {
+    const snapshot = await transaction.get(userRef);
+
+    if (!snapshot.exists()) {
+      return;
+    }
+
+    const user = snapshot.data() as UserDocument;
+    const reliability = getReliabilityProfile(
+      (user.reputation?.score ?? 0) + amount
+    );
+
+    transaction.update(userRef, {
+      "reputation.score": reliability.score,
+      "reputation.verified": reliability.verified,
+      "metadata.updatedAt": serverTimestamp(),
+    });
   });
 }

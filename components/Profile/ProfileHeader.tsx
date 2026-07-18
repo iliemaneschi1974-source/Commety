@@ -1,5 +1,12 @@
 import Image from "next/image";
-import { Check, MapPin, Pencil, X } from "lucide-react";
+import {
+  Check,
+  MapPin,
+  Pencil,
+  ShieldCheck,
+  Star,
+  X,
+} from "lucide-react";
 import { useState } from "react";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -60,6 +67,14 @@ export function ProfileHeader({
 
   const joinedAt =
     formatJoinDate(profile.joinedAt);
+  const reliabilityClassName =
+    profile.reliabilityTier === "SENTINELLA_LOCALE"
+      ? "bg-amber-400 text-[#0F2D5F]"
+      : profile.reliabilityTier === "REPORTER_VERIFICATO"
+        ? "bg-emerald-400 text-[#063d2b]"
+        : profile.reliabilityTier === "AFFIDABILE"
+          ? "bg-emerald-100 text-[#0F2D5F]"
+          : "bg-white/15 text-white";
 
   async function handleSaveNickname() {
     const trimmedNickname = nickname.trim();
@@ -180,6 +195,18 @@ export function ProfileHeader({
             ? `${profile.city} · Iscritto il ${joinedAt}`
             : `Iscritto il ${joinedAt}`}
         </InfoRow>
+
+        <div className="flex flex-wrap justify-center gap-2 pt-1">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-xs font-bold text-[#0F2D5F] shadow-sm">
+            <Star className="size-3.5 fill-current" />
+            Livello {profile.level}
+          </span>
+
+          <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold shadow-sm ${reliabilityClassName}`}>
+            <ShieldCheck className="size-3.5" />
+            {profile.reliabilityLabel}
+          </span>
+        </div>
 
         {profile.subtitle && (
           <p className="text-sm text-white/80">
