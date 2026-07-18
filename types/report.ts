@@ -14,6 +14,13 @@ export type ReportStatus =
   | "HIDDEN";
 
 /**
+ * Percorso di moderazione scelto alla creazione della segnalazione.
+ */
+export type ReportModerationMode =
+  | "TEXT"
+  | "IMAGE";
+
+/**
  * Riferimento ad un'immagine
  * archiviata su Firebase Storage.
  */
@@ -52,6 +59,8 @@ export interface Report {
   city?: string;
 
   status: ReportStatus;
+
+  moderationMode?: ReportModerationMode;
 
 /**
  * Indica se la segnalazione

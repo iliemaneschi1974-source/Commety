@@ -11,6 +11,11 @@ import { OpenAIImageAnalysisResponse } from "../ai/dto/OpenAIImageAnalysisRespon
  * È un DTO dell'Application Layer e disaccoppia
  * il ModerationService dall'infrastruttura
  * (Firestore, Trigger, Provider AI).
+ *
+ * L'analisi AI è opzionale:
+ *
+ * - presente per le segnalazioni con immagini;
+ * - assente per le segnalazioni esclusivamente testuali.
  * ============================================================================
  */
 export class ModerationRequest {
@@ -39,8 +44,11 @@ export class ModerationRequest {
 
     /**
      * Analisi AI prodotta dal provider.
+     *
+     * È presente solamente quando la segnalazione
+     * contiene almeno un'immagine.
      */
-    public readonly analysis: OpenAIImageAnalysisResponse
+    public readonly analysis?: OpenAIImageAnalysisResponse
 
   ) {}
 

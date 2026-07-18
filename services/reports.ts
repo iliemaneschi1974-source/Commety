@@ -68,6 +68,11 @@ export async function createReport(
 
       status: "ACTIVE",
 
+      moderationMode:
+        images.length > 0
+          ? "IMAGE"
+          : "TEXT",
+
 /**
  * La segnalazione nasce sempre
  * non visibile.

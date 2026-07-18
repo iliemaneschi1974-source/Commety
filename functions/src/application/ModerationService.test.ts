@@ -87,4 +87,21 @@ describe("ModerationService", () => {
 
   });
 
+  it("approva una segnalazione esclusivamente testuale valida", () => {
+
+    const request =
+      new ModerationRequest(
+        "traffico",
+        "Incidente sulla circonvallazione",
+        "Rallentamenti in direzione centro a causa di un incidente.",
+        []
+      );
+
+    const result =
+      service.execute(request);
+
+    expect(result.isApproved()).toBe(true);
+
+  });
+
 });

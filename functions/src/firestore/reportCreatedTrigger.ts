@@ -1,21 +1,16 @@
 import * as logger from "firebase-functions/logger";
 import { onDocumentCreated } from "firebase-functions/v2/firestore";
 
+import { ModerationRequest } from "../application/ModerationRequest";
 import { ModerationService } from "../application/ModerationService";
 import { ReportModerationUpdater } from "./ReportModerationUpdater";
-import { ReportImageReference } from "../ai/dto/ReportImageReference";
 
 /**
- * Trigger eseguito alla creazione
- * di una nuova segnalazione.
+ * Modera i report creati senza immagini.
  *
- * Si occupa esclusivamente della
- * moderazione delle segnalazioni
- * prive di immagini.
- *
- * Le segnalazioni con immagini
- * verranno gestite dal
- * reportUpdatedTrigger.
+ * I report con immagini vengono ignorati qui e seguono esclusivamente la
+ * pipeline esistente, attivata da reportUpdatedTrigger al primo update di
+ * `images`.
  */
 export const reportCreatedTrigger =
   onDocumentCreated(
@@ -24,61 +19,38 @@ export const reportCreatedTrigger =
       region: "europe-west1",
     },
     async (event) => {
-
       const report = event.data?.data();
 
       if (!report) {
         return;
       }
 
-      const images =
-        Array.isArray(report.images)
-          ? report.images as ReportImageReference[]
-          : [];
-
-      /**
-       * Le segnalazioni con immagini
-       * vengono gestite dalla AI Pipeline.
-       */
-      if (images.length > 0) {
-
-        logger.info(
-          "Skipping text moderation because report contains images.",
-          {
-            reportId: event.params.reportId,
-            images: images.length,
-          }
-        );
-
+      if (report.moderationMode !== "TEXT") {
         return;
-
       }
 
       logger.info(
-        "Starting text moderation.",
+        "Starting text-only moderation.",
         {
           reportId: event.params.reportId,
         }
       );
+
+      const moderationRequest =
+        new ModerationRequest(
+          report.category ?? "",
+          report.title ?? "",
+          report.description ?? "",
+          []
+        );
 
       const moderationService =
         new ModerationService();
 
       const moderationResult =
-        moderationService.executeTextOnly(
-          report.category ?? "",
-          report.title ?? "",
-          report.description ?? ""
+        moderationService.execute(
+          moderationRequest
         );
-
-      logger.info(
-        "Text moderation completed.",
-        {
-          reportId: event.params.reportId,
-          decision: moderationResult.decision,
-          evidences: moderationResult.evidences,
-        }
-      );
 
       const moderationUpdater =
         new ReportModerationUpdater();
@@ -89,11 +61,12 @@ export const reportCreatedTrigger =
       );
 
       logger.info(
-        "Text moderation saved.",
+        "Text-only moderation completed.",
         {
           reportId: event.params.reportId,
+          decision: moderationResult.decision.value,
+          evidences: moderationResult.evidences.length,
         }
       );
-
     }
   );
