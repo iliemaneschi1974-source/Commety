@@ -55,10 +55,11 @@ export default function FiltersMenu({
         w-72
         rounded-2xl
         border
-        border-slate-200
-        bg-white
+        border-white/15
+        bg-[linear-gradient(135deg,#071a3c_0%,#0F2D5F_55%,#123b73_100%)]
         p-4
-        shadow-2xl
+        text-white
+        shadow-[0_18px_45px_rgba(2,16,42,0.38)]
       "
     >
       <h3 className="mb-4 text-lg font-bold">
@@ -95,7 +96,7 @@ export default function FiltersMenu({
             ${
               filter === "evento"
                 ? "border-transparent text-white shadow-md"
-                : "border-slate-200 bg-white hover:bg-slate-50"
+                : "border-white/15 bg-white/10 hover:bg-white/20"
             }
           `}
         >
@@ -133,7 +134,7 @@ export default function FiltersMenu({
             ${
               filter === "mare"
                 ? "border-transparent text-white shadow-md"
-                : "border-slate-200 bg-white hover:bg-slate-50"
+                : "border-white/15 bg-white/10 hover:bg-white/20"
             }
           `}
         >
@@ -145,13 +146,13 @@ export default function FiltersMenu({
 
       </div>
 
-      <div className="mt-5 border-t pt-4">
+      <div className="mt-5 border-t border-white/15 pt-4">
 
-        <div className="text-xs font-semibold uppercase text-slate-400">
+        <div className="text-xs font-semibold uppercase text-white/60">
           Prossimamente
         </div>
 
-        <div className="mt-3 space-y-2 text-sm text-slate-500">
+        <div className="mt-3 space-y-2 text-sm text-white/75">
 
           <div>📷 Solo con foto</div>
 

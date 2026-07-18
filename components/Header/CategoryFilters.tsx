@@ -1,18 +1,15 @@
 "use client";
 
-import { useState } from "react";
-
 import { useMapContext, ReportFilter } from "@/contexts/MapContext";
 import { CATEGORY_COLORS } from "@/lib/categoryColors";
-
-import FiltersMenu from "./FiltersMenu";
 
 import {
   Globe,
   CloudRain,
   Car,
   TriangleAlert,
-  SlidersHorizontal,
+  PartyPopper,
+  Waves,
 } from "lucide-react";
 
 const FILTERS: {
@@ -40,18 +37,25 @@ const FILTERS: {
     title: "Pericolo",
     icon: TriangleAlert,
   },
+  {
+    id: "evento",
+    title: "Evento",
+    icon: PartyPopper,
+  },
+  {
+    id: "mare",
+    title: "Mare",
+    icon: Waves,
+  },
 ];
 
 export default function CategoryFilters() {
   const { filter, setFilter } = useMapContext();
 
-  const [menuOpen, setMenuOpen] =
-    useState(false);
-
   return (
     <div className="relative">
 
-      <div className="grid grid-cols-5 gap-3">
+      <div className="grid grid-cols-3 gap-3 sm:grid-cols-6">
 
         {FILTERS.map((item) => {
           const Icon = item.icon;
@@ -83,8 +87,8 @@ export default function CategoryFilters() {
 
                 ${
                   active
-                    ? "text-white shadow-lg scale-105"
-                    : "bg-slate-100 text-slate-600 hover:bg-slate-200 active:scale-95"
+                    ? "text-white shadow-[0_8px_18px_rgba(2,16,42,0.28)] scale-105"
+                    : "border border-white/15 bg-white/12 text-white hover:bg-white/22 active:scale-95"
                 }
               `}
             >
@@ -96,39 +100,7 @@ export default function CategoryFilters() {
           );
         })}
 
-        <button
-          title="Filtri"
-          onClick={() =>
-            setMenuOpen((open) => !open)
-          }
-          className="
-            flex
-            h-12
-            items-center
-            justify-center
-            rounded-2xl
-            bg-slate-100
-            text-slate-600
-            transition-all
-            duration-200
-            hover:bg-slate-200
-            active:scale-95
-          "
-        >
-          <SlidersHorizontal
-            size={22}
-            strokeWidth={2.3}
-          />
-        </button>
-
       </div>
-
-      <FiltersMenu
-        open={menuOpen}
-        onClose={() =>
-          setMenuOpen(false)
-        }
-      />
 
     </div>
   );

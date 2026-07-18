@@ -43,15 +43,15 @@ function handleSelect(result: SearchResult) {
           gap-3
           h-14
           rounded-2xl
-          bg-white
+          bg-white/95
           border
-          border-slate-200
+          border-white/70
           px-4
           shadow-sm
           transition
-          focus-within:border-[#2563FF]
+          focus-within:border-white
           focus-within:ring-4
-          focus-within:ring-blue-100
+          focus-within:ring-white/20
         "
       >
         <Search
@@ -75,7 +75,7 @@ function handleSelect(result: SearchResult) {
         {loading && (
           <Loader2
             size={18}
-            className="animate-spin text-[#2563FF]"
+            className="animate-spin text-[#0F2D5F]"
           />
         )}
 

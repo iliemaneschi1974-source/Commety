@@ -53,10 +53,12 @@ export default function LocationButton() {
         w-14
         h-14
         rounded-2xl
-        bg-[#2563FF]
+        border
+        border-white/20
+        bg-[linear-gradient(135deg,#071a3c_0%,#0F2D5F_45%,#1b4b87_100%)]
         text-white
-        shadow-lg
-        hover:bg-[#1f56e5]
+        shadow-[0_10px_24px_rgba(2,16,42,0.34)]
+        hover:brightness-110
         active:scale-95
         transition-all
         flex

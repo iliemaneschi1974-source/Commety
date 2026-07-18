@@ -3,7 +3,7 @@ import {
   CloudRain,
   PartyPopper,
   TriangleAlert,
-  Umbrella,
+  Waves,
 } from "lucide-react"
 import { ReactElement } from "react"
 
@@ -37,6 +37,6 @@ export const MARKER_CONFIG: Record<ReportCategory, MarkerConfig> = {
 
   mare: {
     color: "#06B6D4",
-    icon: <Umbrella size={20} color="white" />,
+    icon: <Waves size={20} color="white" />,
   },
 }

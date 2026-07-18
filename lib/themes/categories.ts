@@ -3,7 +3,7 @@ import {
   CloudRain,
   PartyPopper,
   TriangleAlert,
-  Umbrella,
+  Waves,
   LucideIcon,
 } from "lucide-react"
 
@@ -44,6 +44,6 @@ export const CategoryThemes: Record<ReportCategory, CategoryTheme> = {
   mare: {
     label: "Mare",
     color: CommetyColors.info,
-    icon: Umbrella,
+    icon: Waves,
   },
 }

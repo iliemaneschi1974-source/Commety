@@ -54,11 +54,13 @@ export default function UserFab() {
           justify-center
           overflow-hidden
           rounded-full
-          bg-[#2563FF]
-          shadow-xl
+          border
+          border-white/25
+          bg-[linear-gradient(135deg,#071a3c_0%,#0F2D5F_45%,#1b4b87_100%)]
+          shadow-[0_12px_28px_rgba(2,16,42,0.38)]
           transition
           hover:scale-105
-          hover:bg-[#1d4ed8]
+          hover:brightness-110
           active:scale-95
         "
       >

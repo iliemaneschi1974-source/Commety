@@ -5,9 +5,12 @@ import { ModerationMessage } from "../moderation/ModerationMessage";
 
 describe("ReportSubmissionResult", () => {
   it("crea un risultato di successo", () => {
-    const result = ReportSubmissionResult.success();
+    const result = ReportSubmissionResult.success(
+      "report-id"
+    );
 
     expect(result.success).toBe(true);
+    expect(result.reportId).toBe("report-id");
     expect(result.moderationMessage).toBeUndefined();
   });
 
