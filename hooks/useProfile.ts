@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 
 import { useAuth } from "@/contexts/AuthContext";
+import { getReputationProgress } from "@/lib/reputation";
 
 import {
   ProfileGalleryItem,
@@ -18,6 +19,10 @@ export function useProfile() {
       return null;
     }
 
+    const reputation = getReputationProgress(
+      user.reputation.xp
+    );
+
     return {
       avatarUrl: user.profile.avatarUrl,
 
@@ -31,11 +36,15 @@ export function useProfile() {
 
       subtitle: user.profile.bio,
 
-      level: user.reputation.level,
+      level: reputation.level,
 
       currentXp: user.reputation.xp,
 
-      nextLevelXp: 100,
+      currentLevelXp: reputation.currentLevelXp,
+
+      xpForNextLevel: reputation.xpForNextLevel,
+
+      remainingXp: reputation.remainingXp,
     };
   }, [user]);
 

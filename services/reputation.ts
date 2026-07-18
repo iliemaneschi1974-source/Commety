@@ -7,24 +7,9 @@ import {
 } from "firebase/firestore";
 
 import { db } from "@/lib/firebase";
-import { LEVELS, XP } from "@/lib/reputation";
+import { getReputationProgress, XP } from "@/lib/reputation";
 
 import { UserDocument } from "@/types/firestore-user";
-
-/**
- * Calcola il livello in base agli XP.
- */
-function calculateLevel(xp: number): number {
-  let level = 1;
-
-  for (let i = 0; i < LEVELS.length; i++) {
-    if (xp >= LEVELS[i]) {
-      level = i + 1;
-    }
-  }
-
-  return level;
-}
 
 /**
  * Aggiorna XP e livello.
@@ -51,7 +36,7 @@ async function addXp(
     currentXp + amount;
 
   const newLevel =
-    calculateLevel(newXp);
+    getReputationProgress(newXp).level;
 
   await updateDoc(userRef, {
     "reputation.xp": increment(amount),

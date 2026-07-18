@@ -21,7 +21,6 @@ import {
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import {
-  useRouter,
   useSearchParams,
 } from "next/navigation";
 import Header from "@/components/Header/Header";
@@ -60,13 +59,11 @@ export default function MapComponent() {
   } = useMapContext();
   const processingOverlay =
   useProcessingOverlay();
-const { user } = useAuth();
+  const { user } = useAuth();
   const searchParams = useSearchParams();
-  const router = useRouter();
   const sharedReportId =
     searchParams.get("report");
     const openedFromSharedLink = useRef(false);
-    const sharedReportHandled = useRef(false);
 
   const [userPosition, setUserPosition] =
     useState<[number, number]>(center);
@@ -117,7 +114,6 @@ useEffect(() => {
   if (!sharedReportId) {
     return;
   }
-    sharedReportHandled.current = true;
 const reportId = sharedReportId;
   async function openSharedReport() {
     try {
@@ -324,12 +320,9 @@ const unsubscribe =
   setSheetOpen(false);
   setSelectedReport(null);
 
-  if (openedFromSharedLink.current) {
+  if (sharedReportId) {
     openedFromSharedLink.current = false;
-
-    setTimeout(() => {
-      router.replace("/mappa");
-    }, 350);
+    window.history.replaceState(null, "", "/mappa");
   }
 }}
 />

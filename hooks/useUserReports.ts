@@ -32,22 +32,27 @@ export function useUserReports() {
     return unsubscribe;
   }, [user]);
 
+  const publishedReports = useMemo(
+    () => reports.filter((report) => report.isVisible),
+    [reports]
+  );
+
   const gallery = useMemo<ProfileGalleryItem[]>(() => {
-    return reports.flatMap((report) =>
+    return publishedReports.flatMap((report) =>
       report.images.map((image, index) => ({
         id: `${report.id}-${index}`,
         imageUrl: image.url,
         reportId: report.id,
       }))
     );
-  }, [reports]);
+  }, [publishedReports]);
 
   return {
-    reports,
+    reports: publishedReports,
 
     gallery,
 
-    reportsCount: reports.length,
+    reportsCount: publishedReports.length,
 
     photosCount: gallery.length,
 

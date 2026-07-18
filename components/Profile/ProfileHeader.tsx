@@ -32,20 +32,14 @@ export function ProfileHeader({
   profile,
 }: ProfileHeaderProps) {
   const progress =
-    profile.nextLevelXp > 0
+    profile.xpForNextLevel !== null
       ? Math.min(
-          (profile.currentXp /
-            profile.nextLevelXp) *
+          (profile.currentLevelXp /
+            profile.xpForNextLevel) *
             100,
           100
         )
       : 0;
-
-  const remainingXp = Math.max(
-    profile.nextLevelXp -
-      profile.currentXp,
-    0
-  );
 
   const initials = profile.nickname
     .trim()
@@ -61,9 +55,9 @@ export function ProfileHeader({
   return (
     <div
       data-slot="profile-header"
-      className="flex flex-col items-center gap-6"
+      className="relative flex flex-col items-center gap-6 overflow-hidden rounded-3xl border border-white/15 bg-[linear-gradient(135deg,#071a3c_0%,#0F2D5F_38%,#1b4b87_58%,#0a2553_100%)] p-6 text-white shadow-[0_18px_45px_rgba(6,24,61,0.32)] before:pointer-events-none before:absolute before:inset-0 before:bg-[linear-gradient(115deg,transparent_25%,rgba(255,255,255,0.2)_48%,transparent_62%)] [&>*]:relative [&>*]:z-10 sm:p-8"
     >
-      <Avatar className="relative size-32 overflow-hidden ring-4 ring-background shadow-md">
+      <Avatar className="relative size-32 overflow-hidden ring-4 ring-white/70 shadow-md">
         {profile.avatarUrl ? (
           <Image
             src={profile.avatarUrl}
@@ -74,7 +68,7 @@ export function ProfileHeader({
             priority
           />
         ) : (
-          <AvatarFallback className="text-4xl font-semibold">
+          <AvatarFallback className="bg-white/20 text-4xl font-semibold text-white">
             {initials}
           </AvatarFallback>
         )}
@@ -87,6 +81,7 @@ export function ProfileHeader({
 
         <InfoRow
           icon={<MapPin className="size-4" />}
+          className="text-white/85"
         >
           {profile.city
             ? `${profile.city} · Iscritto il ${joinedAt}`
@@ -94,29 +89,34 @@ export function ProfileHeader({
         </InfoRow>
 
         {profile.subtitle && (
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-white/80">
             {profile.subtitle}
           </p>
         )}
       </div>
 
-      <div className="w-full max-w-sm border-t border-border/50 pt-5">
+      <div className="w-full max-w-sm border-t border-white/30 pt-5">
         <div className="mb-3 flex items-center justify-between">
           <span className="text-sm font-semibold">
             Livello {profile.level}
           </span>
 
-          <span className="text-sm text-muted-foreground">
-            {profile.currentXp} /{" "}
-            {profile.nextLevelXp} XP
+          <span className="text-sm text-white/85">
+            {profile.xpForNextLevel === null
+              ? `${profile.currentXp} XP totali`
+              : `${profile.currentLevelXp} / ${profile.xpForNextLevel} XP`}
           </span>
         </div>
 
-        <Progress value={progress} />
+        <Progress
+          value={progress}
+          className="bg-white/25 [&>div]:bg-white"
+        />
 
-        <p className="mt-3 text-center text-sm text-muted-foreground">
-          Mancano {remainingXp} XP al
-          livello successivo
+        <p className="mt-3 text-center text-sm text-white/85">
+          {profile.xpForNextLevel === null
+            ? "Hai raggiunto il livello massimo"
+            : `Mancano ${profile.remainingXp} XP al livello successivo`}
         </p>
       </div>
     </div>

@@ -18,7 +18,6 @@ export function ProfileGallery({
     <section className="space-y-4">
       <SectionHeader
         title="Foto"
-        actionLabel="Vedi tutte"
       />
 
       <Surface className="p-6">

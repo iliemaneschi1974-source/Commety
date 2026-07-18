@@ -3,6 +3,7 @@ import {
   ChevronRight,
   MapPin,
 } from "lucide-react";
+import Link from "next/link";
 
 import { SectionHeader } from "@/components/ui/section-header";
 import { Surface } from "@/components/ui/Surface";
@@ -20,7 +21,6 @@ export function ProfileReports({
     <section className="space-y-4">
       <SectionHeader
         title="Ultime segnalazioni"
-        actionLabel="Vedi tutte"
       />
 
       <Surface className="p-6">
@@ -35,9 +35,9 @@ export function ProfileReports({
               const Icon = category.icon;
 
               return (
-                <button
+                <Link
                   key={report.id}
-                  type="button"
+                  href={`/mappa?report=${encodeURIComponent(report.id)}`}
                   className={`flex w-full items-center justify-between px-5 py-4 text-left transition-colors hover:bg-muted/40 ${
                     index !== reports.length - 1
                       ? "border-b border-border"
@@ -78,7 +78,7 @@ export function ProfileReports({
                   </div>
 
                   <ChevronRight className="size-5 text-muted-foreground" />
-                </button>
+                </Link>
               );
             })}
           </div>

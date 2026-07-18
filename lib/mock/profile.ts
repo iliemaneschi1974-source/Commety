@@ -11,9 +11,11 @@ export const profileHeaderMock: ProfileHeaderData = {
   city: "Roma",
   joinedAt: "Giugno 2026",
   subtitle: "Reporter attivo della community",
-  level: 12,
+  level: 4,
   currentXp: 540,
-  nextLevelXp: 800,
+  currentLevelXp: 40,
+  xpForNextLevel: 300,
+  remainingXp: 260,
 };
 
 export const profileStatsMock: ProfileStatsData = {

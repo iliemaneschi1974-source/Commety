@@ -8,7 +8,9 @@ export interface ProfileHeaderData {
 
   level: number
   currentXp: number
-  nextLevelXp: number
+  currentLevelXp: number
+  xpForNextLevel: number | null
+  remainingXp: number
 }
 
 export interface ProfileStatsData {
