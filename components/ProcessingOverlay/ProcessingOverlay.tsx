@@ -19,7 +19,7 @@ import { useProcessingOverlay } from "@/hooks/useProcessingOverlay";
  */
 export default function ProcessingOverlay() {
 
-  const { state } =
+  const { state, subject } =
     useProcessingOverlay();
 
   if (state === "IDLE") {
@@ -33,11 +33,13 @@ export default function ProcessingOverlay() {
   switch (state) {
 
     case "PROCESSING":
-      title =
-        "Analisi della segnalazione";
+      title = subject === "video"
+        ? "Analisi del video"
+        : "Analisi della segnalazione";
 
-      description =
-        "Stiamo verificando automaticamente la tua segnalazione. L'operazione potrebbe richiedere alcuni secondi.";
+      description = subject === "video"
+        ? "Stiamo verificando il video in piu momenti prima della pubblicazione. L'operazione potrebbe richiedere alcuni secondi."
+        : "Stiamo verificando automaticamente la tua segnalazione. L'operazione potrebbe richiedere alcuni secondi.";
       break;
 
     case "SUCCESS":

@@ -246,7 +246,7 @@ if (!reportId) {
  * Nessuna immagine:
  * la segnalazione è già pubblicata.
  */
-if (data.images.length === 0) {
+if (data.images.length === 0 && !data.video) {
   processingOverlay.showSuccess();
 
   setTimeout(() => {
@@ -260,7 +260,9 @@ if (data.images.length === 0) {
  * Sono presenti immagini:
  * attendiamo la moderazione AI.
  */
-processingOverlay.showProcessing();
+processingOverlay.showProcessing(
+  data.video ? "video" : "image"
+);
 
 return new Promise((resolve) => {
   const unsubscribe = listenModerationDecision(
@@ -290,7 +292,9 @@ return new Promise((resolve) => {
       );
 
       setMessageDialogDescription(
-        "L'immagine caricata non soddisfa i requisiti di pubblicazione di Commetty. Ti invitiamo a caricarne una diversa."
+        data.video
+          ? "Il video non soddisfa i requisiti di pubblicazione di Commetty. Ti invitiamo a registrarne uno diverso."
+          : "L'immagine caricata non soddisfa i requisiti di pubblicazione di Commetty. Ti invitiamo a caricarne una diversa."
       );
 
       setMessageDialogOpen(true);

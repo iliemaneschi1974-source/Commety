@@ -19,10 +19,15 @@ export type ProcessingOverlayState =
   | "SUCCESS"
   | "ERROR";
 
+export type ProcessingOverlaySubject =
+  | "image"
+  | "video";
+
 interface ProcessingOverlayContextValue {
   state: ProcessingOverlayState;
+  subject: ProcessingOverlaySubject;
 
-  showProcessing(): void;
+  showProcessing(subject?: ProcessingOverlaySubject): void;
 
   showSuccess(): void;
 
@@ -46,9 +51,12 @@ export function ProcessingOverlayProvider({
     useState<ProcessingOverlayState>(
       "IDLE"
     );
+  const [subject, setSubject] =
+    useState<ProcessingOverlaySubject>("image");
 
   const showProcessing =
-    useCallback(() => {
+    useCallback((nextSubject: ProcessingOverlaySubject = "image") => {
+      setSubject(nextSubject);
       setState("PROCESSING");
     }, []);
 
@@ -72,6 +80,7 @@ export function ProcessingOverlayProvider({
     useMemo(
       () => ({
         state,
+        subject,
         showProcessing,
         showSuccess,
         showError,
@@ -79,6 +88,7 @@ export function ProcessingOverlayProvider({
       }),
       [
         state,
+        subject,
         showProcessing,
         showSuccess,
         showError,

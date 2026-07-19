@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { MapPin } from "lucide-react";
 
 interface VideoRecorderProps {
   onChange: (video: File | null, moderationFrames: File[]) => void;
@@ -16,6 +17,7 @@ export default function VideoRecorder({ onChange }: VideoRecorderProps) {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [secondsLeft, setSecondsLeft] = useState(MAX_SECONDS);
   const [error, setError] = useState<string | null>(null);
+  const [preparing, setPreparing] = useState(false);
 
   useEffect(() => () => {
     streamRef.current?.getTracks().forEach((track) => track.stop());
@@ -24,6 +26,7 @@ export default function VideoRecorder({ onChange }: VideoRecorderProps) {
 
   async function startRecording() {
     setError(null);
+    onChange(null, []);
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: { ideal: "environment" } },
@@ -45,12 +48,15 @@ export default function VideoRecorder({ onChange }: VideoRecorderProps) {
         setSecondsLeft(MAX_SECONDS);
         try {
           const video = new File([new Blob(chunks, { type: "video/webm" })], `commety-${Date.now()}.webm`, { type: "video/webm" });
-          const frames = await createModerationFrames(video);
           setPreviewUrl(URL.createObjectURL(video));
+          setPreparing(true);
+          const frames = await createModerationFrames(video);
           onChange(video, frames);
         } catch {
           setError("Non e' stato possibile preparare il video per il controllo di sicurezza.");
           onChange(null, []);
+        } finally {
+          setPreparing(false);
         }
       };
       recorder.start();
@@ -74,6 +80,7 @@ export default function VideoRecorder({ onChange }: VideoRecorderProps) {
   function removeVideo() {
     if (previewUrl) URL.revokeObjectURL(previewUrl);
     setPreviewUrl(null);
+    setPreparing(false);
     onChange(null, []);
   }
 
@@ -82,8 +89,9 @@ export default function VideoRecorder({ onChange }: VideoRecorderProps) {
       <label className="mb-3 block text-sm font-medium text-white/90">Video live &middot; massimo 5 secondi</label>
       {previewUrl ? (
         <div className="relative overflow-hidden rounded-2xl border border-white/25 bg-black">
-          <video controls playsInline src={previewUrl} className="max-h-64 w-full" />
+          <video controls autoPlay muted playsInline preload="metadata" src={previewUrl} className="max-h-64 w-full" />
           <Watermark />
+          {preparing ? <div className="absolute inset-0 flex items-center justify-center bg-[#061735]/60 p-5 text-center text-sm font-bold text-white">Preparazione dell&apos;anteprima e controllo di sicurezza...</div> : null}
           <button type="button" onClick={removeVideo} className="absolute right-3 top-3 rounded-full bg-red-600 px-3 py-1.5 text-sm font-bold text-white">Rimuovi</button>
         </div>
       ) : (
@@ -103,7 +111,7 @@ export default function VideoRecorder({ onChange }: VideoRecorderProps) {
 }
 
 function Watermark() {
-  return <span className="pointer-events-none absolute bottom-3 right-3 rounded-lg border border-white/30 bg-[#061735]/75 px-2 py-1 text-xs font-black text-white">Commety</span>;
+  return <span className="pointer-events-none absolute bottom-3 right-3 inline-flex items-center gap-1 rounded-lg border border-white/30 bg-[#061735]/80 px-2 py-1 text-xs font-black text-white"><span className="relative inline-flex size-4 items-center justify-center"><MapPin className="size-4 fill-white text-white" /><span className="absolute -mt-px text-[8px] font-black text-[#0F2D5F]">C</span></span>Commety</span>;
 }
 
 async function createModerationFrames(videoFile: File): Promise<File[]> {

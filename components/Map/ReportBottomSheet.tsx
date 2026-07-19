@@ -84,7 +84,7 @@ export default function ReportBottomSheet({
         {report.video ? (
           <section className="relative mt-6 overflow-hidden rounded-2xl border border-white/20 bg-black shadow-[0_12px_25px_rgba(1,15,42,0.35)]">
             <video controls playsInline src={report.video.url} className="max-h-[70vh] w-full" />
-            <span className="pointer-events-none absolute bottom-3 right-3 rounded-lg border border-white/30 bg-[#061735]/75 px-2 py-1 text-xs font-black text-white">Commety</span>
+            <span className="pointer-events-none absolute bottom-3 right-3 inline-flex items-center gap-1 rounded-lg border border-white/30 bg-[#061735]/80 px-2 py-1 text-xs font-black text-white"><span className="relative inline-flex size-4 items-center justify-center"><MapPin className="size-4 fill-white text-white" /><span className="absolute -mt-px text-[8px] font-black text-[#0F2D5F]">C</span></span>Commety</span>
           </section>
         ) : report.images.length > 0 && (
           <section className="mt-6">

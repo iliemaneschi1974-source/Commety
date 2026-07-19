@@ -170,7 +170,9 @@ export default function ReportForm({
             onClick={handleSubmit}
             disabled={
               submitting ||
-              !form.title.trim()
+              !form.title.trim() ||
+              (mediaMode === "video" &&
+                (!form.video || form.videoModerationFrames?.length !== 3))
             }
             className="flex-1 rounded-xl border border-emerald-300/70 bg-emerald-500 py-3 font-medium text-white shadow-sm transition hover:bg-emerald-600 disabled:cursor-not-allowed disabled:bg-emerald-700/70"
           >
