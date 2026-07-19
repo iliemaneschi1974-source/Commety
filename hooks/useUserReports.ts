@@ -63,7 +63,7 @@ export function useUserReports() {
 
   const createGalleryItems = (sourceReports: Report[]) => {
     return sourceReports.flatMap((report) =>
-      report.images.map((image, index) => ({
+      report.video ? [] : report.images.map((image, index) => ({
         id: `${report.id}-${index}`,
         imageUrl: image.url,
         reportId: report.id,

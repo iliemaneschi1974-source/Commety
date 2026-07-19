@@ -4,8 +4,8 @@ import {
 
 import {
   getActiveReports,
-  updateReport,
 } from "../repositories/reportsRepository";
+import { adminDb, adminStorage } from "../config/firebaseAdmin";
 
 /**
  * Risultato del job di scadenza.
@@ -24,8 +24,8 @@ export interface ReportExpirationResult {
 
 /**
  * Esegue il controllo di tutte le
- * segnalazioni ACTIVE e porta in
- * stato EXPIRED quelle scadute.
+ * segnalazioni ACTIVE e rimuove definitivamente quelle scadute,
+ * comprese le risorse in Storage e le sotto-collezioni.
  */
 export async function expireReports(): Promise<ReportExpirationResult> {
   const reports = await getActiveReports();
@@ -45,11 +45,13 @@ export async function expireReports(): Promise<ReportExpirationResult> {
       continue;
     }
 
-    await updateReport(report.id, {
-      status: "EXPIRED",
-      lastActivityAt: Timestamp.now(),
-      updatedAt: Timestamp.now(),
+    await adminStorage.bucket().deleteFiles({
+      prefix: `reports/${report.id}/`,
     });
+
+    await adminDb.recursiveDelete(
+      adminDb.collection("reports").doc(report.id)
+    );
 
     expired++;
   }

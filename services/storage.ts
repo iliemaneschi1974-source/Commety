@@ -91,3 +91,20 @@ export async function deleteImages(
   );
 
 }
+
+export async function uploadVideo(
+  file: File,
+  reportId: string
+) {
+  const storagePath = `reports/${reportId}/${crypto.randomUUID()}.webm`;
+  const storageRef = ref(storage, storagePath);
+
+  await uploadBytes(storageRef, file, {
+    contentType: file.type || "video/webm",
+  });
+
+  return {
+    storagePath,
+    url: await getDownloadURL(storageRef),
+  };
+}

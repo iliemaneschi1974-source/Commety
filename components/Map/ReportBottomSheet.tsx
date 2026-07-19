@@ -81,7 +81,12 @@ export default function ReportBottomSheet({
           </div>
         </section>
 
-        {report.images.length > 0 && (
+        {report.video ? (
+          <section className="relative mt-6 overflow-hidden rounded-2xl border border-white/20 bg-black shadow-[0_12px_25px_rgba(1,15,42,0.35)]">
+            <video controls playsInline src={report.video.url} className="max-h-[70vh] w-full" />
+            <span className="pointer-events-none absolute bottom-3 right-3 rounded-lg border border-white/30 bg-[#061735]/75 px-2 py-1 text-xs font-black text-white">Commety</span>
+          </section>
+        ) : report.images.length > 0 && (
           <section className="mt-6">
             <h3 className="mb-3 text-sm font-semibold uppercase tracking-[0.16em] text-white/70">Foto della segnalazione</h3>
             {report.images.length === 1 ? (

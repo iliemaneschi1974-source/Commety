@@ -1,4 +1,5 @@
 import {
+  deleteImage,
   deleteImages,
 } from "@/services/storage";
 
@@ -36,6 +37,11 @@ export async function cleanupReport(
   }
 
   await deleteImages(report.images);
+
+  if (report.video) {
+    await deleteImage(report.video);
+    await deleteImages(report.video.moderationFrames ?? []);
+  }
 
   await deleteReportComments(reportId);
 

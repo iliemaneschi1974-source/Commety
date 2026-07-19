@@ -20,7 +20,7 @@ import { calculateReportExpiration } from "@/lib/reportExpiration";
 import { db } from "@/lib/firebase";
 import { reverseGeocode } from "@/services/geocoding";
 import { rewardReportCreation } from "@/services/reputation";
-import { uploadImages } from "@/services/storage";
+import { uploadImages, uploadVideo } from "@/services/storage";
 import {
   CreateReportInput,
   Report,
@@ -44,7 +44,18 @@ export async function createReport(
     input.lng
   );
 
-  const { images, ...reportData } = input;
+  const {
+    images,
+    video,
+    videoModerationFrames = [],
+    ...reportData
+  } = input;
+
+  if (video && videoModerationFrames.length !== 3) {
+    throw new Error(
+      "Il video non puÃ² essere pubblicato senza il controllo completo di sicurezza."
+    );
+  }
 
   const sanitizedReportData =
     Object.fromEntries(
@@ -69,7 +80,7 @@ export async function createReport(
       status: "ACTIVE",
 
       moderationMode:
-        images.length > 0
+        images.length > 0 || video
           ? "IMAGE"
           : "TEXT",
 
@@ -129,6 +140,22 @@ confirmations: 0,
     console.warn(
       "⚠️ Nessuna immagine ricevuta"
     );
+  }
+
+  if (video) {
+    const [uploadedVideo, moderationFrames] = await Promise.all([
+      uploadVideo(video, reportRef.id),
+      uploadImages(videoModerationFrames, reportRef.id),
+    ]);
+
+    await updateDoc(reportRef, {
+      video: {
+        ...uploadedVideo,
+        durationSeconds: 5,
+        moderationFrames,
+      },
+      updatedAt: serverTimestamp(),
+    });
   }
 
   if (input.userId) {

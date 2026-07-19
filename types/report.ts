@@ -43,6 +43,12 @@ export interface ReportImageReference {
 
 }
 
+export interface ReportVideoReference extends ReportImageReference {
+  durationSeconds: number;
+  /** Fotogrammi tecnici, non mostrati, usati per la moderazione del video. */
+  moderationFrames: ReportImageReference[];
+}
+
 export interface Report {
   id: string;
 
@@ -109,6 +115,8 @@ updatedAt?: Timestamp;
    */
   images: ReportImageReference[];
 
+  video?: ReportVideoReference;
+
   confirmations: number;
 
   commentsCount: number;
@@ -142,4 +150,9 @@ export interface CreateReportInput {
    * dall'utente.
    */
   images: File[];
+
+  video?: File;
+
+  /** Fotogrammi estratti lungo il video per moderarne l'intera durata. */
+  videoModerationFrames?: File[];
 }

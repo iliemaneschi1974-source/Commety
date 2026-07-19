@@ -54,23 +54,42 @@ export const reportUpdatedTrigger =
           ? after.images as ReportImageReference[]
           : [];
 
+      const beforeVideoFrames =
+        Array.isArray(before.video?.moderationFrames)
+          ? before.video.moderationFrames.length
+          : 0;
+
+      const afterVideoFrames =
+        Array.isArray(after.video?.moderationFrames)
+          ? after.video.moderationFrames as ReportImageReference[]
+          : [];
+
+      const hasNewPhotos =
+        beforeImages === 0 && afterImages.length > 0;
+
+      const hasNewVideoFrames =
+        beforeVideoFrames === 0 && afterVideoFrames.length > 0;
+
       /**
        * Avvia la pipeline soltanto
        * quando vengono aggiunte
        * per la prima volta le immagini.
        */
       if (
-        beforeImages !== 0 ||
-        afterImages.length === 0
+        !hasNewPhotos && !hasNewVideoFrames
       ) {
         return;
       }
+
+      const moderationImages = hasNewVideoFrames
+        ? afterVideoFrames
+        : afterImages;
 
       logger.info(
         "Starting AI Pipeline.",
         {
           reportId: event.params.reportId,
-          images: afterImages.length,
+          images: moderationImages.length,
         }
       );
 
@@ -85,7 +104,7 @@ export const reportUpdatedTrigger =
 
         const imageContents =
           await downloader.download(
-            afterImages
+            moderationImages
           );
 
         logger.info(
@@ -154,7 +173,7 @@ export const reportUpdatedTrigger =
     after.type ?? "",
     after.title ?? "",
     after.description ?? "",
-    afterImages.map(
+    moderationImages.map(
       (image) => image.url
     ),
     analysis

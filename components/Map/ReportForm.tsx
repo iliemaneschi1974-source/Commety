@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import ImagePicker from "@/components/Map/ImagePicker";
+import VideoRecorder from "@/components/Map/VideoRecorder";
 import { ReportCategory } from "@/types/report";
 
 export interface ReportFormData {
@@ -10,6 +11,8 @@ export interface ReportFormData {
   title: string;
   description: string;
   images: File[];
+  video?: File;
+  videoModerationFrames?: File[];
 }
 
 interface ReportFormProps {
@@ -23,6 +26,8 @@ const INITIAL_FORM: ReportFormData = {
   title: "",
   description: "",
   images: [],
+  video: undefined,
+  videoModerationFrames: [],
 };
 
 export default function ReportForm({
@@ -34,6 +39,7 @@ export default function ReportForm({
     useState<ReportFormData>(INITIAL_FORM);
 
   const [submitting, setSubmitting] = useState(false);
+  const [mediaMode, setMediaMode] = useState<"photo" | "video">("photo");
 
   const isCommunityEvent = form.type === "evento";
 
@@ -60,6 +66,8 @@ export default function ReportForm({
         title: form.title.trim(),
         description: form.description.trim(),
         images: form.images,
+        video: form.video,
+        videoModerationFrames: form.videoModerationFrames,
       });
 
       if (shouldClose) {
@@ -137,15 +145,12 @@ export default function ReportForm({
           </p>
         ) : null}
 
-        <ImagePicker
-          maxImages={2}
-          onChange={(images) =>
-            setForm((prev) => ({
-              ...prev,
-              images,
-            }))
-          }
-        />
+        <div className="mb-4 grid grid-cols-2 rounded-xl border border-white/20 bg-white/10 p-1 text-sm font-bold">
+          <button type="button" onClick={() => { setMediaMode("photo"); setForm((prev) => ({ ...prev, video: undefined, videoModerationFrames: [] })); }} className={`rounded-lg py-2 transition ${mediaMode === "photo" ? "bg-white text-[#0F2D5F]" : "text-white/75"}`}>Foto</button>
+          <button type="button" onClick={() => { setMediaMode("video"); setForm((prev) => ({ ...prev, images: [] })); }} className={`rounded-lg py-2 transition ${mediaMode === "video" ? "bg-white text-[#0F2D5F]" : "text-white/75"}`}>Video · 5 s</button>
+        </div>
+
+        {mediaMode === "photo" ? <ImagePicker maxImages={1} onChange={(images) => setForm((prev) => ({ ...prev, images, video: undefined, videoModerationFrames: [] }))} /> : <VideoRecorder onChange={(video, videoModerationFrames) => setForm((prev) => ({ ...prev, video: video ?? undefined, images: [], videoModerationFrames }))} />}
 
         </div>
 
