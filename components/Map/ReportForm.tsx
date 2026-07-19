@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import ImagePicker from "@/components/Map/ImagePicker";
 import VideoRecorder from "@/components/Map/VideoRecorder";
+import { REPORT_CATEGORY_CONFIG } from "@/lib/reportCategoryConfig";
 import { ReportCategory } from "@/types/report";
 
 export interface ReportFormData {
@@ -29,6 +30,15 @@ const INITIAL_FORM: ReportFormData = {
   video: undefined,
   videoModerationFrames: [],
 };
+
+const CATEGORY_OPTIONS: ReportCategory[] = [
+  "meteo",
+  "traffico",
+  "pericolo",
+  "evento",
+  "mare",
+  "animali",
+];
 
 export default function ReportForm({
   open,
@@ -89,7 +99,9 @@ export default function ReportForm({
 
         <div className="min-h-0 flex-1 overflow-y-auto pr-1">
         <select
-          className="mb-4 w-full rounded-xl border border-white/70 bg-white/95 p-3 text-slate-900 shadow-sm outline-none focus:border-white focus:ring-4 focus:ring-white/20"
+          className="sr-only"
+          aria-hidden="true"
+          tabIndex={-1}
           value={form.type}
           onChange={(e) =>
             setForm((prev) => ({
@@ -105,6 +117,59 @@ export default function ReportForm({
           <option value="mare">🏖️ Mare</option>
           <option value="animali">🐾 Animali</option>
         </select>
+
+        <fieldset className="mb-5">
+          <legend className="mb-2 text-center text-xs font-bold uppercase tracking-[0.16em] text-white/70">
+            Categoria
+          </legend>
+
+          <div className="grid grid-cols-3 gap-2">
+            {CATEGORY_OPTIONS.map((category) => {
+              const config = REPORT_CATEGORY_CONFIG[category];
+              const selected = form.type === category;
+
+              return (
+                <button
+                  key={category}
+                  type="button"
+                  aria-pressed={selected}
+                  onClick={() =>
+                    setForm((prev) => ({ ...prev, type: category }))
+                  }
+                  style={
+                    selected
+                      ? {
+                          backgroundColor: `${config.color}2b`,
+                          borderColor: config.color,
+                          boxShadow: `0 8px 20px ${config.color}45`,
+                        }
+                      : undefined
+                  }
+                  className={`flex min-h-[76px] flex-col items-center justify-center gap-1 rounded-2xl border px-2 py-2 text-xs font-bold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white/70 active:scale-[0.97] ${
+                    selected
+                      ? "scale-[1.02] text-white"
+                      : "border-white/15 bg-white/10 text-white/80 hover:border-white/35 hover:bg-white/18 hover:text-white"
+                  }`}
+                >
+                  <span className="relative flex h-10 w-10 items-center justify-center">
+                    <span
+                      aria-hidden="true"
+                      className="absolute bottom-0 h-4 w-4 rotate-45 rounded-[3px]"
+                      style={{ backgroundColor: config.color }}
+                    />
+                    <span
+                      className="relative z-10 flex h-9 w-9 items-center justify-center rounded-full border-2 border-white shadow-[0_5px_12px_rgba(2,16,42,0.35)]"
+                      style={{ backgroundColor: config.color }}
+                    >
+                      {config.icon}
+                    </span>
+                  </span>
+                  <span>{config.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        </fieldset>
 
         <input
           type="text"
