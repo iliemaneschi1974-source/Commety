@@ -29,9 +29,15 @@ export function mapReportToOpenGraphModel(
 
     category: report.type,
 
-    photoUrl:
+    mediaUrl:
       report.images.length > 0
         ? report.images[0].url
+        : report.video?.moderationFrames?.[1]?.url,
+
+    mediaType: report.images.length > 0
+      ? "photo"
+      : report.video
+        ? "video"
         : undefined,
   };
 }

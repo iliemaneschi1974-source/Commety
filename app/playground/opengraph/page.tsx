@@ -7,7 +7,8 @@ const report: ReportOpenGraphModel = {
   address: "Via Cassia, Roma",
   relativeTime: "3 minuti fa",
   category: "meteo",
-  photoUrl: "/playground/rainbow.jpg",
+  mediaUrl: "/playground/rainbow.jpg",
+  mediaType: "photo",
 };
 
 export default function OpenGraphPlaygroundPage() {

@@ -22,11 +22,19 @@ export async function getServerReportById(
     return null;
   }
 
-  return {
+  const report = {
     id: snapshot.id,
     ...(snapshot.data() as Omit<
       Report,
       "id"
     >),
   };
+
+  // Le anteprime condivise non devono rivelare segnalazioni in attesa,
+  // rifiutate o nascoste dalla moderazione.
+  if (!report.isVisible) {
+    return null;
+  }
+
+  return report;
 }

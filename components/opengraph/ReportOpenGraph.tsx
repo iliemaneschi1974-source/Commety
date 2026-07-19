@@ -51,7 +51,7 @@ export default function ReportOpenGraph({
           }}
         >
           <ReportPhoto
-            photoUrl={report.photoUrl}
+            photoUrl={report.mediaUrl}
             fallback={
               <ReportPlaceholder
                 backgroundColor={category.color}

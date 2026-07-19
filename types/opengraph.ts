@@ -37,10 +37,10 @@ export interface ReportOpenGraphModel {
   readonly category: ReportCategory;
 
   /**
-   * URL pubblico della foto.
-   *
-   * Undefined se la segnalazione
-   * non contiene immagini.
+   * Foto della segnalazione o fotogramma del video usato come copertina.
+   * Undefined per le segnalazioni esclusivamente testuali.
    */
-  readonly photoUrl?: string;
+  readonly mediaUrl?: string;
+
+  readonly mediaType?: "photo" | "video";
 }
