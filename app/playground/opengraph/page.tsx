@@ -1,14 +1,12 @@
-import { ReportOpenGraph } from "@/components/opengraph";
+import ReportOpenGraphImage from "@/components/opengraph-image/ReportOpenGraphImage";
 
 import { ReportOpenGraphModel } from "@/types/opengraph";
 
 const report: ReportOpenGraphModel = {
-  title: "Doppio arcobaleno dopo il temporale",
+  title: "Concerto live in piazza questa sera",
   address: "Via Cassia, Roma",
   relativeTime: "3 minuti fa",
-  category: "meteo",
-  mediaUrl: "/playground/rainbow.jpg",
-  mediaType: "photo",
+  category: "evento",
 };
 
 export default function OpenGraphPlaygroundPage() {
@@ -23,7 +21,9 @@ export default function OpenGraphPlaygroundPage() {
         padding: 40,
       }}
     >
-      <ReportOpenGraph report={report} />
+      <div style={{ transform: "scale(0.7)", transformOrigin: "center center" }}>
+        <ReportOpenGraphImage report={report} />
+      </div>
     </main>
   );
 }
