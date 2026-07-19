@@ -24,7 +24,6 @@ export default function VideoRecorder({ onChange }: VideoRecorderProps) {
 
   async function startRecording() {
     setError(null);
-
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: { ideal: "environment" } },
@@ -34,10 +33,9 @@ export default function VideoRecorder({ onChange }: VideoRecorderProps) {
       if (previewRef.current) previewRef.current.srcObject = stream;
 
       const chunks: BlobPart[] = [];
-      const preferredMimeType = MediaRecorder.isTypeSupported("video/webm;codecs=vp8")
-        ? "video/webm;codecs=vp8"
-        : "video/webm";
-      const recorder = new MediaRecorder(stream, { mimeType: preferredMimeType });
+      const mimeType = MediaRecorder.isTypeSupported("video/webm;codecs=vp8")
+        ? "video/webm;codecs=vp8" : "video/webm";
+      const recorder = new MediaRecorder(stream, { mimeType });
       recorder.ondataavailable = (event) => {
         if (event.data.size > 0) chunks.push(event.data);
       };
@@ -45,25 +43,19 @@ export default function VideoRecorder({ onChange }: VideoRecorderProps) {
         stream.getTracks().forEach((track) => track.stop());
         setRecording(false);
         setSecondsLeft(MAX_SECONDS);
-
         try {
-          const video = new File(
-            [new Blob(chunks, { type: "video/webm" })],
-            `commety-${Date.now()}.webm`,
-            { type: "video/webm" }
-          );
+          const video = new File([new Blob(chunks, { type: "video/webm" })], `commety-${Date.now()}.webm`, { type: "video/webm" });
           const frames = await createModerationFrames(video);
           setPreviewUrl(URL.createObjectURL(video));
           onChange(video, frames);
         } catch {
-          setError("Non Ã¨ stato possibile preparare il video per il controllo di sicurezza.");
+          setError("Non e' stato possibile preparare il video per il controllo di sicurezza.");
           onChange(null, []);
         }
       };
       recorder.start();
       setRecording(true);
       setSecondsLeft(MAX_SECONDS);
-
       const timer = window.setInterval(() => {
         setSecondsLeft((value) => {
           if (value <= 1) {
@@ -85,14 +77,34 @@ export default function VideoRecorder({ onChange }: VideoRecorderProps) {
     onChange(null, []);
   }
 
-  return <div className="mb-6">
-    <label className="mb-3 block text-sm font-medium text-white/90">Video live Â· massimo 5 secondi</label>
-    {previewUrl ? <div className="relative overflow-hidden rounded-2xl border border-white/25 bg-black"><video controls playsInline src={previewUrl} className="max-h-64 w-full" /><Watermark /><button type="button" onClick={removeVideo} className="absolute right-3 top-3 rounded-full bg-red-600 px-3 py-1.5 text-sm font-bold text-white">Rimuovi</button></div> : <div className="overflow-hidden rounded-2xl border border-dashed border-white/40 bg-black/25"><video ref={previewRef} autoPlay muted playsInline className="max-h-64 w-full" /><div className="p-3 text-center"><button type="button" onClick={startRecording} disabled={recording} className="rounded-xl bg-red-600 px-5 py-3 font-bold text-white disabled:opacity-60">{recording ? `Registrazione: ${secondsLeft}s` : "Registra dalla fotocamera"}</button><p className="mt-2 text-xs text-white/65">Nessun audio, nessuna galleria. Il video Ã¨ controllato in piÃ¹ momenti prima della pubblicazione.</p></div></div>}
-    {error ? <p className="mt-3 text-center text-sm text-red-200">{error}</p> : null}
-  </div>;
+  return (
+    <div className="mb-6">
+      <label className="mb-3 block text-sm font-medium text-white/90">Video live &middot; massimo 5 secondi</label>
+      {previewUrl ? (
+        <div className="relative overflow-hidden rounded-2xl border border-white/25 bg-black">
+          <video controls playsInline src={previewUrl} className="max-h-64 w-full" />
+          <Watermark />
+          <button type="button" onClick={removeVideo} className="absolute right-3 top-3 rounded-full bg-red-600 px-3 py-1.5 text-sm font-bold text-white">Rimuovi</button>
+        </div>
+      ) : (
+        <div className="overflow-hidden rounded-2xl border border-dashed border-white/40 bg-black/25">
+          <video ref={previewRef} autoPlay muted playsInline className="max-h-64 w-full" />
+          <div className="p-3 text-center">
+            <button type="button" onClick={startRecording} disabled={recording} className="rounded-xl bg-red-600 px-5 py-3 font-bold text-white disabled:opacity-60">
+              {recording ? `Registrazione: ${secondsLeft}s` : "Registra dalla fotocamera"}
+            </button>
+            <p className="mt-2 text-xs text-white/65">Nessun audio, nessuna galleria. Il video viene controllato in pi&ugrave; momenti prima della pubblicazione.</p>
+          </div>
+        </div>
+      )}
+      {error ? <p className="mt-3 text-center text-sm text-red-200">{error}</p> : null}
+    </div>
+  );
 }
 
-function Watermark() { return <span className="pointer-events-none absolute bottom-3 right-3 rounded-lg border border-white/30 bg-[#061735]/75 px-2 py-1 text-xs font-black text-white">Commety</span>; }
+function Watermark() {
+  return <span className="pointer-events-none absolute bottom-3 right-3 rounded-lg border border-white/30 bg-[#061735]/75 px-2 py-1 text-xs font-black text-white">Commety</span>;
+}
 
 async function createModerationFrames(videoFile: File): Promise<File[]> {
   const url = URL.createObjectURL(videoFile);
@@ -100,17 +112,12 @@ async function createModerationFrames(videoFile: File): Promise<File[]> {
   video.src = url;
   video.muted = true;
   video.playsInline = true;
-
   try {
     await waitFor(video, "loadedmetadata");
     const duration = Number.isFinite(video.duration) ? video.duration : MAX_SECONDS;
-    const frameTimes = MODERATION_FRAME_TIMES.map((time) =>
-      Math.min(time, Math.max(0, duration - 0.1))
-    );
+    const frameTimes = MODERATION_FRAME_TIMES.map((time) => Math.min(time, Math.max(0, duration - 0.1)));
     const frames: File[] = [];
-    for (const [index, time] of frameTimes.entries()) {
-      frames.push(await createFrame(video, time, index));
-    }
+    for (const [index, time] of frameTimes.entries()) frames.push(await createFrame(video, time, index));
     return frames;
   } finally {
     URL.revokeObjectURL(url);
@@ -120,8 +127,7 @@ async function createModerationFrames(videoFile: File): Promise<File[]> {
 async function createFrame(video: HTMLVideoElement, time: number, index: number): Promise<File> {
   video.currentTime = time;
   await waitFor(video, "seeked");
-  const longestSide = Math.max(video.videoWidth, video.videoHeight, 1);
-  const scale = Math.min(1, 960 / longestSide);
+  const scale = Math.min(1, 960 / Math.max(video.videoWidth, video.videoHeight, 1));
   const canvas = document.createElement("canvas");
   canvas.width = Math.max(1, Math.round(video.videoWidth * scale));
   canvas.height = Math.max(1, Math.round(video.videoHeight * scale));
@@ -134,13 +140,7 @@ async function createFrame(video: HTMLVideoElement, time: number, index: number)
 function waitFor(target: HTMLVideoElement, eventName: "loadedmetadata" | "seeked"): Promise<void> {
   return new Promise((resolve, reject) => {
     const timeout = window.setTimeout(() => reject(new Error("Timeout video")), 5000);
-    target.addEventListener(eventName, () => {
-      window.clearTimeout(timeout);
-      resolve();
-    }, { once: true });
-    target.addEventListener("error", () => {
-      window.clearTimeout(timeout);
-      reject(new Error("Errore video"));
-    }, { once: true });
+    target.addEventListener(eventName, () => { window.clearTimeout(timeout); resolve(); }, { once: true });
+    target.addEventListener("error", () => { window.clearTimeout(timeout); reject(new Error("Errore video")); }, { once: true });
   });
 }
