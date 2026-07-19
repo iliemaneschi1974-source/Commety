@@ -206,7 +206,7 @@ export default function Home() {
       <section className="relative isolate overflow-hidden bg-[radial-gradient(circle_at_88%_8%,rgba(93,157,230,0.48),transparent_27%),radial-gradient(circle_at_15%_42%,rgba(64,132,214,0.3),transparent_29%),linear-gradient(145deg,#061735_0%,#0F2D5F_52%,#071a3c_100%)] pb-24 pt-6 text-white sm:pt-8">
         <div className="pointer-events-none absolute inset-0 opacity-30 [background-image:linear-gradient(rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.08)_1px,transparent_1px)] [background-size:44px_44px]" />
 
-        <header className="relative z-10 mx-auto flex w-full max-w-7xl items-center justify-between gap-5 px-6 lg:px-8">
+        <header className="relative z-10 mx-auto flex w-full max-w-7xl items-center justify-center px-6 lg:px-8">
           <Image
             src="/logo-header-cropped.png"
             alt="Commety"
