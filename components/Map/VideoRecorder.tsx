@@ -15,6 +15,7 @@ export default function VideoRecorder({ onChange }: VideoRecorderProps) {
   const streamRef = useRef<MediaStream | null>(null);
   const [recording, setRecording] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [posterUrl, setPosterUrl] = useState<string | null>(null);
   const [secondsLeft, setSecondsLeft] = useState(MAX_SECONDS);
   const [error, setError] = useState<string | null>(null);
   const [preparing, setPreparing] = useState(false);
@@ -23,6 +24,10 @@ export default function VideoRecorder({ onChange }: VideoRecorderProps) {
     streamRef.current?.getTracks().forEach((track) => track.stop());
     if (previewUrl) URL.revokeObjectURL(previewUrl);
   }, [previewUrl]);
+
+  useEffect(() => () => {
+    if (posterUrl) URL.revokeObjectURL(posterUrl);
+  }, [posterUrl]);
 
   async function startRecording() {
     setError(null);
@@ -44,6 +49,7 @@ export default function VideoRecorder({ onChange }: VideoRecorderProps) {
         if (event.data.size > 0) chunks.push(event.data);
       };
       recorder.onstop = async () => {
+        const livePoster = await captureLivePoster(previewRef.current);
         stream.getTracks().forEach((track) => track.stop());
         setRecording(false);
         setSecondsLeft(MAX_SECONDS);
@@ -56,6 +62,7 @@ export default function VideoRecorder({ onChange }: VideoRecorderProps) {
             { type: recordedMimeType }
           );
           setPreviewUrl(URL.createObjectURL(video));
+          if (livePoster) setPosterUrl(livePoster);
           setPreparing(true);
           const frames = await createModerationFrames(video);
           onChange(video, frames);
@@ -86,7 +93,9 @@ export default function VideoRecorder({ onChange }: VideoRecorderProps) {
 
   function removeVideo() {
     if (previewUrl) URL.revokeObjectURL(previewUrl);
+    if (posterUrl) URL.revokeObjectURL(posterUrl);
     setPreviewUrl(null);
+    setPosterUrl(null);
     setPreparing(false);
     onChange(null, []);
   }
@@ -96,7 +105,7 @@ export default function VideoRecorder({ onChange }: VideoRecorderProps) {
       <label className="mb-3 block text-sm font-medium text-white/90">Video live &middot; massimo 5 secondi</label>
       {previewUrl ? (
         <div className="relative overflow-hidden rounded-2xl border border-white/25 bg-black">
-          <video controls autoPlay muted playsInline preload="metadata" src={previewUrl} className="max-h-64 w-full" />
+          <video controls playsInline preload="metadata" poster={posterUrl ?? undefined} src={previewUrl} className="max-h-64 w-full" />
           <Watermark />
           {preparing ? <div className="absolute inset-0 flex items-center justify-center bg-[#061735]/60 p-5 text-center text-sm font-bold text-white">Preparazione dell&apos;anteprima e controllo di sicurezza...</div> : null}
           <button type="button" onClick={removeVideo} className="absolute right-3 top-3 rounded-full bg-red-600 px-3 py-1.5 text-sm font-bold text-white">Rimuovi</button>
@@ -128,6 +137,17 @@ function getSupportedVideoMimeType(): string | undefined {
     "video/webm;codecs=vp8",
     "video/webm",
   ].find((candidate) => MediaRecorder.isTypeSupported(candidate));
+}
+
+async function captureLivePoster(video: HTMLVideoElement | null): Promise<string | null> {
+  if (!video || video.videoWidth === 0 || video.videoHeight === 0) return null;
+  const scale = Math.min(1, 960 / Math.max(video.videoWidth, video.videoHeight));
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.round(video.videoWidth * scale);
+  canvas.height = Math.round(video.videoHeight * scale);
+  canvas.getContext("2d")?.drawImage(video, 0, 0, canvas.width, canvas.height);
+  const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.85));
+  return blob ? URL.createObjectURL(blob) : null;
 }
 
 async function createModerationFrames(videoFile: File): Promise<File[]> {
