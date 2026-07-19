@@ -38,4 +38,35 @@ describe("moderazione dei commenti", () => {
       )
     ).toBe(true);
   });
+
+  it.each([
+    "Non fare la puttana",
+    "Sono delle puttane",
+    "Sei una troia",
+    "Sono delle troie",
+  ])("rifiuta l'insulto pesante: %s", (text) => {
+    const moderationEngine = new DefaultModerationEngine(
+      new DefaultModerationPolicy()
+    );
+
+    const result = moderationEngine.modera(new UserContent(text, []));
+
+    expect(result.isRejected()).toBe(true);
+  });
+
+  it.each([
+    "Sei un bastardo",
+    "Siete degli imbecilli",
+    "Che cretine",
+    "È un leccaculo",
+    "Quei rompicoglioni non smettono",
+  ])("rifiuta gli altri insulti pesanti: %s", (text) => {
+    const moderationEngine = new DefaultModerationEngine(
+      new DefaultModerationPolicy()
+    );
+
+    const result = moderationEngine.modera(new UserContent(text, []));
+
+    expect(result.isRejected()).toBe(true);
+  });
 });

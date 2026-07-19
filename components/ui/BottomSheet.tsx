@@ -3,6 +3,8 @@
 import {
   ReactNode,
   useEffect,
+  useRef,
+  useState,
 } from "react";
 import { X } from "lucide-react";
 
@@ -19,6 +21,11 @@ export default function BottomSheet({
   children,
   animation = "standard",
 }: BottomSheetProps) {
+  const [animationPhase, setAnimationPhase] = useState<
+    "hidden" | "entering" | "exiting"
+  >("hidden");
+  const hasOpened = useRef(false);
+
   useEffect(() => {
     if (!open) return;
 
@@ -28,6 +35,23 @@ export default function BottomSheet({
     return () => {
       document.body.style.overflow = originalOverflow;
     };
+  }, [open]);
+
+  useEffect(() => {
+    if (open) {
+      hasOpened.current = true;
+    }
+
+    if (!open && !hasOpened.current) {
+      return;
+    }
+
+    const delay = open ? 48 : 0;
+    const timeout = window.setTimeout(() => {
+      setAnimationPhase(open ? "entering" : "exiting");
+    }, delay);
+
+    return () => window.clearTimeout(timeout);
   }, [open]);
 
   return (
@@ -63,18 +87,20 @@ export default function BottomSheet({
           shadow-[0_-18px_45px_rgba(2,16,42,0.42)]
 
           transition-[transform,opacity]
-          duration-400
-          ${animation === "report" ? "ease-[cubic-bezier(0.22,1,0.36,1)]" : "ease-out"}
+          duration-300
+          ease-out
 
           max-h-[85vh]
           overflow-hidden
 
           ${
-            open
-              ? "translate-y-0 opacity-100"
-              : animation === "report"
-                ? "translate-y-12 opacity-0"
-                : "translate-y-full opacity-100"
+            animationPhase === "entering"
+              ? animation === "report"
+                ? "commety-report-sheet-enter opacity-100"
+                : "translate-y-0 opacity-100"
+              : animationPhase === "exiting" && animation === "report"
+                ? "commety-report-sheet-exit pointer-events-none"
+                : "translate-y-full opacity-0 pointer-events-none"
           }
         `}
       >

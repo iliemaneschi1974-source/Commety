@@ -20,11 +20,38 @@ export class ParolacceRule implements SpamRule {
     radice: string;
     desinenze: readonly string[];
   }[] = [
+    // Volgarità e insulti sessuali
     { radice: "cazz", desinenze: ["o", "i"] },
     { radice: "merd", desinenze: ["a", "e"] },
     { radice: "vaffancul", desinenze: ["o"] },
     { radice: "stronz", desinenze: ["o", "a", "i", "e"] },
-    { radice: "coglion", desinenze: ["e", "i"] },
+    { radice: "coglion", desinenze: ["a", "e", "i"] },
+    { radice: "puttan", desinenze: ["a", "e"] },
+    { radice: "troi", desinenze: ["a", "e"] },
+    { radice: "minch", desinenze: ["ia", "ie", "ione", "ioni"] },
+    { radice: "cazzon", desinenze: ["e", "i"] },
+    { radice: "leccacul", desinenze: ["o", "i"] },
+    { radice: "succhiacazz", desinenze: ["o", "i"] },
+
+    // Insulti personali inequivocabili
+    { radice: "bastard", desinenze: ["o", "a", "i", "e"] },
+    { radice: "cretin", desinenze: ["o", "a", "i", "e"] },
+    { radice: "idiot", desinenze: ["a", "e", "i"] },
+    { radice: "imbecill", desinenze: ["e", "i"] },
+    { radice: "deficient", desinenze: ["e", "i"] },
+    { radice: "dement", desinenze: ["e", "i"] },
+    { radice: "cerebroles", desinenze: ["o", "a", "i", "e"] },
+    { radice: "rincoglionit", desinenze: ["o", "a", "i", "e"] },
+    { radice: "pirl", desinenze: ["a", "e"] },
+    { radice: "infam", desinenze: ["e", "i"] },
+    { radice: "schifos", desinenze: ["o", "a", "i", "e"] },
+    { radice: "lurid", desinenze: ["o", "a", "i", "e"] },
+    { radice: "subnormal", desinenze: ["e", "i"] },
+    { radice: "mongoloid", desinenze: ["e", "i"] },
+
+    // Insulti composti frequenti
+    { radice: "rompicoglion", desinenze: ["e", "i"] },
+    { radice: "cagasott", desinenze: ["o", "a", "i", "e"] },
   ];
 
   analizza(
