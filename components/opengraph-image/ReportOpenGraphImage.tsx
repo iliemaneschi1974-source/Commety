@@ -1,6 +1,8 @@
 import { ReportOpenGraphModel } from "@/types/opengraph";
 import { OPEN_GRAPH_CATEGORY_CONFIG } from "./categoryConfig";
 
+const COMMETY_LOGO_URL = "https://www.commety.it/logo.png";
+
 export interface ReportOpenGraphImageProps {
   readonly report: ReportOpenGraphModel;
 }
@@ -34,8 +36,7 @@ export default function ReportOpenGraphImage({ report }: ReportOpenGraphImagePro
           <div style={{ display: "flex", fontSize: "27px", color: "rgba(255,255,255,0.88)", fontWeight: 600 }}>📍 {report.address}</div>
           <div style={{ display: "flex", marginTop: "12px", fontSize: "22px", color: "rgba(255,255,255,0.62)" }}>{report.relativeTime}</div>
           <div style={{ display: "flex", alignItems: "center", marginTop: "32px" }}>
-            <BrandMark />
-            <div style={{ display: "flex", marginLeft: "14px", fontSize: "28px", fontWeight: 800, letterSpacing: "-1px" }}>commety</div>
+            <CommetyLogo width={188} height={52} />
             <div style={{ display: "flex", marginLeft: "auto", fontSize: "17px", color: "rgba(255,255,255,0.55)", fontWeight: 600 }}>La mappa del mondo reale</div>
           </div>
         </div>
@@ -48,10 +49,10 @@ function InstitutionalVisual() {
   return <div style={{ width: "520px", height: "630px", display: "flex", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden", background: "linear-gradient(150deg, #123d72 0%, #071a3c 72%)" }}>
     <div style={{ position: "absolute", width: "740px", height: "740px", borderRadius: "370px", border: "1px solid rgba(255,255,255,0.13)", display: "flex" }} />
     <div style={{ position: "absolute", width: "500px", height: "500px", borderRadius: "250px", border: "1px solid rgba(255,255,255,0.12)", display: "flex" }} />
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", zIndex: 1 }}><BrandMark size={142} /><div style={{ display: "flex", marginTop: "24px", color: "rgba(255,255,255,0.72)", fontSize: "23px", fontWeight: 700 }}>Dalla community, sulla mappa.</div></div>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", zIndex: 1 }}><CommetyLogo width={280} height={77} /><div style={{ display: "flex", marginTop: "24px", color: "rgba(255,255,255,0.72)", fontSize: "23px", fontWeight: 700 }}>Dalla community, sulla mappa.</div></div>
   </div>;
 }
 
-function BrandMark({ size = 48 }: { size?: number }) {
-  return <div style={{ width: `${size}px`, height: `${size}px`, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: `${size / 2}px`, backgroundColor: "#ffffff", color: "#0F2D5F", fontSize: `${Math.round(size * 0.55)}px`, fontWeight: 900, boxShadow: "0 12px 30px rgba(0,0,0,0.28)" }}>C</div>;
+function CommetyLogo({ width, height }: { width: number; height: number }) {
+  return <img src={COMMETY_LOGO_URL} alt="Commety" width={width} height={height} style={{ width: `${width}px`, height: `${height}px`, objectFit: "contain" }} />;
 }
