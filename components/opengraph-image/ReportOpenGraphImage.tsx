@@ -15,7 +15,7 @@ export default function ReportOpenGraphImage({ report }: ReportOpenGraphImagePro
   const hasMedia = Boolean(report.mediaUrl);
 
   return (
-    <div style={{ width: "1200px", height: "630px", display: "flex", overflow: "hidden", backgroundColor: "#071a3c", fontFamily: "sans-serif" }}>
+    <div style={{ width: "1200px", height: "630px", display: "flex", overflow: "hidden", borderRadius: "42px", backgroundColor: "#071a3c", fontFamily: "sans-serif" }}>
       {hasMedia ? (
         <div style={{ width: "520px", height: "630px", display: "flex", position: "relative", overflow: "hidden", backgroundColor: "#0b2858" }}>
           <img src={report.mediaUrl} alt="" width={520} height={630} style={{ width: "520px", height: "630px", objectFit: "cover" }} />
