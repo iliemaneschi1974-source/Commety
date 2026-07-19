@@ -81,12 +81,7 @@ export default function ReportBottomSheet({
           </div>
         </section>
 
-        {report.video ? (
-          <section className="relative mt-6 overflow-hidden rounded-2xl border border-white/20 bg-black shadow-[0_12px_25px_rgba(1,15,42,0.35)]">
-            <video controls playsInline src={report.video.url} className="max-h-[70vh] w-full" />
-            <span className="pointer-events-none absolute bottom-3 right-3 inline-flex items-center gap-1 rounded-lg border border-white/30 bg-[#061735]/80 px-2 py-1 text-xs font-black text-white"><span className="relative inline-flex size-4 items-center justify-center"><MapPin className="size-4 fill-white text-white" /><span className="absolute -mt-px text-[8px] font-black text-[#0F2D5F]">C</span></span>Commety</span>
-          </section>
-        ) : report.images.length > 0 && (
+        {report.video ? <ReportVideo key={report.id} src={report.video.url} /> : report.images.length > 0 && (
           <section className="mt-6">
             <h3 className="mb-3 text-sm font-semibold uppercase tracking-[0.16em] text-white/70">Foto della segnalazione</h3>
             {report.images.length === 1 ? (
@@ -126,4 +121,14 @@ export default function ReportBottomSheet({
 
 function Stat({ icon, value, label }: { icon: React.ReactNode; value: number; label: string }) {
   return <div className="rounded-2xl bg-white/8 p-3 text-center">{icon}<p className="mt-1 font-bold">{value}</p><p className="text-xs text-white/60">{label}</p></div>;
+}
+
+function ReportVideo({ src }: { src: string }) {
+  const [ready, setReady] = useState(false);
+
+  return <section className="relative mt-6 overflow-hidden rounded-2xl border border-white/20 bg-[#061735] shadow-[0_12px_25px_rgba(1,15,42,0.35)]">
+    {!ready ? <div className="absolute inset-0 z-10 flex min-h-56 flex-col items-center justify-center bg-[radial-gradient(circle_at_50%_20%,#315d97_0%,#0F2D5F_45%,#061735_100%)] text-white"><span className="relative grid size-16 place-items-center"><MapPin className="size-16 fill-white text-white" /><span className="absolute -mt-1 text-3xl font-black text-[#0F2D5F]">C</span></span><p className="mt-3 text-lg font-black tracking-tight">Commety</p><p className="mt-1 text-xs text-white/70">Preparazione video</p></div> : null}
+    <video controls playsInline preload="metadata" src={src} onLoadedData={() => setReady(true)} className="max-h-[70vh] w-full" />
+    <span className="pointer-events-none absolute bottom-3 right-3 z-20 inline-flex items-center gap-1 rounded-lg border border-white/30 bg-[#061735]/80 px-2 py-1 text-xs font-black text-white"><span className="relative inline-flex size-4 items-center justify-center"><MapPin className="size-4 fill-white text-white" /><span className="absolute -mt-px text-[8px] font-black text-[#0F2D5F]">C</span></span>Commety</span>
+  </section>;
 }
