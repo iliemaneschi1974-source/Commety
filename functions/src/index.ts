@@ -6,6 +6,7 @@ import { reportUpdatedTrigger } from "./firestore/reportUpdatedTrigger";
 import { testOpenAI } from "./http/testOpenAI";
 
 import { expirationScheduler } from "./schedulers/expirationScheduler";
+import { deleteAccount } from "./callable/deleteAccount";
 
 /**
  * Configurazione globale delle Cloud Functions.
@@ -33,3 +34,8 @@ export { reportUpdatedTrigger };
  * Endpoint diagnostico OpenAI.
  */
 export { testOpenAI };
+
+/**
+ * Cancellazione definitiva dell'account e dei relativi contenuti.
+ */
+export { deleteAccount };

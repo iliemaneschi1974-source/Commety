@@ -66,7 +66,9 @@ export default function Modal({
       <div
         className="
           w-full
+          max-h-[calc(100dvh-2rem)]
           max-w-md
+          overflow-y-auto
           rounded-3xl
           bg-white
           p-6

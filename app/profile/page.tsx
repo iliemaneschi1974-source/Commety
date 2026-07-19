@@ -7,6 +7,7 @@ import { ProfileGallery } from "@/components/Profile/ProfileGallery";
 import { ProfileHeader } from "@/components/Profile/ProfileHeader";
 import { ProfileReports } from "@/components/Profile/ProfileReports";
 import { ProfileStats } from "@/components/Profile/ProfileStats";
+import { AccountActions } from "@/components/Profile/AccountActions";
 
 import { useProfile } from "@/hooks/useProfile";
 import { useUserReports } from "@/hooks/useUserReports";
@@ -79,6 +80,8 @@ export default function ProfilePage() {
       <ProfileReports reports={reports} />
 
       <ProfileGallery images={gallery} />
+
+      <AccountActions />
 
       <Link
         href="/mappa"
