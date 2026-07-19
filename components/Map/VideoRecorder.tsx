@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { MapPin } from "lucide-react";
+import { MapPin, Play } from "lucide-react";
 
 interface VideoRecorderProps {
   onChange: (video: File | null, moderationFrames: File[]) => void;
@@ -12,6 +12,7 @@ const MODERATION_FRAME_TIMES = [0.5, 2.5, 4.5];
 
 export default function VideoRecorder({ onChange }: VideoRecorderProps) {
   const previewRef = useRef<HTMLVideoElement>(null);
+  const playbackRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const [recording, setRecording] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -19,6 +20,7 @@ export default function VideoRecorder({ onChange }: VideoRecorderProps) {
   const [secondsLeft, setSecondsLeft] = useState(MAX_SECONDS);
   const [error, setError] = useState<string | null>(null);
   const [preparing, setPreparing] = useState(false);
+  const [playing, setPlaying] = useState(false);
 
   useEffect(() => () => {
     streamRef.current?.getTracks().forEach((track) => track.stop());
@@ -54,6 +56,7 @@ export default function VideoRecorder({ onChange }: VideoRecorderProps) {
       };
       recorder.onstop = async () => {
         const livePoster = await captureLivePoster(previewRef.current);
+        if (previewRef.current) previewRef.current.srcObject = null;
         stream.getTracks().forEach((track) => track.stop());
         setRecording(false);
         setSecondsLeft(MAX_SECONDS);
@@ -102,7 +105,19 @@ export default function VideoRecorder({ onChange }: VideoRecorderProps) {
     setPreviewUrl(null);
     setPosterUrl(null);
     setPreparing(false);
+    setPlaying(false);
     onChange(null, []);
+  }
+
+  async function playPreview() {
+    const player = playbackRef.current;
+    if (!player) return;
+    try {
+      player.currentTime = 0;
+      await player.play();
+    } catch {
+      setError("Impossibile riprodurre il video su questo dispositivo.");
+    }
   }
 
   return (
@@ -110,14 +125,15 @@ export default function VideoRecorder({ onChange }: VideoRecorderProps) {
       <label className="mb-3 block text-sm font-medium text-white/90">Video live &middot; massimo 5 secondi</label>
       {previewUrl ? (
         <div className="relative overflow-hidden rounded-2xl border border-white/25 bg-black">
-          <video controls playsInline preload="metadata" poster={posterUrl ?? undefined} src={previewUrl} className="max-h-64 w-full" />
+          <video key="recorded-preview" ref={playbackRef} controls muted playsInline preload="metadata" poster={posterUrl ?? undefined} src={previewUrl} onPlay={() => setPlaying(true)} onEnded={() => setPlaying(false)} onPause={() => setPlaying(false)} className="max-h-64 w-full" />
           <Watermark />
           {preparing ? <div className="absolute inset-0 flex items-center justify-center bg-[#061735]/60 p-5 text-center text-sm font-bold text-white">Preparazione dell&apos;anteprima e controllo di sicurezza...</div> : null}
+          {!preparing && !playing ? <button type="button" onClick={playPreview} aria-label="Riproduci anteprima video" className="absolute left-1/2 top-1/2 grid size-16 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-white/60 bg-[#0F2D5F]/90 text-white shadow-[0_8px_22px_rgba(0,0,0,0.45)] transition hover:scale-105 hover:bg-[#17467f]"><Play className="ml-1 size-7 fill-current" /></button> : null}
           <button type="button" onClick={removeVideo} className="absolute right-3 top-3 rounded-full bg-red-600 px-3 py-1.5 text-sm font-bold text-white">Rimuovi</button>
         </div>
       ) : (
         <div className="overflow-hidden rounded-2xl border border-dashed border-white/40 bg-black/25">
-          <video ref={previewRef} autoPlay muted playsInline className="max-h-64 w-full" />
+          <video key="live-camera" ref={previewRef} autoPlay muted playsInline className="max-h-64 w-full" />
           <div className="p-3 text-center">
             <button type="button" onClick={startRecording} disabled={recording} className="rounded-xl bg-red-600 px-5 py-3 font-bold text-white disabled:opacity-60">
               {recording ? `Registrazione: ${secondsLeft}s` : "Registra dalla fotocamera"}
