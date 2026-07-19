@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
 import ReportOpenGraphImage from "@/components/opengraph-image/ReportOpenGraphImage";
@@ -16,6 +16,10 @@ const institutionalPreview: ReportOpenGraphModel = {
 };
 
 export default function OpenGraphPlaygroundPage() {
+  return <Suspense fallback={<PreviewStatus message="Preparazione anteprima..." />}><OpenGraphPlayground /></Suspense>;
+}
+
+function OpenGraphPlayground() {
   const searchParams = useSearchParams();
   const reportId = searchParams.get("report");
   const [preview, setPreview] = useState<ReportOpenGraphModel | null>(() =>
@@ -43,9 +47,13 @@ export default function OpenGraphPlaygroundPage() {
 
   return (
     <main style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", minHeight: "100vh", background: "#E5E7EB", padding: 40, gap: 20 }}>
-      {message ? <p style={{ color: "#0F2D5F", fontFamily: "sans-serif", fontWeight: 700 }}>{message}</p> : null}
-      {!preview && !message ? <p style={{ color: "#0F2D5F", fontFamily: "sans-serif", fontWeight: 700 }}>Caricamento della segnalazione reale...</p> : null}
+      {message ? <PreviewStatus message={message} /> : null}
+      {!preview && !message ? <PreviewStatus message="Caricamento della segnalazione reale..." /> : null}
       {preview ? <div style={{ transform: "scale(0.7)", transformOrigin: "center center" }}><ReportOpenGraphImage report={preview} /></div> : null}
     </main>
   );
+}
+
+function PreviewStatus({ message }: { message: string }) {
+  return <p style={{ color: "#0F2D5F", fontFamily: "sans-serif", fontWeight: 700 }}>{message}</p>;
 }
