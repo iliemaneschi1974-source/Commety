@@ -13,6 +13,7 @@ const CATEGORY_ICONS: Record<Report["type"], string> = {
   pericolo: "⚠️",
   evento: "🎉",
   mare: "🏖️",
+  animali: "🐾",
 };
 
 const CATEGORY_LABELS: Record<Report["type"], string> = {
@@ -21,6 +22,7 @@ const CATEGORY_LABELS: Record<Report["type"], string> = {
   pericolo: "Pericolo",
   evento: "Evento",
   mare: "Mare",
+  animali: "Animali",
 };
 
 export default function ReportCard({

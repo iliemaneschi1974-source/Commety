@@ -40,6 +40,13 @@ export const REPORT_EXPIRATION = {
     extensionWindow: 4 * HOUR,
     maxDuration: 72 * HOUR,
   },
+
+  animali: {
+    duration: 24 * HOUR,
+    extensionDuration: 12 * HOUR,
+    extensionWindow: 4 * HOUR,
+    maxDuration: 72 * HOUR,
+  },
 } satisfies Record<
   ReportCategory,
   {

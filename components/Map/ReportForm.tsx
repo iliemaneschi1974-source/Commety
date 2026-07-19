@@ -42,6 +42,7 @@ export default function ReportForm({
   const [mediaMode, setMediaMode] = useState<"photo" | "video">("photo");
 
   const isCommunityEvent = form.type === "evento";
+  const isAnimalReport = form.type === "animali";
 
   if (!open) {
     return null;
@@ -102,6 +103,7 @@ export default function ReportForm({
           <option value="pericolo">⚠️ Pericolo</option>
           <option value="evento">🎉 Evento</option>
           <option value="mare">🏖️ Mare</option>
+          <option value="animali">🐾 Animali</option>
         </select>
 
         <input
@@ -142,6 +144,12 @@ export default function ReportForm({
             Gli Eventi raccontano la vita del territorio: momenti belli,
             iniziative, sport, musica e anche eventuali criticità. Evita volti
             riconoscibili nelle foto.
+          </p>
+        ) : null}
+
+        {isAnimalReport ? (
+          <p className="-mt-1 mb-4 text-center text-xs leading-5 text-white/75">
+            Segnala animali in difficolta e luoghi amici degli animali. Per emergenze o maltrattamenti in corso contatta subito le autorita competenti.
           </p>
         ) : null}
 

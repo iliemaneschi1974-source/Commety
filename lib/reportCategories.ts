@@ -4,6 +4,7 @@ import {
   Car,
   TriangleAlert,
   PartyPopper,
+  PawPrint,
   Waves,
 } from "lucide-react";
 
@@ -60,5 +61,12 @@ export const REPORT_CATEGORIES: Record<
     label: "Mare",
     color: "#14B8A6",
     icon: Waves,
+  },
+
+  animali: {
+    id: "animali",
+    label: "Animali",
+    color: "#F97316",
+    icon: PawPrint,
   },
 };

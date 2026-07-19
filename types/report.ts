@@ -5,7 +5,8 @@ export type ReportCategory =
   | "traffico"
   | "pericolo"
   | "evento"
-  | "mare";
+  | "mare"
+  | "animali";
 
 export type ReportStatus =
   | "ACTIVE"

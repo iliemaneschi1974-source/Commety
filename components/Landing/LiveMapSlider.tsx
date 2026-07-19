@@ -4,6 +4,7 @@ import {
   Car,
   CloudRain,
   Music2,
+  PawPrint,
   Pause,
   Play,
   TriangleAlert,
@@ -57,6 +58,15 @@ const SLIDES = [
     color: "#EF4444",
     Icon: TriangleAlert,
   },
+  {
+    id: "animali",
+    label: "Animali",
+    title: "Nuova area cani",
+    detail: "Parco della Caffarella · ora",
+    audience: "11 conferme",
+    color: "#F97316",
+    Icon: PawPrint,
+  },
 ] as const;
 
 type Slide = (typeof SLIDES)[number];
@@ -95,6 +105,10 @@ function MapEffects({ slide }: { slide: Slide }) {
 
   if (slide.id === "viabilita") {
     return <div className="commety-slider-traffic" aria-hidden="true"><i /><i /><i /><i /></div>;
+  }
+
+  if (slide.id === "animali") {
+    return <PawPrint className="size-9 text-[#F97316] drop-shadow-[0_0_12px_rgba(249,115,22,0.75)]" aria-hidden="true" />;
   }
 
   return <div className="commety-slider-alert" aria-hidden="true"><i /><i /><i /></div>;

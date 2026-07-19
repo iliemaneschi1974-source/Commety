@@ -84,6 +84,13 @@ coherent with a memory that happened there. In these cases, score title and
 description similarity according to the shared place and context; do not
 require the private moment itself to be visible.
 
+For the category "animali", interpret reports as a neutral account of animal
+life in the territory. They can describe animals in difficulty, abandonment,
+lost animals, pet-friendly parks, dog areas, beaches, services or positive
+community initiatives. Do not require danger to be visible for a useful report
+about an animal-friendly place. Still identify clearly visible animal cruelty,
+violence or graphic injury according to the dedicated safety fields.
+
 Evaluate whether the images realistically depict the reported event.
 
 The similarity values must represent semantic coherence, NOT keyword similarity.

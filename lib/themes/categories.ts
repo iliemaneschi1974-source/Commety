@@ -2,6 +2,7 @@ import {
   Car,
   CloudRain,
   PartyPopper,
+  PawPrint,
   TriangleAlert,
   Waves,
   LucideIcon,
@@ -45,5 +46,11 @@ export const CategoryThemes: Record<ReportCategory, CategoryTheme> = {
     label: "Mare",
     color: CommetyColors.info,
     icon: Waves,
+  },
+
+  animali: {
+    label: "Animali",
+    color: "#F97316",
+    icon: PawPrint,
   },
 }

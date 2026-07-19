@@ -9,6 +9,7 @@ import {
   Car,
   TriangleAlert,
   PartyPopper,
+  PawPrint,
   Waves,
 } from "lucide-react";
 
@@ -46,6 +47,11 @@ const FILTERS: {
     id: "mare",
     title: "Mare",
     icon: Waves,
+  },
+  {
+    id: "animali",
+    title: "Animali",
+    icon: PawPrint,
   },
 ];
 

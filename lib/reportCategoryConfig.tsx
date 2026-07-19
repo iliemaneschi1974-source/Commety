@@ -3,6 +3,7 @@ import {
   Car,
   CloudRain,
   PartyPopper,
+  PawPrint,
   TriangleAlert,
   Waves,
 } from "lucide-react";
@@ -58,5 +59,11 @@ export const REPORT_CATEGORY_CONFIG: Record<
     label: "Mare",
     color: "#06B6D4",
     icon: <Waves size={20} color="white" />,
+  },
+
+  animali: {
+    label: "Animali",
+    color: "#F97316",
+    icon: <PawPrint size={20} color="white" />,
   },
 };

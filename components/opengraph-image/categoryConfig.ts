@@ -55,4 +55,9 @@ export const OPEN_GRAPH_CATEGORY_CONFIG: Record<
     color: "#06B6D4",
     emoji: "🌊",
   },
+  animali: {
+    label: "Animali",
+    color: "#F97316",
+    emoji: "🐾",
+  },
 };

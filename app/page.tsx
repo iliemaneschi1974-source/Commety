@@ -13,6 +13,7 @@ import {
   Globe,
   MapPin,
   PartyPopper,
+  PawPrint,
   Trees,
   TriangleAlert,
   Users,
@@ -30,7 +31,7 @@ const siteUrl =
 export const metadata: Metadata = {
   title: "Segnalazioni in tempo reale sulla mappa",
   description:
-    "Scopri segnalazioni in tempo reale su meteo, viabilità, pericoli, eventi e mare vicino a te. Commety è la mappa partecipata del mondo reale.",
+    "Scopri segnalazioni in tempo reale su meteo, viabilità, pericoli, eventi, mare e animali vicino a te. Commety è la mappa partecipata del mondo reale.",
   keywords: [
     "segnalazioni in tempo reale",
     "mappa segnalazioni",
@@ -39,6 +40,9 @@ export const metadata: Metadata = {
     "pericoli stradali",
     "eventi locali",
     "mare",
+    "animali",
+    "aree cani",
+    "pet-friendly",
     "community",
     "Commety",
   ],
@@ -242,6 +246,7 @@ export default function Home() {
               <span className="rounded-full border border-[#EF4444]/45 bg-[#EF4444]/15 px-4 py-2 text-sm font-semibold text-white"><TriangleAlert className="mr-1.5 inline size-4 text-[#EF4444]" />Pericoli</span>
               <span className="rounded-full border border-[#8B5CF6]/45 bg-[#8B5CF6]/15 px-4 py-2 text-sm font-semibold text-white"><PartyPopper className="mr-1.5 inline size-4 text-[#8B5CF6]" />Eventi</span>
               <span className="rounded-full border border-[#06B6D4]/45 bg-[#06B6D4]/15 px-4 py-2 text-sm font-semibold text-white"><Waves className="mr-1.5 inline size-4 text-[#06B6D4]" />Mare</span>
+              <span className="rounded-full border border-[#F97316]/45 bg-[#F97316]/15 px-4 py-2 text-sm font-semibold text-white"><PawPrint className="mr-1.5 inline size-4 text-[#F97316]" />Animali</span>
               <span className="rounded-full border border-[#F59E0B]/45 bg-[#F59E0B]/15 px-4 py-2 text-sm font-semibold text-white"><Car className="mr-1.5 inline size-4 text-[#F59E0B]" />Viabilità</span>
             </div>
 

@@ -2,6 +2,7 @@ import {
   Car,
   CloudRain,
   PartyPopper,
+  PawPrint,
   TriangleAlert,
   Waves,
 } from "lucide-react"
@@ -38,5 +39,10 @@ export const MARKER_CONFIG: Record<ReportCategory, MarkerConfig> = {
   mare: {
     color: "#06B6D4",
     icon: <Waves size={20} color="white" />,
+  },
+
+  animali: {
+    color: "#F97316",
+    icon: <PawPrint size={20} color="white" />,
   },
 }

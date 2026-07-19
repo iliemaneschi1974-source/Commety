@@ -10,4 +10,6 @@ export const CATEGORY_COLORS = {
   evento: "#8B5CF6",
 
   mare: "#06B6D4",
+
+  animali: "#F97316",
 } as const;
