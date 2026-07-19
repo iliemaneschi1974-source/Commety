@@ -45,8 +45,12 @@ export default function VideoRecorder({ onChange }: VideoRecorderProps) {
       const recorder = mimeType
         ? new MediaRecorder(stream, { mimeType })
         : new MediaRecorder(stream);
+      let recordedMimeType = recorder.mimeType || mimeType || "video/webm";
       recorder.ondataavailable = (event) => {
-        if (event.data.size > 0) chunks.push(event.data);
+        if (event.data.size > 0) {
+          chunks.push(event.data);
+          if (event.data.type) recordedMimeType = event.data.type;
+        }
       };
       recorder.onstop = async () => {
         const livePoster = await captureLivePoster(previewRef.current);
@@ -54,7 +58,6 @@ export default function VideoRecorder({ onChange }: VideoRecorderProps) {
         setRecording(false);
         setSecondsLeft(MAX_SECONDS);
         try {
-          const recordedMimeType = recorder.mimeType || mimeType || "video/webm";
           const extension = recordedMimeType.includes("mp4") ? "mp4" : "webm";
           const video = new File(
             [new Blob(chunks, { type: recordedMimeType })],
@@ -73,7 +76,9 @@ export default function VideoRecorder({ onChange }: VideoRecorderProps) {
           setPreparing(false);
         }
       };
-      recorder.start();
+      // Blocchi periodici: alcuni browser finalizzano male il file se il
+      // primo dato viene richiesto soltanto al termine della registrazione.
+      recorder.start(250);
       setRecording(true);
       setSecondsLeft(MAX_SECONDS);
       const timer = window.setInterval(() => {
@@ -132,11 +137,14 @@ function Watermark() {
 
 function getSupportedVideoMimeType(): string | undefined {
   return [
-    "video/mp4;codecs=avc1.42E01E",
-    "video/mp4",
     "video/webm;codecs=vp8",
     "video/webm",
-  ].find((candidate) => MediaRecorder.isTypeSupported(candidate));
+    "video/mp4;codecs=avc1.42E01E",
+    "video/mp4",
+  ].find((candidate) =>
+    MediaRecorder.isTypeSupported(candidate) &&
+    document.createElement("video").canPlayType(candidate) !== ""
+  );
 }
 
 async function captureLivePoster(video: HTMLVideoElement | null): Promise<string | null> {
