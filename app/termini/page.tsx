@@ -6,6 +6,10 @@ export const metadata: Metadata = {
   title: "Termini di utilizzo",
   description: "Termini di utilizzo della piattaforma Commety.",
   alternates: { canonical: "/termini" },
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function TermsPage() {

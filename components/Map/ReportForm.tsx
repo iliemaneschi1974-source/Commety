@@ -72,12 +72,13 @@ export default function ReportForm({
 
   return (
     <div className="fixed inset-0 z-[2000] flex items-center justify-center bg-black/40 p-4">
-      <div className="relative w-full max-w-md overflow-hidden rounded-3xl border border-white/15 bg-[linear-gradient(135deg,#071a3c_0%,#0F2D5F_42%,#1b4b87_62%,#0a2553_100%)] p-6 text-white shadow-[0_18px_45px_rgba(2,16,42,0.45)] before:pointer-events-none before:absolute before:inset-0 before:bg-[linear-gradient(115deg,transparent_25%,rgba(255,255,255,0.18)_48%,transparent_62%)] [&>*]:relative [&>*]:z-10">
+      <div className="relative flex max-h-[calc(100dvh-2rem)] w-full max-w-md flex-col overflow-hidden rounded-3xl border border-white/15 bg-[linear-gradient(135deg,#071a3c_0%,#0F2D5F_42%,#1b4b87_62%,#0a2553_100%)] p-6 text-white shadow-[0_18px_45px_rgba(2,16,42,0.45)] before:pointer-events-none before:absolute before:inset-0 before:bg-[linear-gradient(115deg,transparent_25%,rgba(255,255,255,0.18)_48%,transparent_62%)] [&>*]:relative [&>*]:z-10">
 
         <h2 className="mb-6 text-center text-2xl font-bold">
           Nuova segnalazione
         </h2>
 
+        <div className="min-h-0 flex-1 overflow-y-auto pr-1">
         <select
           className="mb-4 w-full rounded-xl border border-white/70 bg-white/95 p-3 text-slate-900 shadow-sm outline-none focus:border-white focus:ring-4 focus:ring-white/20"
           value={form.type}
@@ -146,7 +147,9 @@ export default function ReportForm({
           }
         />
 
-        <div className="flex gap-3">
+        </div>
+
+        <div className="mt-4 flex shrink-0 gap-3 border-t border-white/15 pt-4">
 
           <button
             type="button"

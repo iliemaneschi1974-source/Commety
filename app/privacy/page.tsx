@@ -6,6 +6,10 @@ export const metadata: Metadata = {
   title: "Privacy Policy",
   description: "Informativa sul trattamento dei dati personali di Commety.",
   alternates: { canonical: "/privacy" },
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function PrivacyPage() {
