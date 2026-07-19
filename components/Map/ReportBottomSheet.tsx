@@ -1,5 +1,12 @@
 "use client";
 
+import {
+  CheckCircle2,
+  MapPin,
+  MessageCircle,
+  Share2,
+  ThumbsUp,
+} from "lucide-react";
 import { useState } from "react";
 
 import BottomSheet from "@/components/ui/BottomSheet";
@@ -8,8 +15,9 @@ import Comments from "@/components/Map/Comments";
 import ImageViewer from "@/components/Map/ImageViewer";
 import MessageDialog from "@/components/ui/MessageDialog";
 import { useConfirmation } from "@/hooks/useConfirmation";
-import { Report } from "@/types/report";
+import { REPORT_CATEGORY_CONFIG } from "@/lib/reportCategoryConfig";
 import { buildShareData } from "@/lib/share";
+import { Report } from "@/types/report";
 
 interface ReportBottomSheetProps {
   report: Report | null;
@@ -17,269 +25,100 @@ interface ReportBottomSheetProps {
   onClose: () => void;
 }
 
-const CATEGORY_LABELS: Record<Report["type"], string> = {
-  meteo: "🌧️ Meteo",
-  traffico: "🚗 Traffico",
-  pericolo: "⚠️ Pericolo",
-  evento: "🎉 Evento",
-  mare: "🏖️ Mare",
-};
-
 export default function ReportBottomSheet({
   report,
   open,
   onClose,
 }: ReportBottomSheetProps) {
+  const { confirmed, loading, toggle } = useConfirmation(report?.id);
+  const [viewerOpen, setViewerOpen] = useState(false);
+  const [currentImage, setCurrentImage] = useState(0);
+  const [shareMessageOpen, setShareMessageOpen] = useState(false);
 
-  const {
-    confirmed,
-    loading,
-    toggle,
-  } = useConfirmation(report?.id);
-const [viewerOpen, setViewerOpen] = useState(false);
-const [currentImage, setCurrentImage] = useState(0);
-const [shareMessageOpen, setShareMessageOpen] = useState(false);
-
-  if (!report) return null;
-  const currentReport = report;
-async function handleShare() {
-  const shareData = buildShareData({
-    reportId: currentReport.id,
-    title: currentReport.title,
-    address: currentReport.address,
-    city: currentReport.city,
-  });
-
-  try {
-    if (navigator.share) {
-      await navigator.share(shareData);
-      return;
-    }
-
-    await navigator.clipboard.writeText(shareData.url);
-
-    setShareMessageOpen(true);
-  } catch (error) {
-    console.error(error);
+  if (!report) {
+    return null;
   }
-}
 
+  const currentReport = report;
+  const category = REPORT_CATEGORY_CONFIG[currentReport.type];
+
+  async function handleShare() {
+    const shareData = buildShareData({
+      reportId: currentReport.id,
+      title: currentReport.title,
+      address: currentReport.address,
+      city: currentReport.city,
+    });
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+        return;
+      }
+
+      await navigator.clipboard.writeText(shareData.url);
+      setShareMessageOpen(true);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   return (
-    <BottomSheet
-      open={open}
-      onClose={onClose}
-    >
-      <div className="px-6 pb-8">
-
-        <div className="mb-4">
-          <span className="rounded-full bg-blue-100 px-3 py-1 text-sm font-semibold text-blue-700">
-            {CATEGORY_LABELS[report.type]}
-          </span>
-        </div>
-
-        <h2 className="text-2xl font-bold text-slate-900">
-          {report.title}
-        </h2>
-
-        <p className="mt-2 text-slate-600">
-          {report.description}
-        </p>
-      {report.images.length > 0 && (
-  <div className="mt-6">
-
-    <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
-      📷 Foto
-    </h3>
-
-    {report.images.length === 1 ? (
-
-  <div className="mt-4">
-    <img
-  src={report.images[0].url}
-  onClick={() => {
-    setCurrentImage(0);
-    setViewerOpen(true);
-  }}
-      alt="Foto segnalazione"
-      loading="lazy"
-      className="cursor-pointer mx-auto max-h-[70vh] w-auto max-w-full rounded-2xl border border-slate-200 bg-slate-100 shadow-sm"
-    />
-  </div>
-
-) : report.images.length > 1 ? (
-
-  <>
-    <div
-      className="
-        mt-4
-        flex
-        snap-x
-        snap-mandatory
-        gap-4
-        overflow-x-auto
-        scroll-smooth
-        pb-3
-      "
-    >
-      {report.images.map((image, index) => (
-        <img
-          key={index}
-          src={image.url}
-          onClick={() => {
-    setCurrentImage(index);
-    setViewerOpen(true);
-  }}
-          alt={`Foto ${index + 1}`}
-          loading="lazy"
-          className="cursor-pointer 
-            h-auto
-            max-h-[70vh]
-            w-full
-            min-w-full
-            snap-center
-            rounded-2xl
-            border
-            border-slate-200
-            bg-slate-100
-            object-contain
-            shadow-sm
-          "
-        />
-      ))}
-    </div>
-
-    <div className="mt-2 flex justify-center gap-2">
-      {report.images.map((_, index) => (
-        <div
-          key={index}
-          className="h-2 w-2 rounded-full bg-slate-300"
-        />
-      ))}
-    </div>
-  </>
-
-) : null}
-
-    {report.images.length === 2 && (
-      <div className="mt-2 text-center text-xs text-slate-400">
-        ← scorri →
-      </div>
-    )}
-
-  </div>
-)}
-        <div className="mt-6 flex items-center justify-between rounded-2xl bg-slate-100 p-4">
-
-          <div className="text-center">
-            <div className="text-xl">👍</div>
-
-            <div className="font-semibold">
-              {report.confirmations}
+    <BottomSheet open={open} onClose={onClose}>
+      <div className="px-5 pb-8 text-white sm:px-6">
+        <section className="relative overflow-hidden rounded-3xl border border-white/15 bg-[#061d43]/45 p-5 shadow-[0_16px_34px_rgba(1,15,42,0.28)] before:pointer-events-none before:absolute before:inset-0 before:bg-[linear-gradient(115deg,transparent_28%,rgba(255,255,255,0.12)_50%,transparent_66%)]">
+          <div className="absolute -right-10 -top-12 size-36 rounded-full opacity-40 blur-2xl" style={{ backgroundColor: category.color }} />
+          <div className="relative z-10">
+            <div className="flex items-center justify-between gap-3">
+              <span className="inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-bold text-white shadow-sm" style={{ backgroundColor: category.color }}>
+                {category.icon}
+                {category.label}
+              </span>
+              <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-200"><CheckCircle2 className="size-4" /> Pubblicata</span>
             </div>
-
-            <div className="text-xs text-slate-500">
-              Conferme
-            </div>
+            <h2 className="mt-5 text-2xl font-black tracking-tight sm:text-3xl">{report.title}</h2>
+            <p className="mt-2 leading-7 text-white/80">{report.description}</p>
           </div>
+        </section>
 
-          <div className="text-center">
-            <div className="text-xl">💬</div>
-
-            <div className="font-semibold">
-              {report.commentsCount}
-            </div>
-
-            <div className="text-xs text-slate-500">
-              Commenti
-            </div>
-          </div>
-
-          <div className="text-center max-w-[140px]">
-            <div className="text-xl">📍</div>
-
-            {report.address ? (
-              <>
-                <div className="break-words text-xs font-medium text-slate-700">
-                  {report.address}
-                </div>
-
-                {report.city && (
-                  <div className="text-xs text-slate-500">
-                    {report.city}
-                  </div>
-                )}
-              </>
+        {report.images.length > 0 && (
+          <section className="mt-6">
+            <h3 className="mb-3 text-sm font-semibold uppercase tracking-[0.16em] text-white/70">Foto della segnalazione</h3>
+            {report.images.length === 1 ? (
+              <img src={report.images[0].url} alt="Foto segnalazione" loading="lazy" onClick={() => { setCurrentImage(0); setViewerOpen(true); }} className="mx-auto max-h-[70vh] w-auto max-w-full cursor-pointer rounded-2xl border border-white/20 bg-white/10 shadow-[0_12px_25px_rgba(1,15,42,0.35)] transition hover:brightness-110" />
             ) : (
-              <div className="text-xs">
-                {report.lat.toFixed(4)}
-                <br />
-                {report.lng.toFixed(4)}
-              </div>
+              <>
+                <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-3">
+                  {report.images.map((image, index) => <img key={image.storagePath} src={image.url} alt={`Foto ${index + 1}`} loading="lazy" onClick={() => { setCurrentImage(index); setViewerOpen(true); }} className="h-auto max-h-[70vh] w-full min-w-full cursor-pointer snap-center rounded-2xl border border-white/20 bg-white/10 object-contain shadow-[0_12px_25px_rgba(1,15,42,0.35)]" />)}
+                </div>
+                <p className="text-center text-xs text-white/55">Scorri per vedere le foto</p>
+              </>
             )}
-          </div>
+          </section>
+        )}
 
-        </div>
+        <section className="mt-6 grid grid-cols-3 gap-2 rounded-3xl border border-white/15 bg-[#061d43]/55 p-3 shadow-[0_12px_26px_rgba(1,15,42,0.22)]">
+          <Stat icon={<ThumbsUp className="size-5 text-emerald-300" />} value={report.confirmations} label="Conferme" />
+          <Stat icon={<MessageCircle className="size-5 text-[#a9d5ff]" />} value={report.commentsCount} label="Commenti" />
+          <div className="rounded-2xl bg-white/8 p-3 text-center"><MapPin className="mx-auto size-5 text-[#f9d47c]" />{report.address ? <><p className="mt-1 break-words text-xs font-medium text-white/90">{report.address}</p>{report.city && <p className="text-xs text-white/60">{report.city}</p>}</> : <p className="mt-1 text-xs text-white/80">{report.lat.toFixed(4)}<br />{report.lng.toFixed(4)}</p>}</div>
+        </section>
 
         <div className="mt-6 grid grid-cols-2 gap-3">
+          <Button onClick={toggle} disabled={loading} variant="secondary" className={confirmed ? "border border-emerald-300/35 bg-emerald-500 text-white hover:bg-emerald-400" : "border border-white/20 bg-white/12 text-white hover:bg-white/20"}>{loading ? "Conferma..." : confirmed ? "Confermato" : "Conferma"}</Button>
+          <Button onClick={handleShare} className="border border-white/20 bg-white text-[#0F2D5F] hover:bg-[#dbeafe]"><Share2 className="size-4" /> Condividi</Button>
+        </div>
 
-  <Button
-    onClick={toggle}
-    disabled={loading}
-    variant={confirmed ? "secondary" : "default"}
-  >
-    {loading
-      ? "⏳ Conferma..."
-      : confirmed
-        ? "✅ Confermato"
-        : "👍 Conferma"}
-  </Button>
+        <div className="mt-8 rounded-3xl bg-white p-5 text-slate-900 shadow-[0_12px_28px_rgba(1,15,42,0.24)]">
+          <Comments reportId={report.id} />
+        </div>
+      </div>
 
-  <Button
-  onClick={handleShare}
-  className="
-    bg-blue-600
-    text-white
-    hover:bg-blue-700
-  "
->
-  📤 Condividi
-</Button>
-
-</div>
-
-        <Comments reportId={report.id} />
-</div>
-
-<ImageViewer
-  images={report.images.map((image) => image.url)}
-  currentIndex={currentImage}
-  open={viewerOpen}
-  onClose={() => setViewerOpen(false)}
-  onPrevious={() =>
-    setCurrentImage((prev) =>
-      prev === 0
-        ? report.images.length - 1
-        : prev - 1
-    )
-  }
-  onNext={() =>
-    setCurrentImage((prev) =>
-      prev === report.images.length - 1
-        ? 0
-        : prev + 1
-    )
-  }
-/>
-
-<MessageDialog
-  open={shareMessageOpen}
-  title="Link copiato"
-  message="Il link della segnalazione è stato copiato negli appunti."
-  variant="info"
-  onClose={() => setShareMessageOpen(false)}
-/>
-
-</BottomSheet>
+      <ImageViewer images={report.images.map((image) => image.url)} currentIndex={currentImage} open={viewerOpen} onClose={() => setViewerOpen(false)} onPrevious={() => setCurrentImage((previous) => previous === 0 ? report.images.length - 1 : previous - 1)} onNext={() => setCurrentImage((previous) => previous === report.images.length - 1 ? 0 : previous + 1)} />
+      <MessageDialog open={shareMessageOpen} title="Link copiato" message="Il link della segnalazione è stato copiato negli appunti." variant="info" onClose={() => setShareMessageOpen(false)} />
+    </BottomSheet>
   );
+}
+
+function Stat({ icon, value, label }: { icon: React.ReactNode; value: number; label: string }) {
+  return <div className="rounded-2xl bg-white/8 p-3 text-center">{icon}<p className="mt-1 font-bold">{value}</p><p className="text-xs text-white/60">{label}</p></div>;
 }

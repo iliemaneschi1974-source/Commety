@@ -3,8 +3,6 @@
 import {
   ReactNode,
   useEffect,
-  useRef,
-  useState,
 } from "react";
 import { X } from "lucide-react";
 
@@ -57,9 +55,10 @@ export default function BottomSheet({
           right-0
           z-[1999]
 
-          rounded-t-3xl
-          bg-white
-          shadow-2xl
+          rounded-t-[2rem]
+          border-t border-white/15
+          bg-[linear-gradient(145deg,#071a3c_0%,#0F2D5F_45%,#123b73_100%)]
+          shadow-[0_-18px_45px_rgba(2,16,42,0.42)]
 
           transition-transform
           duration-300
@@ -76,11 +75,11 @@ export default function BottomSheet({
         `}
       >
         {/* Header */}
-        <div className="relative">
+        <div className="relative z-30">
 
           {/* Handle */}
           <div className="flex justify-center py-3">
-            <div className="h-1.5 w-12 rounded-full bg-slate-300" />
+            <div className="h-1.5 w-12 rounded-full bg-white/55" />
           </div>
 
           {/* Close button */}
@@ -89,6 +88,7 @@ export default function BottomSheet({
             aria-label="Chiudi"
             className="
               absolute
+              z-40
               right-3
               top-2
 
@@ -98,15 +98,16 @@ export default function BottomSheet({
               items-center
               justify-center
 
-              rounded-full
+              rounded-xl
 
-              text-slate-500
+              bg-red-500
+              text-white
+              shadow-[0_8px_18px_rgba(239,68,68,0.35)]
 
               transition-all
               duration-200
 
-              hover:bg-slate-100
-              hover:text-slate-700
+              hover:bg-red-600
 
               active:scale-95
             "
@@ -117,7 +118,7 @@ export default function BottomSheet({
         </div>
 
         {/* Content */}
-        <div className="overflow-y-auto max-h-[calc(85vh-32px)]">
+        <div className="relative z-10 overflow-y-auto max-h-[calc(85vh-32px)]">
           {children}
         </div>
 
