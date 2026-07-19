@@ -54,5 +54,5 @@ function InstitutionalVisual() {
 }
 
 function CommetyLogo({ width, height }: { width: number; height: number }) {
-  return <img src={COMMETY_LOGO_URL} alt="Commety" width={width} height={height} style={{ width: `${width}px`, height: `${height}px`, objectFit: "contain" }} />;
+  return <img src={COMMETY_LOGO_URL} alt="Commety" width={width} height={height} style={{ width: `${width}px`, height: `${height}px`, objectFit: "contain", filter: "brightness(0) invert(1)" }} />;
 }
