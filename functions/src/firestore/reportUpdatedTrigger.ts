@@ -116,7 +116,7 @@ export const reportUpdatedTrigger =
         const visionRequest: VisionAnalysisRequest = {
           title: after.title ?? "",
           description: after.description ?? "",
-          category: after.category ?? "",
+          category: after.type ?? "",
           images: imageContents,
         };
 
@@ -151,7 +151,7 @@ export const reportUpdatedTrigger =
          */
         const moderationRequest =
   new ModerationRequest(
-    after.category ?? "",
+    after.type ?? "",
     after.title ?? "",
     after.description ?? "",
     afterImages.map(

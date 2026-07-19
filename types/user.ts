@@ -46,6 +46,14 @@ export interface UserPreferences {
   darkMode: boolean
 }
 
+export interface UserConsents {
+  privacyPolicyVersion?: string
+  termsVersion?: string
+  legalAcceptedAt?: string
+  analyticsEnabled?: boolean
+  analyticsConsentUpdatedAt?: string
+}
+
 export interface UserMetadata {
   createdAt: string
 
@@ -70,6 +78,8 @@ export interface CommettyUser {
   reputation: UserReputation
 
   preferences: UserPreferences
+
+  consents?: UserConsents
 
   metadata: UserMetadata
 }

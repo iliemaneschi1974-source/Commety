@@ -38,6 +38,21 @@ export function toCommettyUser(
 
     preferences: document.preferences,
 
+    consents: document.consents
+      ? {
+          privacyPolicyVersion: document.consents.privacyPolicyVersion,
+          termsVersion: document.consents.termsVersion,
+          legalAcceptedAt: document.consents.legalAcceptedAt
+            ? toIsoString(document.consents.legalAcceptedAt)
+            : undefined,
+          analyticsEnabled: document.consents.analyticsEnabled,
+          analyticsConsentUpdatedAt:
+            document.consents.analyticsConsentUpdatedAt
+              ? toIsoString(document.consents.analyticsConsentUpdatedAt)
+              : undefined,
+        }
+      : undefined,
+
     metadata: {
       createdAt: toIsoString(
         document.metadata.createdAt
@@ -77,6 +92,23 @@ export function toUserDocument(
     reputation: user.reputation,
 
     preferences: user.preferences,
+
+    consents: user.consents
+      ? {
+          privacyPolicyVersion: user.consents.privacyPolicyVersion,
+          termsVersion: user.consents.termsVersion,
+          legalAcceptedAt: user.consents.legalAcceptedAt
+            ? Timestamp.fromDate(new Date(user.consents.legalAcceptedAt))
+            : undefined,
+          analyticsEnabled: user.consents.analyticsEnabled,
+          analyticsConsentUpdatedAt:
+            user.consents.analyticsConsentUpdatedAt
+              ? Timestamp.fromDate(
+                  new Date(user.consents.analyticsConsentUpdatedAt)
+                )
+              : undefined,
+        }
+      : undefined,
 
     metadata: {
       createdAt: Timestamp.fromDate(

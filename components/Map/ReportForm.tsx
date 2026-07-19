@@ -35,6 +35,8 @@ export default function ReportForm({
 
   const [submitting, setSubmitting] = useState(false);
 
+  const isCommunityEvent = form.type === "evento";
+
   if (!open) {
     return null;
   }
@@ -95,7 +97,11 @@ export default function ReportForm({
 
         <input
           type="text"
-          placeholder="Titolo"
+          placeholder={
+            isCommunityEvent
+              ? "Es. Concerto live in piazza"
+              : "Titolo"
+          }
           className="mb-4 w-full rounded-xl border border-white/70 bg-white/95 p-3 text-slate-900 shadow-sm outline-none placeholder:text-slate-400 focus:border-white focus:ring-4 focus:ring-white/20"
           value={form.title}
           onChange={(e) =>
@@ -107,7 +113,11 @@ export default function ReportForm({
         />
 
         <textarea
-          placeholder="Descrizione"
+          placeholder={
+            isCommunityEvent
+              ? "Racconta cosa sta accadendo: concerto, partita, aperitivo, iniziativa o criticità locale."
+              : "Descrizione"
+          }
           className="mb-4 h-32 w-full resize-none rounded-xl border border-white/70 bg-white/95 p-3 text-slate-900 shadow-sm outline-none placeholder:text-slate-400 focus:border-white focus:ring-4 focus:ring-white/20"
           value={form.description}
           onChange={(e) =>
@@ -117,6 +127,14 @@ export default function ReportForm({
             }))
           }
         />
+
+        {isCommunityEvent ? (
+          <p className="-mt-1 mb-4 text-center text-xs leading-5 text-white/75">
+            Gli Eventi raccontano la vita del territorio: momenti belli,
+            iniziative, sport, musica e anche eventuali criticità. Evita volti
+            riconoscibili nelle foto.
+          </p>
+        ) : null}
 
         <ImagePicker
           maxImages={2}

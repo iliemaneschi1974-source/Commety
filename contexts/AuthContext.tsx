@@ -3,6 +3,7 @@
 import {
   createContext,
   ReactNode,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -18,6 +19,7 @@ import {
 import {
   ensureUserExists,
   listenUser,
+  saveUserConsents,
 } from "@/services/users";
 
 import { CommettyUser } from "@/types/user";
@@ -29,7 +31,9 @@ interface AuthContextType {
 
   user: CommettyUser | null;
 
-  signInWithGoogle: () => Promise<void>;
+  signInWithGoogle: (analyticsEnabled: boolean) => Promise<void>;
+
+  acceptLegalConsent: (analyticsEnabled: boolean) => Promise<void>;
 
   signOut: () => Promise<void>;
 }
@@ -86,15 +90,33 @@ return unsubscribeUser;
     return unsubscribe;
   }, []);
 
-  async function signInWithGoogle() {
+  async function signInWithGoogle(
+    analyticsEnabled: boolean
+  ) {
     setLoading(true);
 
     try {
-      await firebaseSignInWithGoogle();
+      const credential = await firebaseSignInWithGoogle();
+
+      await ensureUserExists(credential.user);
+      await saveUserConsents(
+        credential.user.uid,
+        analyticsEnabled
+      );
     } finally {
       setLoading(false);
     }
   }
+
+  const acceptLegalConsent = useCallback(async (
+    analyticsEnabled: boolean
+  ) => {
+    if (!user) {
+      return;
+    }
+
+    await saveUserConsents(user.uid, analyticsEnabled);
+  }, [user]);
 
   async function signOut() {
     setLoading(true);
@@ -117,9 +139,11 @@ return unsubscribeUser;
 
       signInWithGoogle,
 
+      acceptLegalConsent,
+
       signOut,
     }),
-    [loading, user]
+    [loading, user, acceptLegalConsent]
   );
 
   return (

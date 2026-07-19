@@ -2,6 +2,7 @@ import { Timestamp } from "firebase/firestore";
 
 import {
   UserPreferences,
+  UserConsents,
   UserProfile,
   UserReputation,
   UserRole,
@@ -25,6 +26,11 @@ export interface UserDocument {
   reputation: UserReputation;
 
   preferences: UserPreferences;
+
+  consents?: Omit<UserConsents, "legalAcceptedAt" | "analyticsConsentUpdatedAt"> & {
+    legalAcceptedAt?: Timestamp;
+    analyticsConsentUpdatedAt?: Timestamp;
+  };
 
   metadata: {
     createdAt: Timestamp;

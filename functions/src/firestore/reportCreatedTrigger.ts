@@ -38,7 +38,7 @@ export const reportCreatedTrigger =
 
       const moderationRequest =
         new ModerationRequest(
-          report.category ?? "",
+          report.type ?? "",
           report.title ?? "",
           report.description ?? "",
           []

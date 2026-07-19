@@ -69,6 +69,21 @@ Compare the visual content with:
 - report title
 - report description
 
+For the category "evento", interpret the report as a neutral account of
+community life. It can describe both positive and negative situations, such as
+concerts, sports matches, public demonstrations, local initiatives, social
+gatherings, food and drink moments, crowds, cancellations or disruptions.
+Do not treat a positive, social or celebratory event as irrelevant merely
+because it does not show danger, traffic or a road-related issue.
+
+For an "evento" that describes a memory or a personal moment connected to a
+specific place, an image of that recognizable place or its surrounding context
+is coherent even if it does not literally show the person or the exact action
+described. For example, a photo of a station, square, venue or street can be
+coherent with a memory that happened there. In these cases, score title and
+description similarity according to the shared place and context; do not
+require the private moment itself to be visible.
+
 Evaluate whether the images realistically depict the reported event.
 
 The similarity values must represent semantic coherence, NOT keyword similarity.

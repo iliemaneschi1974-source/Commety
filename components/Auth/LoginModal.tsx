@@ -1,6 +1,8 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
 
 import Modal from "@/components/Modal/Modal";
 import { useAuth } from "@/contexts/AuthContext";
@@ -14,6 +16,9 @@ export default function LoginModal({
   open,
   onClose,
 }: LoginModalProps) {
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [analyticsEnabled, setAnalyticsEnabled] = useState(false);
   const {
     loading,
     signInWithGoogle,
@@ -21,7 +26,7 @@ export default function LoginModal({
 
   async function handleGoogleLogin() {
     try {
-      await signInWithGoogle();
+      await signInWithGoogle(analyticsEnabled);
       onClose();
     } catch (error) {
       console.error(
@@ -65,10 +70,25 @@ export default function LoginModal({
           <li>✓ Ricevi notifiche</li>
         </ul>
 
+        <div className="mt-6 w-full space-y-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-left text-sm text-slate-700">
+          <label className="flex cursor-pointer items-start gap-3">
+            <input checked={privacyAccepted} className="mt-1 size-4 accent-[#0F2D5F]" onChange={(event) => setPrivacyAccepted(event.target.checked)} type="checkbox" />
+            <span>Ho letto e accetto la <Link className="font-semibold text-[#0F2D5F] underline" href="/privacy" target="_blank">Privacy Policy</Link>.</span>
+          </label>
+          <label className="flex cursor-pointer items-start gap-3">
+            <input checked={termsAccepted} className="mt-1 size-4 accent-[#0F2D5F]" onChange={(event) => setTermsAccepted(event.target.checked)} type="checkbox" />
+            <span>Accetto i <Link className="font-semibold text-[#0F2D5F] underline" href="/termini" target="_blank">Termini di utilizzo</Link>.</span>
+          </label>
+          <label className="flex cursor-pointer items-start gap-3 border-t border-slate-200 pt-3">
+            <input checked={analyticsEnabled} className="mt-1 size-4 accent-emerald-600" onChange={(event) => setAnalyticsEnabled(event.target.checked)} type="checkbox" />
+            <span>Aiutaci a migliorare Commety con statistiche anonime di utilizzo.<span className="mt-1 block text-xs text-slate-500">Facoltativo, senza pubblicità né remarketing.</span></span>
+          </label>
+        </div>
+
         <button
           type="button"
           onClick={handleGoogleLogin}
-          disabled={loading}
+          disabled={loading || !privacyAccepted || !termsAccepted}
           className="
             mt-8
             flex
@@ -91,6 +111,8 @@ export default function LoginModal({
             ? "Accesso in corso..."
             : "Continua con Google"}
         </button>
+
+        {!privacyAccepted || !termsAccepted ? <p className="mt-3 text-center text-xs text-slate-500">Per accedere devi accettare Privacy Policy e Termini di utilizzo.</p> : null}
 
         <button
           type="button"

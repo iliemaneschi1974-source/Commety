@@ -3,8 +3,6 @@ import {
   doc,
   getDoc,
   onSnapshot,
-  QuerySnapshot,
-  DocumentData,
   serverTimestamp,
   setDoc,
   updateDoc,
@@ -15,12 +13,12 @@ import { db } from "@/lib/firebase";
 import { DEFAULT_USER } from "@/lib/defaults/user";
 import {
   toCommettyUser,
-  toUserDocument,
 } from "@/lib/mappers/user";
 
 import { CreateUserDocument } from "@/types/create-user-document";
 import { UserDocument } from "@/types/firestore-user";
 import { CommettyUser } from "@/types/user";
+import { LEGAL_DOCUMENT_VERSION } from "@/lib/legal";
 
 const usersCollection = collection(db, "users");
 
@@ -161,4 +159,20 @@ export async function ensureUserExists(
   }
 
   return createUser(firebaseUser);
+}
+
+export async function saveUserConsents(
+  uid: string,
+  analyticsEnabled: boolean
+) {
+  return updateDoc(doc(usersCollection, uid), {
+    consents: {
+      privacyPolicyVersion: LEGAL_DOCUMENT_VERSION,
+      termsVersion: LEGAL_DOCUMENT_VERSION,
+      legalAcceptedAt: serverTimestamp(),
+      analyticsEnabled,
+      analyticsConsentUpdatedAt: serverTimestamp(),
+    },
+    "metadata.updatedAt": serverTimestamp(),
+  });
 }

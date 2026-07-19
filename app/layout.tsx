@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 
 import ProcessingOverlay from "@/components/ProcessingOverlay/ProcessingOverlay";
+import LegalConsentGate from "@/components/Auth/LegalConsentGate";
 
 import { AuthProvider } from "@/contexts/AuthContext";
 import { MapProvider } from "@/contexts/MapContext";
@@ -75,6 +76,7 @@ export default function RootLayout({
               {children}
 
               <ProcessingOverlay />
+              <LegalConsentGate />
             </ProcessingOverlayProvider>
           </MapProvider>
         </AuthProvider>
