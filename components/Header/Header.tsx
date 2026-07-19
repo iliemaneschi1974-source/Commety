@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import SearchBar from "./SearchBar";
-import CategoryFilters from "./CategoryFilters";
 import LocationButton from "./LocationButton";
 
 export default function Header() {
@@ -31,12 +30,6 @@ export default function Header() {
           <SearchBar />
 
           <LocationButton />
-
-        </div>
-
-        <div className="relative z-10 mt-4">
-
-          <CategoryFilters />
 
         </div>
 

@@ -24,6 +24,7 @@ import {
   useSearchParams,
 } from "next/navigation";
 import Header from "@/components/Header/Header";
+import { CategoryRail } from "@/components/Header/CategoryFilters";
 import ClickHandler from "@/components/Map/ClickHandler";
 import UserFab from "@/components/User/UserFab";
 import RecenterMap from "@/components/Map/RecenterMap";
@@ -286,6 +287,7 @@ return new Promise((resolve) => {
   return (
     <main className="relative h-screen w-screen">
       <Header />
+      <CategoryRail />
 
       <MapContainer
         center={center}
