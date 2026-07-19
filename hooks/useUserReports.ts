@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import { useAuth } from "@/contexts/AuthContext";
 import { listenUserReports } from "@/services/reports";
+import { isReportExpired } from "@/services/lifecycle/expiration";
 
 import { ProfileGalleryItem } from "@/types/profile";
 import { Report } from "@/types/report";
@@ -13,12 +14,16 @@ export function useUserReports() {
 
   const [reports, setReports] = useState<Report[]>([]);
   const [loading, setLoading] = useState(true);
+  const [now, setNow] = useState(() => new Date());
 
   useEffect(() => {
     if (!user) {
-      setReports([]);
-      setLoading(false);
-      return;
+      const resetTimeoutId = window.setTimeout(() => {
+        setReports([]);
+        setLoading(false);
+      }, 0);
+
+      return () => window.clearTimeout(resetTimeoutId);
     }
 
     const unsubscribe = listenUserReports(
@@ -32,29 +37,57 @@ export function useUserReports() {
     return unsubscribe;
   }, [user]);
 
-  const publishedReports = useMemo(
+  useEffect(() => {
+    const intervalId = window.setInterval(() => {
+      setNow(new Date());
+    }, 60_000);
+
+    return () => window.clearInterval(intervalId);
+  }, []);
+
+  const approvedReports = useMemo(
     () => reports.filter((report) => report.isVisible),
     [reports]
   );
 
-  const gallery = useMemo<ProfileGalleryItem[]>(() => {
-    return publishedReports.flatMap((report) =>
+  const activePublishedReports = useMemo(
+    () => approvedReports.filter((report) => {
+      if (report.status !== "ACTIVE") {
+        return false;
+      }
+
+      return !report.expiresAt || !isReportExpired(report.expiresAt, now);
+    }),
+    [approvedReports, now]
+  );
+
+  const createGalleryItems = (sourceReports: Report[]) => {
+    return sourceReports.flatMap((report) =>
       report.images.map((image, index) => ({
         id: `${report.id}-${index}`,
         imageUrl: image.url,
         reportId: report.id,
       }))
     );
-  }, [publishedReports]);
+  };
+
+  const gallery = useMemo<ProfileGalleryItem[]>(() => {
+    return createGalleryItems(activePublishedReports);
+  }, [activePublishedReports]);
+
+  const approvedPhotosCount = useMemo(
+    () => createGalleryItems(approvedReports).length,
+    [approvedReports]
+  );
 
   return {
-    reports: publishedReports,
+    reports: activePublishedReports,
 
     gallery,
 
-    reportsCount: publishedReports.length,
+    reportsCount: approvedReports.length,
 
-    photosCount: gallery.length,
+    photosCount: approvedPhotosCount,
 
     loading,
   };

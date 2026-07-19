@@ -200,6 +200,385 @@ body {
 
 }
 
+@keyframes commetyMapSignal {
+  0%, 100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.11);
+  }
+}
+
+@keyframes commetySectionRise {
+  0% {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes commetySectionTitle {
+  0%, 100% {
+    text-shadow: 0 0 0 rgba(37, 99, 255, 0);
+  }
+
+  50% {
+    text-shadow: 0 0 20px rgba(37, 99, 255, 0.18);
+  }
+}
+
+@keyframes commetyMetallicSweep {
+  0%, 28% {
+    background-position: -260% 0;
+  }
+
+  60%, 100% {
+    background-position: 260% 0;
+  }
+}
+
+@keyframes commetyWatermarkPan {
+  0% {
+    background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0;
+  }
+
+  100% {
+    background-position: 42px 24px, -36px 20px, 120px 50px, -100px 60px, 46px 46px, 46px 46px;
+  }
+}
+
+@keyframes commetySectionFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-7px);
+  }
+}
+
+.commety-map-watermark::before {
+  position: absolute;
+  inset: 0;
+  content: "";
+  pointer-events: none;
+  opacity: 0.15;
+  background-image:
+    radial-gradient(circle at 16% 27%, rgba(37, 99, 255, 0.13) 0 3px, transparent 4px),
+    radial-gradient(circle at 78% 66%, rgba(6, 182, 212, 0.13) 0 4px, transparent 5px),
+    linear-gradient(32deg, transparent 47%, rgba(15, 45, 95, 0.08) 48% 49%, transparent 50%),
+    linear-gradient(118deg, transparent 46%, rgba(15, 45, 95, 0.08) 47% 48%, transparent 49%),
+    linear-gradient(90deg, rgba(15, 45, 95, 0.035) 1px, transparent 1px),
+    linear-gradient(rgba(15, 45, 95, 0.035) 1px, transparent 1px);
+  background-size: auto, auto, 410px 280px, 360px 260px, 46px 46px, 46px 46px;
+  animation: commetyWatermarkPan 18s linear infinite;
+}
+
+.commety-section-title {
+  animation: commetySectionTitle 4.8s ease-in-out infinite;
+}
+
+.commety-section-card {
+  animation:
+    commetySectionRise 700ms cubic-bezier(0.16, 1, 0.3, 1) both,
+    commetySectionFloat 4.8s ease-in-out 900ms infinite;
+}
+
+.commety-section-card-delay-1 { animation-delay: 100ms, 1000ms; }
+.commety-section-card-delay-2 { animation-delay: 200ms, 1100ms; }
+.commety-section-card-delay-3 { animation-delay: 300ms, 1200ms; }
+
+.commety-metallic-sweep::before {
+  background-size: 260% 100%;
+  animation: commetyMetallicSweep 8s ease-in-out infinite;
+}
+
+@keyframes commetySliderSceneChange {
+  0% {
+    opacity: 0;
+    transform: scale(1.04);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.commety-slider-scene {
+  position: absolute;
+  inset: 0;
+  animation: commetySliderSceneChange 850ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.commety-slider-scene-eventi {
+  background:
+    radial-gradient(circle at 72% 22%, rgba(200, 144, 255, 0.72), transparent 18%),
+    radial-gradient(circle at 25% 74%, rgba(255, 204, 116, 0.56), transparent 18%),
+    linear-gradient(145deg, #ddd4cc 0%, #cfc2b4 52%, #d9d0bd 100%);
+}
+
+.commety-slider-scene-meteo {
+  background:
+    radial-gradient(circle at 70% 20%, rgba(116, 157, 190, 0.58), transparent 26%),
+    linear-gradient(145deg, #b7c2c6 0%, #8fa5ae 48%, #a6b2ae 100%);
+}
+
+.commety-slider-scene-mare {
+  background:
+    radial-gradient(ellipse at 78% 12%, #c9e2eb 0%, #c9e2eb 19%, transparent 19.5%),
+    linear-gradient(145deg, #e2d6bc 0%, #d4c39f 36%, #80c3d7 37%, #69b5cf 100%);
+}
+
+.commety-slider-scene-viabilita {
+  background:
+    linear-gradient(35deg, transparent 46%, rgba(255, 255, 255, 0.42) 47%, rgba(255, 255, 255, 0.42) 52%, transparent 53%),
+    linear-gradient(145deg, #c5c8c4 0%, #aaaead 47%, #c0c5be 100%);
+}
+
+.commety-slider-scene-pericoli {
+  background:
+    radial-gradient(circle at 23% 72%, rgba(118, 154, 89, 0.76), transparent 21%),
+    radial-gradient(circle at 77% 20%, rgba(173, 138, 91, 0.58), transparent 22%),
+    linear-gradient(145deg, #d8d2b8 0%, #bfc89f 50%, #d1c38e 100%);
+}
+
+@keyframes commetyMapFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes commetyMapRing {
+  0% {
+    opacity: 0.9;
+    transform: scale(0.72);
+  }
+
+  75%, 100% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+}
+
+@keyframes commetyEventEqualizer {
+  0%, 100% {
+    transform: scaleY(0.35);
+  }
+
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes commetySliderRain {
+  0% {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  35% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@keyframes commetySliderWave {
+  0%, 100% {
+    transform: translateX(-2px) scaleY(0.75);
+  }
+
+  50% {
+    transform: translateX(2px) scaleY(1);
+  }
+}
+
+@keyframes commetySliderTraffic {
+  0% {
+    transform: translateX(-10px);
+  }
+
+  100% {
+    transform: translateX(28px);
+  }
+}
+
+@keyframes commetySliderAlert {
+  0% {
+    opacity: 0.9;
+    transform: scale(0.5);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.25);
+  }
+}
+
+.commety-map-signal {
+  animation: commetyMapSignal 2.6s ease-in-out infinite;
+}
+
+.commety-map-signal > span:first-child {
+  animation: commetyMapRing 2.6s ease-out infinite;
+}
+
+.commety-map-float {
+  animation: commetyMapFloat 4.5s ease-in-out infinite;
+}
+
+.commety-event-card {
+  animation: commetyMapFloat 5.2s ease-in-out infinite;
+}
+
+.commety-slider-card {
+  animation: commetyMapFloat 5s ease-in-out infinite;
+}
+
+.commety-event-equalizer span {
+  width: 0.2rem;
+  height: 100%;
+  transform-origin: bottom;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  animation: commetyEventEqualizer 900ms ease-in-out infinite;
+}
+
+.commety-event-equalizer span:nth-child(2) {
+  height: 65%;
+  animation-delay: -240ms;
+}
+
+.commety-event-equalizer span:nth-child(3) {
+  height: 85%;
+  animation-delay: -470ms;
+}
+
+.commety-event-equalizer span:nth-child(4) {
+  height: 52%;
+  animation-delay: -110ms;
+}
+
+.commety-event-equalizer span:nth-child(5) {
+  height: 72%;
+  animation-delay: -620ms;
+}
+
+.commety-slider-rain {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.25rem;
+  height: 2.25rem;
+}
+
+.commety-slider-rain i {
+  display: block;
+  width: 0.16rem;
+  height: 1rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  animation: commetySliderRain 900ms ease-in infinite;
+}
+
+.commety-slider-rain i:nth-child(2) { animation-delay: -180ms; }
+.commety-slider-rain i:nth-child(3) { animation-delay: -460ms; }
+.commety-slider-rain i:nth-child(4) { animation-delay: -640ms; }
+.commety-slider-rain i:nth-child(5) { animation-delay: -320ms; }
+
+.commety-slider-waves {
+  display: flex;
+  align-items: end;
+  gap: 0.2rem;
+  height: 2rem;
+}
+
+.commety-slider-waves i {
+  display: block;
+  width: 0.85rem;
+  height: 0.35rem;
+  border-top: 2px solid rgba(255, 255, 255, 0.95);
+  border-radius: 50%;
+  animation: commetySliderWave 1.2s ease-in-out infinite;
+}
+
+.commety-slider-waves i:nth-child(2) { animation-delay: -350ms; }
+.commety-slider-waves i:nth-child(3) { animation-delay: -700ms; }
+
+.commety-slider-traffic {
+  display: flex;
+  width: 3rem;
+  height: 1.5rem;
+  align-items: center;
+  overflow: hidden;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+}
+
+.commety-slider-traffic i {
+  display: block;
+  width: 0.38rem;
+  height: 0.38rem;
+  flex: 0 0 auto;
+  margin-right: 0.35rem;
+  border-radius: 999px;
+  background: white;
+  animation: commetySliderTraffic 1.25s linear infinite;
+}
+
+.commety-slider-traffic i:nth-child(2) { animation-delay: -320ms; }
+.commety-slider-traffic i:nth-child(3) { animation-delay: -640ms; }
+.commety-slider-traffic i:nth-child(4) { animation-delay: -960ms; }
+
+.commety-slider-alert {
+  position: relative;
+  width: 2.25rem;
+  height: 2.25rem;
+}
+
+.commety-slider-alert i {
+  position: absolute;
+  inset: 0;
+  display: block;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 999px;
+  animation: commetySliderAlert 1.8s ease-out infinite;
+}
+
+.commety-slider-alert i:nth-child(2) { animation-delay: -600ms; }
+.commety-slider-alert i:nth-child(3) { animation-delay: -1200ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .commety-map-signal,
+  .commety-map-signal > span:first-child,
+  .commety-map-float,
+  .commety-event-card,
+  .commety-event-equalizer span,
+  .commety-slider-card,
+  .commety-slider-rain i,
+  .commety-slider-waves i,
+  .commety-slider-traffic i,
+  .commety-slider-alert i,
+  .commety-map-watermark::before,
+  .commety-section-title,
+  .commety-section-card,
+  .commety-metallic-sweep::before {
+    animation: none;
+  }
+}
+
 .commety-success-mark {
   display: flex;
   width: 5rem;

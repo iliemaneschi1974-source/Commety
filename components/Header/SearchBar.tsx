@@ -34,7 +34,7 @@ function handleSelect(result: SearchResult) {
 }
 
   return (
-    <div className="relative flex-1">
+    <div className="relative z-30 flex-1">
 
       <div
         className="

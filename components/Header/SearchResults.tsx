@@ -16,7 +16,7 @@ export default function SearchResults({
 }: Props) {
   if (loading) {
     return (
-      <div className="absolute left-0 right-0 top-full mt-2 rounded-2xl border border-slate-200 bg-white shadow-xl overflow-hidden z-50">
+      <div className="absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl">
         <div className="p-4 text-center text-slate-500">
           Ricerca in corso...
         </div>
@@ -27,7 +27,7 @@ export default function SearchResults({
   if (results.length === 0) return null;
 
   return (
-    <div className="absolute left-0 right-0 top-full mt-2 rounded-2xl border border-slate-200 bg-white shadow-xl overflow-hidden z-50">
+    <div className="absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl">
       {results.map((result) => (
         <button
           key={result.id}

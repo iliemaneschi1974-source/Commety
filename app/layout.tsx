@@ -17,18 +17,23 @@ const inter = Inter({
 
 const appUrl =
   process.env.NEXT_PUBLIC_APP_URL ??
-  "https://commety.it";
+  "https://www.commety.it";
 
 export const metadata: Metadata = {
   metadataBase: new URL(appUrl),
 
-  title: "Commety",
+  title: {
+    default: "Commety | La mappa del mondo reale",
+    template: "%s | Commety",
+  },
 
-  description: "Scopri cosa sta succedendo vicino a te.",
+  description:
+    "Scopri cosa sta succedendo vicino a te con le segnalazioni in tempo reale della community Commety.",
 
   openGraph: {
-    title: "Commety",
-    description: "Scopri cosa sta succedendo vicino a te.",
+    title: "Commety | La mappa del mondo reale",
+    description:
+      "Scopri cosa sta succedendo vicino a te con le segnalazioni in tempo reale della community Commety.",
     url: appUrl,
     siteName: "Commety",
     locale: "it_IT",
@@ -36,7 +41,7 @@ export const metadata: Metadata = {
 
     images: [
       {
-        url: `${appUrl}/images/branding/og-home.png`,
+        url: `${appUrl}/og-image.png`,
         width: 1200,
         height: 630,
         alt: "Commety",
@@ -46,9 +51,10 @@ export const metadata: Metadata = {
 
   twitter: {
     card: "summary_large_image",
-    title: "Commety",
-    description: "Scopri cosa sta succedendo vicino a te.",
-    images: [`${appUrl}/images/branding/og-home.png`],
+    title: "Commety | La mappa del mondo reale",
+    description:
+      "Scopri cosa sta succedendo vicino a te con le segnalazioni in tempo reale della community Commety.",
+    images: [`${appUrl}/og-image.png`],
   },
 };
 
