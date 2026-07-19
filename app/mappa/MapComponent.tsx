@@ -84,6 +84,7 @@ export default function MapComponent() {
 
 const [sheetOpen, setSheetOpen] =
   useState(false);
+const reportClearTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 const [messageDialogOpen, setMessageDialogOpen] =
   useState(false);
 
@@ -92,6 +93,30 @@ const [messageDialogTitle, setMessageDialogTitle] =
 
 const [messageDialogDescription, setMessageDialogDescription] =
   useState("");
+
+const openReportSheet = (report: Report) => {
+  if (reportClearTimer.current) {
+    clearTimeout(reportClearTimer.current);
+    reportClearTimer.current = null;
+  }
+
+  setSelectedReport(report);
+  setSheetOpen(true);
+};
+
+const closeReportSheet = () => {
+  setSheetOpen(false);
+
+  reportClearTimer.current = setTimeout(() => {
+    setSelectedReport(null);
+    reportClearTimer.current = null;
+  }, 400);
+
+  if (sharedReportId) {
+    openedFromSharedLink.current = false;
+    window.history.replaceState(null, "", "/mappa");
+  }
+};
 useEffect(() => {
   if (userLocation || sharedReportId) {
     return;
@@ -143,9 +168,7 @@ const reportId = sharedReportId;
         16
       );
 
-      setSelectedReport(report);
-
-      setSheetOpen(true);
+      openReportSheet(report);
     } catch (error) {
       console.error(
         "Errore apertura segnalazione condivisa:",
@@ -322,10 +345,7 @@ return new Promise((resolve) => {
         )}
 
         <ReportsLayer
-  onReportClick={(report) => {
-    setSelectedReport(report);
-    setSheetOpen(true);
-  }}
+  onReportClick={openReportSheet}
 />
       </MapContainer>
 
@@ -342,15 +362,7 @@ return new Promise((resolve) => {
       <ReportBottomSheet
   report={selectedReport}
   open={sheetOpen}
-  onClose={() => {
-  setSheetOpen(false);
-  setSelectedReport(null);
-
-  if (sharedReportId) {
-    openedFromSharedLink.current = false;
-    window.history.replaceState(null, "", "/mappa");
-  }
-}}
+  onClose={closeReportSheet}
 />
 <MessageDialog
   open={messageDialogOpen}

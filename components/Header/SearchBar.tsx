@@ -34,24 +34,26 @@ function handleSelect(result: SearchResult) {
 }
 
   return (
-    <div className="relative z-30 flex-1">
+    <div className="relative z-30 min-w-0 flex-1">
 
       <div
         className="
           flex
           items-center
-          gap-3
+          gap-2
           h-14
           rounded-2xl
           bg-white/95
           border
           border-white/70
-          px-4
+          px-3
           shadow-sm
           transition
           focus-within:border-white
           focus-within:ring-4
           focus-within:ring-white/20
+          sm:gap-3
+          sm:px-4
         "
       >
         <Search
@@ -64,6 +66,7 @@ function handleSelect(result: SearchResult) {
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Cerca città o indirizzo..."
           className="
+            min-w-0
             flex-1
             bg-transparent
             outline-none

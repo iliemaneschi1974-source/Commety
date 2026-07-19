@@ -10,12 +10,14 @@ interface BottomSheetProps {
   open: boolean;
   onClose: () => void;
   children: ReactNode;
+  animation?: "standard" | "report";
 }
 
 export default function BottomSheet({
   open,
   onClose,
   children,
+  animation = "standard",
 }: BottomSheetProps) {
   useEffect(() => {
     if (!open) return;
@@ -60,17 +62,19 @@ export default function BottomSheet({
           bg-[linear-gradient(145deg,#071a3c_0%,#0F2D5F_45%,#123b73_100%)]
           shadow-[0_-18px_45px_rgba(2,16,42,0.42)]
 
-          transition-transform
-          duration-300
-          ease-out
+          transition-[transform,opacity]
+          duration-400
+          ${animation === "report" ? "ease-[cubic-bezier(0.22,1,0.36,1)]" : "ease-out"}
 
           max-h-[85vh]
           overflow-hidden
 
           ${
             open
-              ? "translate-y-0"
-              : "translate-y-full"
+              ? "translate-y-0 opacity-100"
+              : animation === "report"
+                ? "translate-y-12 opacity-0"
+                : "translate-y-full opacity-100"
           }
         `}
       >

@@ -21,4 +21,21 @@ describe("moderazione dei commenti", () => {
       )
     ).toBe(true);
   });
+
+  it("rifiuta anche le varianti al plurale", () => {
+    const moderationEngine = new DefaultModerationEngine(
+      new DefaultModerationPolicy()
+    );
+
+    const result = moderationEngine.modera(
+      new UserContent("Siete degli stronzi", [])
+    );
+
+    expect(result.isRejected()).toBe(true);
+    expect(
+      result.evidences.some(
+        (evidence) => evidence.tipo === "PAROLACCE"
+      )
+    ).toBe(true);
+  });
 });

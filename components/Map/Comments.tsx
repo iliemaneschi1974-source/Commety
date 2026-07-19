@@ -1,5 +1,6 @@
 "use client";
 
+import { Send } from "lucide-react";
 import { KeyboardEvent, useState } from "react";
 
 import CommentCard from "@/components/Map/CommentCard";
@@ -96,20 +97,22 @@ export default function Comments({
         )}
       </div>
 
-      <div className="mt-5 flex gap-2">
+      <div className="mt-5 space-y-3">
         <input
           value={text}
           onChange={(e) => setText(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Scrivi un commento..."
-          className="flex-1 rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-[#2563FF] focus:ring-2 focus:ring-[#2563FF]/20"
+          className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-[#2563FF] focus:ring-2 focus:ring-[#2563FF]/20"
         />
 
         <Button
           onClick={handleSubmit}
           disabled={loading || !text.trim()}
+          className="h-12 w-full bg-emerald-500 text-base font-bold text-white hover:bg-emerald-600 disabled:bg-emerald-700/70"
         >
-          {loading ? "Invio..." : "Invia"}
+          <Send className="size-4" />
+          {loading ? "Invio..." : "Pubblica commento"}
         </Button>
       </div>
 

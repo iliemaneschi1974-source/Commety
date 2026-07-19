@@ -45,7 +45,7 @@ export default function LocationButton() {
     <>
       <button
         onClick={handleLocation}
-        className="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/20 bg-[linear-gradient(135deg,#071a3c_0%,#0F2D5F_45%,#1b4b87_100%)] text-white shadow-[0_10px_24px_rgba(2,16,42,0.34)] transition-all hover:brightness-110 active:scale-95"
+        className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-white/20 bg-[linear-gradient(135deg,#071a3c_0%,#0F2D5F_45%,#1b4b87_100%)] text-white shadow-[0_10px_24px_rgba(2,16,42,0.34)] transition-all hover:brightness-110 active:scale-95"
       >
         {loading ? (
           <Loader2 size={22} className="animate-spin" />

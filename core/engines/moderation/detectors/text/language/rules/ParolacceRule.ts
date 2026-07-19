@@ -12,14 +12,19 @@ import { SpamRule } from "../../spam/SpamRule";
  */
 export class ParolacceRule implements SpamRule {
   /**
-   * Elenco iniziale dei termini volgari.
+   * Radici con le rispettive desinenze ammesse. In questo modo la
+   * moderazione intercetta singolare, plurale e genere senza cercare
+   * frammenti all'interno di parole non correlate.
    */
-  private static readonly PAROLACCE: readonly string[] = [
-    "cazzo",
-    "merda",
-    "vaffanculo",
-    "stronzo",
-    "coglione",
+  private static readonly PAROLACCE: readonly {
+    radice: string;
+    desinenze: readonly string[];
+  }[] = [
+    { radice: "cazz", desinenze: ["o", "i"] },
+    { radice: "merd", desinenze: ["a", "e"] },
+    { radice: "vaffancul", desinenze: ["o"] },
+    { radice: "stronz", desinenze: ["o", "a", "i", "e"] },
+    { radice: "coglion", desinenze: ["e", "i"] },
   ];
 
   analizza(
@@ -33,8 +38,11 @@ export class ParolacceRule implements SpamRule {
 
     let rilevate = 0;
 
-    for (const parola of ParolacceRule.PAROLACCE) {
-      const regex = new RegExp(`\\b${parola}\\b`, "iu");
+    for (const { radice, desinenze } of ParolacceRule.PAROLACCE) {
+      const regex = new RegExp(
+        `\\b${radice}(?:${desinenze.join("|")})\\b`,
+        "iu"
+      );
 
       if (regex.test(testo)) {
         rilevate++;

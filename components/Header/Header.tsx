@@ -25,7 +25,7 @@ export default function Header() {
 
         </div>
 
-        <div className="relative z-20 flex gap-3">
+        <div className="relative z-20 flex gap-2 sm:gap-3">
 
           <SearchBar />
 
