@@ -36,9 +36,10 @@ export default function VideoRecorder({ onChange }: VideoRecorderProps) {
       if (previewRef.current) previewRef.current.srcObject = stream;
 
       const chunks: BlobPart[] = [];
-      const mimeType = MediaRecorder.isTypeSupported("video/webm;codecs=vp8")
-        ? "video/webm;codecs=vp8" : "video/webm";
-      const recorder = new MediaRecorder(stream, { mimeType });
+      const mimeType = getSupportedVideoMimeType();
+      const recorder = mimeType
+        ? new MediaRecorder(stream, { mimeType })
+        : new MediaRecorder(stream);
       recorder.ondataavailable = (event) => {
         if (event.data.size > 0) chunks.push(event.data);
       };
@@ -47,7 +48,13 @@ export default function VideoRecorder({ onChange }: VideoRecorderProps) {
         setRecording(false);
         setSecondsLeft(MAX_SECONDS);
         try {
-          const video = new File([new Blob(chunks, { type: "video/webm" })], `commety-${Date.now()}.webm`, { type: "video/webm" });
+          const recordedMimeType = recorder.mimeType || mimeType || "video/webm";
+          const extension = recordedMimeType.includes("mp4") ? "mp4" : "webm";
+          const video = new File(
+            [new Blob(chunks, { type: recordedMimeType })],
+            `commety-${Date.now()}.${extension}`,
+            { type: recordedMimeType }
+          );
           setPreviewUrl(URL.createObjectURL(video));
           setPreparing(true);
           const frames = await createModerationFrames(video);
@@ -112,6 +119,15 @@ export default function VideoRecorder({ onChange }: VideoRecorderProps) {
 
 function Watermark() {
   return <span className="pointer-events-none absolute bottom-3 right-3 inline-flex items-center gap-1 rounded-lg border border-white/30 bg-[#061735]/80 px-2 py-1 text-xs font-black text-white"><span className="relative inline-flex size-4 items-center justify-center"><MapPin className="size-4 fill-white text-white" /><span className="absolute -mt-px text-[8px] font-black text-[#0F2D5F]">C</span></span>Commety</span>;
+}
+
+function getSupportedVideoMimeType(): string | undefined {
+  return [
+    "video/mp4;codecs=avc1.42E01E",
+    "video/mp4",
+    "video/webm;codecs=vp8",
+    "video/webm",
+  ].find((candidate) => MediaRecorder.isTypeSupported(candidate));
 }
 
 async function createModerationFrames(videoFile: File): Promise<File[]> {

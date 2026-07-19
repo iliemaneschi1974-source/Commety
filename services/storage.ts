@@ -96,7 +96,8 @@ export async function uploadVideo(
   file: File,
   reportId: string
 ) {
-  const storagePath = `reports/${reportId}/${crypto.randomUUID()}.webm`;
+  const extension = file.type.includes("mp4") ? "mp4" : "webm";
+  const storagePath = `reports/${reportId}/${crypto.randomUUID()}.${extension}`;
   const storageRef = ref(storage, storagePath);
 
   await uploadBytes(storageRef, file, {
