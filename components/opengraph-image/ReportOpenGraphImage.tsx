@@ -1,7 +1,9 @@
 import { ReportOpenGraphModel } from "@/types/opengraph";
 import { OPEN_GRAPH_CATEGORY_CONFIG } from "./categoryConfig";
 
-const COMMETY_LOGO_URL = "https://www.commety.it/logo.png";
+// Stesso asset trasparente usato nell'header della mappa e nel profilo:
+// scritta bianca, marker originale blu e nessun riquadro di sfondo.
+const COMMETY_LOGO_URL = "https://www.commety.it/logo-header-cropped.png";
 
 export interface ReportOpenGraphImageProps {
   readonly report: ReportOpenGraphModel;
@@ -54,5 +56,5 @@ function InstitutionalVisual() {
 }
 
 function CommetyLogo({ width, height }: { width: number; height: number }) {
-  return <img src={COMMETY_LOGO_URL} alt="Commety" width={width} height={height} style={{ width: `${width}px`, height: `${height}px`, objectFit: "contain", filter: "brightness(0) invert(1)" }} />;
+  return <img src={COMMETY_LOGO_URL} alt="Commety" width={width} height={height} style={{ width: `${width}px`, height: `${height}px`, objectFit: "contain", filter: "drop-shadow(0 0 10px rgba(255,255,255,0.8)) drop-shadow(0 7px 8px rgba(2,16,42,0.7))" }} />;
 }
