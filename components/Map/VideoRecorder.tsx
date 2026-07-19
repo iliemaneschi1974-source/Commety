@@ -125,7 +125,7 @@ export default function VideoRecorder({ onChange }: VideoRecorderProps) {
       <label className="mb-3 block text-sm font-medium text-white/90">Video live &middot; massimo 5 secondi</label>
       {previewUrl ? (
         <div className="relative overflow-hidden rounded-2xl border border-white/25 bg-black">
-          <video key="recorded-preview" ref={playbackRef} controls muted playsInline preload="metadata" poster={posterUrl ?? undefined} src={previewUrl} onPlay={() => setPlaying(true)} onEnded={() => setPlaying(false)} onPause={() => setPlaying(false)} className="max-h-64 w-full" />
+          <video key="recorded-preview" ref={playbackRef} muted playsInline preload="metadata" poster={posterUrl ?? undefined} src={previewUrl} onPlay={() => setPlaying(true)} onEnded={() => setPlaying(false)} onPause={() => setPlaying(false)} className="max-h-64 w-full" />
           <Watermark />
           {preparing ? <div className="absolute inset-0 flex items-center justify-center bg-[#061735]/60 p-5 text-center text-sm font-bold text-white">Preparazione dell&apos;anteprima e controllo di sicurezza...</div> : null}
           {!preparing && !playing ? <button type="button" onClick={playPreview} aria-label="Riproduci anteprima video" className="absolute left-1/2 top-1/2 grid size-16 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-white/60 bg-[#0F2D5F]/90 text-white shadow-[0_8px_22px_rgba(0,0,0,0.45)] transition hover:scale-105 hover:bg-[#17467f]"><Play className="ml-1 size-7 fill-current" /></button> : null}
