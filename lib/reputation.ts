@@ -3,6 +3,8 @@ export const XP = {
 
   PHOTO_UPLOADED: 3,
 
+  VIDEO_UPLOADED: 5,
+
   COMMENT_CREATED: 2,
 
   REPORT_CONFIRMED: 5,

@@ -80,6 +80,11 @@ export function useUserReports() {
     [approvedReports]
   );
 
+  const approvedVideosCount = useMemo(
+    () => approvedReports.filter((report) => Boolean(report.video)).length,
+    [approvedReports]
+  );
+
   return {
     reports: activePublishedReports,
 
@@ -88,6 +93,8 @@ export function useUserReports() {
     reportsCount: approvedReports.length,
 
     photosCount: approvedPhotosCount,
+
+    mediaCount: approvedPhotosCount + approvedVideosCount,
 
     loading,
   };

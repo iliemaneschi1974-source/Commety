@@ -161,7 +161,8 @@ confirmations: 0,
   if (input.userId) {
     await rewardReportCreation(
       input.userId,
-      images.length
+      images.length,
+      Boolean(video)
     );
   }
 

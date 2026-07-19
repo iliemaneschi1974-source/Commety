@@ -96,7 +96,7 @@ export function ProfileStats({
               />
             }
             value={stats.photos}
-            label="Foto"
+            label="Foto e video"
           />
         </div>
       </Surface>

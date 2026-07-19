@@ -25,7 +25,7 @@ export default function ProfilePage() {
     reports,
     gallery,
     reportsCount,
-    photosCount,
+    mediaCount,
     loading: reportsLoading,
   } = useUserReports();
 
@@ -52,7 +52,7 @@ export default function ProfilePage() {
   const stats = {
     ...profileStats,
     reports: reportsCount,
-    photos: photosCount,
+    photos: mediaCount,
   };
 
   async function handleSaveNickname(nickname: string) {

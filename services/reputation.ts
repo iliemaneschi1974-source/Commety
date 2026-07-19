@@ -55,15 +55,17 @@ async function addXp(
  */
 export async function rewardReportCreation(
   uid: string,
-  photosCount: number
+  photosCount: number,
+  hasVideo = false
 ) {
+  const mediaCount = photosCount + (hasVideo ? 1 : 0);
   const userRef = doc(db, "users", uid);
 
   await updateDoc(userRef, {
     "statistics.reports": increment(1),
 
     "statistics.photos":
-      increment(photosCount),
+      increment(mediaCount),
 
     "metadata.updatedAt":
       serverTimestamp(),
@@ -72,7 +74,8 @@ export async function rewardReportCreation(
   await addXp(
     uid,
     XP.REPORT_CREATED +
-      photosCount * XP.PHOTO_UPLOADED
+      photosCount * XP.PHOTO_UPLOADED +
+      (hasVideo ? XP.VIDEO_UPLOADED : 0)
   );
 }
 
