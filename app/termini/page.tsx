@@ -17,7 +17,7 @@ export default function TermsPage() {
     <LegalPageLayout
       eyebrow="Regole della community"
       title="Termini di utilizzo"
-      updatedAt="20 luglio 2026"
+      updatedAt="20 luglio 2026 – aggiornamento chiamate audio"
     >
       <p className="commety-legal-lead">
         Commety è una piattaforma partecipata che permette di condividere e
@@ -85,6 +85,23 @@ export default function TermsPage() {
           Puoi rifiutare una richiesta, bloccare un utente o segnalarlo. In
           caso di blocco non potrà più inviarti richieste o messaggi tramite la
           piattaforma.
+        </p>
+      </section>
+
+      <section>
+        <h2>4-ter. Chiamate audio</h2>
+        <p>
+          Le chiamate audio sono disponibili solo tra utenti registrati che
+          hanno già accettato una richiesta di chat. Avviando o accettando una
+          chiamata autorizzi l&apos;uso del microfono del tuo dispositivo, secondo
+          le impostazioni del browser o del sistema operativo.
+        </p>
+        <p>
+          Non è consentito usare le chiamate per molestie, minacce, spam,
+          registrazioni o diffusione di contenuti senza il consenso dell&apos;altro
+          partecipante. Puoi terminare la chiamata, bloccare o segnalare
+          l&apos;utente in qualsiasi momento. Le chiamate non sostituiscono i
+          servizi di emergenza.
         </p>
       </section>
 
