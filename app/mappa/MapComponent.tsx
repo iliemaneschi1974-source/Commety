@@ -246,23 +246,17 @@ if (!reportId) {
  * Nessuna immagine:
  * la segnalazione è già pubblicata.
  */
-if (data.images.length === 0 && !data.video) {
-  processingOverlay.showSuccess();
-
-  setTimeout(() => {
-    processingOverlay.hide();
-  }, 2000);
-
-  return true;
-}
+const hasMedia = data.images.length > 0 || Boolean(data.video);
 
 /**
  * Sono presenti immagini:
  * attendiamo la moderazione AI.
  */
-processingOverlay.showProcessing(
-  data.video ? "video" : "image"
-);
+if (hasMedia) {
+  processingOverlay.showProcessing(
+    data.video ? "video" : "image"
+  );
+}
 
 return new Promise((resolve) => {
   const unsubscribe = listenModerationDecision(
@@ -272,27 +266,37 @@ return new Promise((resolve) => {
       unsubscribe();
 
       if (
-        event.decision === "APPROVATO"
+        event.decision === "APPROVATO" ||
+        event.decision === "LIMITATO"
       ) {
 
-        processingOverlay.showSuccess();
+        if (hasMedia) {
+          processingOverlay.showSuccess();
 
-        setTimeout(() => {
-          processingOverlay.hide();
-        }, 2000);
+          setTimeout(() => {
+            processingOverlay.hide();
+          }, 2000);
+        }
 
         resolve(true);
         return;
       }
 
-      processingOverlay.hide();
+      if (hasMedia) {
+        processingOverlay.hide();
+      }
 
       setMessageDialogTitle(
         "Segnalazione non pubblicata"
       );
 
       setMessageDialogDescription(
-        data.video
+        !hasMedia
+          ? event.evidences.find(
+              (evidence) => evidence.type === "SPAM"
+            )?.description ??
+            "La segnalazione non rispetta le regole della community."
+          : data.video
           ? "Il video non soddisfa i requisiti di pubblicazione di Commetty. Ti invitiamo a registrarne uno diverso."
           : "L'immagine caricata non soddisfa i requisiti di pubblicazione di Commetty. Ti invitiamo a caricarne una diversa."
       );

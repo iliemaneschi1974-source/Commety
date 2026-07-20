@@ -111,6 +111,12 @@ updatedAt?: Timestamp;
    */
   authorConfirmationKey?: string;
 
+  /**
+   * Impronta tecnica non reversibile del dispositivo, usata dal backend per
+   * riconoscere invii ripetuti e contrastare lo spam.
+   */
+  authorSpamKey?: string;
+
   username?: string;
 
   displayName?: string;

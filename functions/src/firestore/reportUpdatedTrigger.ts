@@ -44,6 +44,13 @@ export const reportUpdatedTrigger =
         return;
       }
 
+      if (after.spamBlocked === true) {
+        logger.info("Skipping AI pipeline for spam-blocked report.", {
+          reportId: event.params.reportId,
+        });
+        return;
+      }
+
       const beforeImages =
         Array.isArray(before.images)
           ? before.images.length

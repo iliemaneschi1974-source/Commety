@@ -18,7 +18,10 @@ import {
 
 import { calculateReportExpiration } from "@/lib/reportExpiration";
 import { db } from "@/lib/firebase";
-import { getReportOwnerKey } from "@/services/device";
+import {
+  getReportOwnerKey,
+  getReportSpamKey,
+} from "@/services/device";
 import { reverseGeocode } from "@/services/geocoding";
 import { rewardReportCreation } from "@/services/reputation";
 import { uploadImages, uploadVideo } from "@/services/storage";
@@ -71,7 +74,10 @@ export async function createReport(
   } = calculateReportExpiration(input.type);
 
   const reportRef = doc(reportsCollection);
-  const authorConfirmationKey = await getReportOwnerKey(reportRef.id);
+  const [authorConfirmationKey, authorSpamKey] = await Promise.all([
+    getReportOwnerKey(reportRef.id),
+    getReportSpamKey(),
+  ]);
 
   await setDoc(
     reportRef,
@@ -79,6 +85,7 @@ export async function createReport(
       ...sanitizedReportData,
 
       authorConfirmationKey,
+      authorSpamKey,
 
       address: location.address,
       city: location.city,

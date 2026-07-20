@@ -38,6 +38,11 @@ export interface ReportModerationEvent {
    */
   decision: ReportModerationDecision;
 
+  evidences: Array<{
+    type?: string;
+    description?: string;
+  }>;
+
 }
 
 /**
@@ -75,6 +80,9 @@ export function listenModerationDecision(
       callback({
         decision:
           decision as ReportModerationDecision,
+        evidences: Array.isArray(data?.moderation?.evidences)
+          ? data.moderation.evidences
+          : [],
       });
 
     }

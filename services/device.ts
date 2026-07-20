@@ -40,3 +40,21 @@ export async function getReportOwnerKey(
     byte.toString(16).padStart(2, "0")
   ).join("");
 }
+
+/**
+ * Crea un'impronta tecnica stabile, ma non reversibile, del dispositivo.
+ *
+ * Non viene mai mostrata nell'interfaccia: serve esclusivamente al backend
+ * per riconoscere invii ripetuti e proteggere la mappa da comportamenti spam.
+ */
+export async function getReportSpamKey(): Promise<string> {
+  const data = new TextEncoder().encode(
+    `commety-report-spam:${getDeviceId()}`
+  );
+
+  const digest = await crypto.subtle.digest("SHA-256", data);
+
+  return Array.from(new Uint8Array(digest), (byte) =>
+    byte.toString(16).padStart(2, "0")
+  ).join("");
+}

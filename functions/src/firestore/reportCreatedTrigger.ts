@@ -4,6 +4,7 @@ import { onDocumentCreated } from "firebase-functions/v2/firestore";
 import { ModerationRequest } from "../application/ModerationRequest";
 import { ModerationService } from "../application/ModerationService";
 import { ReportModerationUpdater } from "./ReportModerationUpdater";
+import { ReportSpamGuard } from "./ReportSpamGuard";
 
 /**
  * Modera i report creati senza immagini.
@@ -22,6 +23,25 @@ export const reportCreatedTrigger =
       const report = event.data?.data();
 
       if (!report) {
+        return;
+      }
+
+      const spamGuard = new ReportSpamGuard();
+      const spamCheck = await spamGuard.check(
+        event.params.reportId,
+        report
+      );
+
+      if (spamCheck.blocked) {
+        await spamGuard.block(
+          event.params.reportId,
+          spamCheck.description
+        );
+
+        logger.warn("Report blocked for behavioural spam.", {
+          reportId: event.params.reportId,
+          reason: spamCheck.description,
+        });
         return;
       }
 
