@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowLeft, Ban, Check, MessageCircle, Send, Trash2, X } from "lucide-react";
+import { ArrowLeft, Ban, Check, MessageCircle, Phone, Send, Trash2, X } from "lucide-react";
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 
 import { useAuth } from "@/contexts/AuthContext";
@@ -16,7 +16,6 @@ import {
   sendChatMessage,
 } from "@/services/chat";
 import { ChatMessage, ChatThread } from "@/types/chat";
-import CallPanel from "@/components/Chat/CallPanel";
 
 function formatTime(value?: string) {
   if (!value) return "";
@@ -152,6 +151,16 @@ export default function ChatClient({
     setActiveThread(thread);
     await loadMessages(thread.id);
   }
+
+  function watchOrStartCall(start = false) {
+    if (!activeThread || !user) return;
+    window.dispatchEvent(new CustomEvent("commety:call", { detail: { threadId: activeThread.id, currentUserId: user.uid, participantName: title, participantAvatarUrl: activeThread.participant.avatarUrl, start } }));
+  }
+
+  useEffect(() => {
+    if (!canSendMessages || !activeThread || !user) return;
+    window.dispatchEvent(new CustomEvent("commety:call", { detail: { threadId: activeThread.id, currentUserId: user.uid, participantName: title, participantAvatarUrl: activeThread.participant.avatarUrl } }));
+  }, [activeThread, canSendMessages, title, user]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -293,7 +302,7 @@ export default function ChatClient({
                 <div className="min-w-0 flex-1"><h2 className="break-words font-bold leading-5 text-[#0F2D5F]">{title}</h2><p className="mt-0.5 text-sm text-emerald-600">Utente registrato</p></div>
               </div>
               <div className="ml-auto flex w-full justify-end gap-2 sm:w-auto">
-                {canSendMessages ? <CallPanel threadId={activeThread.id} currentUserId={user.uid} participantName={title} participantAvatarUrl={activeThread.participant.avatarUrl} /> : null}
+                {canSendMessages ? <button type="button" onClick={() => watchOrStartCall(true)} title="Avvia chiamata audio" aria-label="Avvia chiamata audio" className="flex size-10 items-center justify-center rounded-xl bg-emerald-500 text-white shadow-sm transition hover:bg-emerald-400"><Phone className="size-5" /></button> : null}
                 <button type="button" onClick={() => void handleTerminateChat()} disabled={busy} title="Termina chat" className="flex size-10 items-center justify-center rounded-xl text-red-500 transition hover:bg-red-50 disabled:opacity-50 sm:size-auto sm:gap-1 sm:px-3 sm:py-2 sm:text-xs sm:font-bold"><Trash2 className="size-4" /><span className="hidden sm:inline">Termina chat</span></button>
                 <button type="button" onClick={() => void handleReportAndBlock()} disabled={busy} title="Segnala e blocca utente" className="flex size-10 items-center justify-center rounded-xl text-red-500 transition hover:bg-red-50 disabled:opacity-50"><Ban className="size-5" /></button>
               </div>
