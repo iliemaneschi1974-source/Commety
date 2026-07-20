@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
 interface ImageViewerProps {
   images: string[];
@@ -24,9 +25,13 @@ export default function ImageViewer({
   const [visible, setVisible] = useState(open);
 
   useEffect(() => {
-    if (open) {
+    if (!open) return;
+
+    const frame = window.requestAnimationFrame(() => {
       setVisible(true);
-    }
+    });
+
+    return () => window.cancelAnimationFrame(frame);
   }, [open]);
 
   useEffect(() => {
@@ -71,11 +76,15 @@ export default function ImageViewer({
     return null;
   }
 
-  return (
+  if (typeof document === "undefined") {
+    return null;
+  }
+
+  return createPortal(
     <div
       onClick={onClose}
       className={`
-        fixed inset-0 z-[9999]
+        fixed inset-0 z-[10000]
         flex items-center justify-center
         bg-black/95
         transition-opacity duration-200
@@ -87,7 +96,8 @@ export default function ImageViewer({
           event.stopPropagation();
           onClose();
         }}
-        className="absolute right-5 top-5 text-4xl text-white transition-all duration-200 hover:scale-110 active:scale-95"
+        aria-label="Chiudi galleria"
+        className="absolute right-5 top-5 z-10 flex size-12 items-center justify-center rounded-2xl border border-white/25 bg-[#061735]/85 text-3xl text-white shadow-lg backdrop-blur transition-all duration-200 hover:scale-110 hover:bg-[#0F2D5F] active:scale-95"
       >
         ✕
       </button>
@@ -155,6 +165,7 @@ export default function ImageViewer({
           ))}
         </div>
       )}
-    </div>
+    </div>,
+    document.body
   );
 }
