@@ -14,6 +14,7 @@ import { AIPipeline } from "../ai/pipeline/AIPipeline";
 import { StorageImageDownloader } from "../storage/StorageImageDownloader";
 import { SensitiveMediaRedactor } from "../privacy/SensitiveMediaRedactor";
 import { SanitizedMediaStorage } from "../privacy/SanitizedMediaStorage";
+import { CommetyWatermark } from "../privacy/CommetyWatermark";
 import { adminDb } from "../config/firebaseAdmin";
 
 import { ModerationRequest } from "../application/ModerationRequest";
@@ -277,6 +278,17 @@ const moderationResult =
         const moderationUpdater =
           new ReportModerationUpdater();
 
+        if (
+          moderationResult.decision.isApprovato() ||
+          moderationResult.decision.isLimitato()
+        ) {
+          await applyCommetyWatermark(
+            event.params.reportId,
+            afterImages,
+            after.mediaPrivacy
+          );
+        }
+
         await moderationUpdater.save(
           event.params.reportId,
           moderationResult
@@ -390,4 +402,37 @@ async function redactSensitiveMedia(
     storage.delete(video.storagePath),
     ...moderationFrames.map((frame) => storage.delete(frame.storagePath)),
   ]);
+}
+
+async function applyCommetyWatermark(
+  reportId: string,
+  images: ReportImageReference[],
+  mediaPrivacy: Record<string, unknown> | undefined
+): Promise<void> {
+  if (images.length === 0) return;
+
+  const downloader = new StorageImageDownloader();
+  const storage = new SanitizedMediaStorage();
+  const watermark = new CommetyWatermark();
+  const sourceImages = await downloader.download(images);
+  const watermarkedImages = await Promise.all(
+    sourceImages.map((image) => watermark.apply(image.bytes))
+  );
+  const savedImages = await Promise.all(
+    watermarkedImages.map((image) => storage.saveImage(reportId, image))
+  );
+
+  await adminDb.collection("reports").doc(reportId).update({
+    images: savedImages,
+    mediaPrivacy: {
+      ...(mediaPrivacy ?? {}),
+      watermark: {
+        appliedAt: FieldValue.serverTimestamp(),
+        brand: "Commety",
+      },
+    },
+    updatedAt: FieldValue.serverTimestamp(),
+  });
+
+  await Promise.all(images.map((image) => storage.delete(image.storagePath)));
 }
