@@ -1,5 +1,9 @@
-import Image from "next/image";
+"use client";
 
+import Image from "next/image";
+import { useState } from "react";
+
+import ImageViewer from "@/components/Map/ImageViewer";
 import { SectionHeader } from "@/components/ui/section-header";
 import { Surface } from "@/components/ui/Surface";
 import { ProfileGalleryItem } from "@/types/profile";
@@ -11,8 +15,11 @@ interface ProfileGalleryProps {
 export function ProfileGallery({
   images,
 }: ProfileGalleryProps) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [viewerOpen, setViewerOpen] = useState(false);
   const preview = images.slice(0, 6);
   const remaining = Math.max(images.length - 6, 0);
+  const imageUrls = images.map((image) => image.imageUrl);
 
   return (
     <section className="space-y-4">
@@ -36,6 +43,11 @@ export function ProfileGallery({
                 <button
                   key={image.id}
                   type="button"
+                  onClick={() => {
+                    setCurrentIndex(index);
+                    setViewerOpen(true);
+                  }}
+                  aria-label={`Apri foto ${index + 1}`}
                   className="group relative aspect-square overflow-hidden rounded-lg"
                 >
                   <Image
@@ -56,6 +68,23 @@ export function ProfileGallery({
           </div>
         )}
       </Surface>
+
+      <ImageViewer
+        images={imageUrls}
+        currentIndex={currentIndex}
+        open={viewerOpen}
+        onClose={() => setViewerOpen(false)}
+        onPrevious={() =>
+          setCurrentIndex((current) =>
+            current === 0 ? imageUrls.length - 1 : current - 1
+          )
+        }
+        onNext={() =>
+          setCurrentIndex((current) =>
+            current === imageUrls.length - 1 ? 0 : current + 1
+          )
+        }
+      />
     </section>
   );
 }
