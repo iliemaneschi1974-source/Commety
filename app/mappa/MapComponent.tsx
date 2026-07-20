@@ -62,7 +62,6 @@ export default function MapComponent() {
     flyTo,
     userLocation,
     setUserLocation,
-    reportComposerRequest,
   } = useMapContext();
   const processingOverlay =
   useProcessingOverlay();
@@ -79,7 +78,6 @@ export default function MapComponent() {
     useState<[number, number] | null>(null);
 
   const [open, setOpen] = useState(false);
-  const handledReportComposerRequest = useRef(0);
   const [selectedReport, setSelectedReport] =
   useState<Report | null>(null);
 
@@ -94,19 +92,6 @@ const [messageDialogTitle, setMessageDialogTitle] =
 
 const [messageDialogDescription, setMessageDialogDescription] =
   useState("");
-
-  useEffect(() => {
-    if (
-      reportComposerRequest === 0 ||
-      reportComposerRequest === handledReportComposerRequest.current
-    ) {
-      return;
-    }
-
-    handledReportComposerRequest.current = reportComposerRequest;
-    setSelectedPosition(userLocation ?? center);
-    setOpen(true);
-  }, [reportComposerRequest, userLocation, center]);
 
 const openReportSheet = (report: Report) => {
   if (reportClearTimer.current) {

@@ -108,6 +108,17 @@ export function ProfileHeader({
       data-slot="profile-header"
       className="relative flex flex-col items-center gap-6 overflow-hidden rounded-3xl border border-white/15 bg-[linear-gradient(135deg,#071a3c_0%,#0F2D5F_38%,#1b4b87_58%,#0a2553_100%)] p-6 text-white shadow-[0_18px_45px_rgba(6,24,61,0.32)] before:pointer-events-none before:absolute before:inset-0 before:bg-[linear-gradient(115deg,transparent_25%,rgba(255,255,255,0.2)_48%,transparent_62%)] [&>*]:relative [&>*]:z-10 sm:p-8"
     >
+      <div className="flex justify-center">
+        <Image
+          src="/logo-header-cropped.png"
+          alt="Commety"
+          width={180}
+          height={48}
+          priority
+          className="h-11 w-auto object-contain [filter:drop-shadow(0_0_10px_rgba(255,255,255,0.75))_drop-shadow(0_6px_8px_rgba(2,16,42,0.7))]"
+        />
+      </div>
+
       <Avatar className="relative size-32 overflow-hidden ring-4 ring-white/70 shadow-md">
         {profile.avatarUrl ? (
           <Image

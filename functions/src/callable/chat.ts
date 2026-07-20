@@ -11,6 +11,25 @@ import { adminDb } from "../config/firebaseAdmin";
 const MAX_MESSAGE_LENGTH = 500;
 const MAX_MESSAGES_PER_MINUTE = 10;
 
+const CHAT_BLOCKING_EVIDENCES = new Set([
+  "HATE_SPEECH",
+  "BESTEMMIE",
+  "PAROLACCE",
+  "SPAM",
+  "CARATTERI_RIPETUTI",
+  "PAROLE_RIPETUTE",
+  "EMOJI_RIPETUTE",
+  "MAIUSCOLO_ECCESSIVO",
+  "LINK_MULTIPLI",
+  "EMAIL_MULTIPLE",
+  "NUMERI_TELEFONICI_MULTIPLI",
+  "PATTERN_PUBBLICITARIO",
+  "PAROLE_CHIAVE_SPAM",
+  "PUBBLICITA",
+  "DATI_PERSONALI_RILEVATI",
+  "PHISHING",
+]);
+
 type ChatAction =
   | "inbox"
   | "open"
@@ -250,11 +269,39 @@ export const chat = onCall(
         throw new HttpsError("invalid-argument", "Risposta non valida.");
       }
 
-      await threadRef.update({
-        status: data.response === "accept" ? "ACCEPTED" : "REJECTED",
-        respondedAt: FieldValue.serverTimestamp(),
-        updatedAt: FieldValue.serverTimestamp(),
-      });
+      if (data.response === "accept") {
+        const participants = Array.isArray(thread.data()?.participants)
+          ? thread.data()?.participants
+          : [];
+        const requester = participants.find(
+          (entry: { uid?: string }) => entry.uid === requestedBy
+        ) as { displayName?: string } | undefined;
+        const requesterName = requester?.displayName || "un utente Commety";
+        const welcomeMessage =
+          `Ciao, è un piacere parlare con te. Io sono ${requesterName}.`;
+
+        await Promise.all([
+          threadRef.collection("messages").add({
+            text: welcomeMessage,
+            senderId: requestedBy,
+            createdAt: FieldValue.serverTimestamp(),
+            automatic: true,
+          }),
+          threadRef.update({
+            status: "ACCEPTED",
+            respondedAt: FieldValue.serverTimestamp(),
+            lastMessage: welcomeMessage,
+            lastMessageAt: FieldValue.serverTimestamp(),
+            updatedAt: FieldValue.serverTimestamp(),
+          }),
+        ]);
+      } else {
+        await threadRef.update({
+          status: "REJECTED",
+          respondedAt: FieldValue.serverTimestamp(),
+          updatedAt: FieldValue.serverTimestamp(),
+        });
+      }
 
       return { accepted: data.response === "accept" };
     }
@@ -368,7 +415,11 @@ export const chat = onCall(
       new DefaultModerationPolicy()
     ).modera(new UserContent(text, []));
 
-    if (moderation.isRejected()) {
+    const hasBlockingEvidence = moderation.evidences.some(
+      (evidence) => CHAT_BLOCKING_EVIDENCES.has(evidence.tipo)
+    );
+
+    if (hasBlockingEvidence) {
       return {
         sent: false,
         error: "Il messaggio non rispetta le regole della community.",

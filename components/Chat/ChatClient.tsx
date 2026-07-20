@@ -27,7 +27,7 @@ function formatTime(value?: string) {
 }
 
 function formatLastActivity(value?: string) {
-  if (!value) return "Nuova conversazione";
+  if (!value) return "";
 
   return new Intl.DateTimeFormat("it-IT", {
     day: "numeric",
@@ -248,55 +248,56 @@ export default function ChatClient({
   }
 
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top,#3b67a2_0%,#0F2D5F_34%,#071a3c_100%)] p-3 pb-24 text-white sm:p-6 sm:pb-24">
-      <div className="mx-auto grid min-h-[calc(100vh-7rem)] max-w-6xl overflow-hidden rounded-[2rem] border border-white/15 bg-[#071a3c]/70 shadow-[0_24px_70px_rgba(2,12,34,0.45)] backdrop-blur-xl md:grid-cols-[330px_1fr]">
-        <aside className={`${activeThread ? "hidden md:block" : "block"} border-b border-white/10 md:border-b-0 md:border-r`}>
-          <div className="relative border-b border-white/10 p-5">
-            <div className="flex justify-center"><Image src="/logo-header-cropped.png" alt="Commety" width={180} height={48} priority className="h-10 w-auto object-contain [filter:drop-shadow(0_0_10px_rgba(255,255,255,0.75))_drop-shadow(0_6px_8px_rgba(2,16,42,0.7))]" /></div>
-            <div className="mt-4 text-center"><h1 className="text-2xl font-bold">Messaggi</h1><p className="mt-1 text-sm text-white/70">Conversazioni private della community</p></div>
-          </div>
+    <main className="mx-auto flex min-h-screen w-full max-w-3xl flex-col gap-6 p-6 pb-28">
+      <header className="relative overflow-hidden rounded-3xl border border-white/15 bg-[linear-gradient(135deg,#071a3c_0%,#0F2D5F_38%,#1b4b87_58%,#0a2553_100%)] p-6 text-center text-white shadow-[0_18px_45px_rgba(6,24,61,0.32)] before:pointer-events-none before:absolute before:inset-0 before:bg-[linear-gradient(115deg,transparent_25%,rgba(255,255,255,0.2)_48%,transparent_62%)] sm:p-8">
+        <div className="relative z-10"><Image src="/logo-header-cropped.png" alt="Commety" width={180} height={48} priority className="mx-auto h-11 w-auto object-contain [filter:drop-shadow(0_0_10px_rgba(255,255,255,0.75))_drop-shadow(0_6px_8px_rgba(2,16,42,0.7))]" /><div className="mt-5 flex flex-col items-center"><span className="flex size-11 items-center justify-center rounded-full bg-white/15"><MessageCircle className="size-5 text-emerald-300" /></span><h1 className="mt-3 text-3xl font-bold tracking-tight">Messaggi</h1><p className="mt-1 text-sm text-white/80">Conversazioni private della community</p></div></div>
+      </header>
+
+      <div className="grid min-h-[calc(100vh-27rem)] overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl md:grid-cols-[290px_1fr]">
+        <aside className={`${activeThread ? "hidden md:block" : "block"} border-b border-slate-200 bg-white md:border-b-0 md:border-r`}>
+          <div className="border-b border-slate-100 px-5 py-4"><h2 className="font-bold text-[#0F2D5F]">Le tue conversazioni</h2><p className="mt-1 text-sm text-slate-500">Utenti registrati di Commety</p></div>
 
           <div className="max-h-[calc(100vh-190px)] overflow-y-auto p-3">
             {threads.length === 0 ? (
-              <div className="rounded-2xl border border-dashed border-white/25 p-5 text-center text-sm leading-6 text-white/70">
+              <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-5 text-center text-sm leading-6 text-slate-500">
                 Le tue conversazioni appariranno qui. Puoi iniziarne una dal commento di un utente registrato.
               </div>
             ) : threads.map((thread) => (
-              <button key={thread.id} type="button" onClick={() => void handleSelectThread(thread)} className={`mb-2 flex w-full items-center gap-3 rounded-2xl p-3 text-left transition ${activeThread?.id === thread.id ? "bg-white/15" : "hover:bg-white/10"}`}>
+              <button key={thread.id} type="button" onClick={() => void handleSelectThread(thread)} className={`mb-2 flex w-full items-center gap-3 rounded-2xl p-3 text-left transition ${activeThread?.id === thread.id ? "bg-[#eaf2ff]" : "hover:bg-slate-50"}`}>
                 <ChatAvatar name={thread.participant.displayName} avatarUrl={thread.participant.avatarUrl} />
                 <div className="min-w-0 flex-1">
-                  <p className="truncate font-bold">{thread.participant.displayName}</p>
-                  <p className="truncate text-sm text-white/65">{thread.status === "REQUESTED" ? thread.requestedBy === user.uid ? "Richiesta inviata" : "Nuova richiesta di chat" : thread.status === "REJECTED" ? "Richiesta non accettata" : thread.lastMessage ?? "Inizia la conversazione"}</p>
+                  <p className="truncate font-bold text-slate-800">{thread.participant.displayName}</p>
+                  <p className="truncate text-sm text-slate-500">{thread.status === "REQUESTED" ? thread.requestedBy === user.uid ? "Richiesta inviata" : "Nuova richiesta di chat" : thread.status === "REJECTED" ? "Richiesta non accettata" : thread.lastMessage ?? "Inizia la conversazione"}</p>
                 </div>
-                <span className="text-xs text-white/55">{formatLastActivity(thread.lastMessageAt)}</span>
+                <span className="text-xs text-slate-400">{formatLastActivity(thread.lastMessageAt)}</span>
               </button>
             ))}
           </div>
         </aside>
 
-        <section className={`${activeThread ? "flex" : "hidden md:flex"} min-h-0 flex-col`}>
+        <section className={`${activeThread ? "flex" : "hidden md:flex"} min-h-0 flex-col bg-white`}>
           {activeThread ? <>
-            <header className="flex items-center gap-3 border-b border-white/10 p-5">
-              <button type="button" onClick={() => setActiveThread(null)} className="md:hidden"><ArrowLeft className="size-5" /></button>
+            <header className="flex items-center gap-3 border-b border-slate-200 p-5">
+              <button type="button" onClick={() => setActiveThread(null)} className="text-[#0F2D5F] md:hidden"><ArrowLeft className="size-5" /></button>
               <ChatAvatar name={title} avatarUrl={activeThread.participant.avatarUrl} className="size-11 ring-2 ring-emerald-300" />
-              <div className="min-w-0 flex-1"><h2 className="truncate font-bold">{title}</h2><p className="text-sm text-emerald-200">Utente registrato</p></div>
-              <button type="button" onClick={() => void handleTerminateChat()} disabled={busy} title="Termina chat" className="flex size-10 items-center justify-center rounded-xl text-red-200 transition hover:bg-red-500/20 disabled:opacity-50 sm:size-auto sm:gap-1 sm:px-3 sm:py-2 sm:text-xs sm:font-bold"><Trash2 className="size-4" /><span className="hidden sm:inline">Termina chat</span></button>
-              <button type="button" onClick={() => void handleReportAndBlock()} disabled={busy} title="Segnala e blocca utente" className="flex size-10 items-center justify-center rounded-xl text-red-200 transition hover:bg-red-500/20 disabled:opacity-50"><Ban className="size-5" /></button>
+              <div className="min-w-0 flex-1"><h2 className="truncate font-bold text-[#0F2D5F]">{title}</h2><p className="text-sm text-emerald-600">Utente registrato</p></div>
+              <button type="button" onClick={() => void handleTerminateChat()} disabled={busy} title="Termina chat" className="flex size-10 items-center justify-center rounded-xl text-red-500 transition hover:bg-red-50 disabled:opacity-50 sm:size-auto sm:gap-1 sm:px-3 sm:py-2 sm:text-xs sm:font-bold"><Trash2 className="size-4" /><span className="hidden sm:inline">Termina chat</span></button>
+              <button type="button" onClick={() => void handleReportAndBlock()} disabled={busy} title="Segnala e blocca utente" className="flex size-10 items-center justify-center rounded-xl text-red-500 transition hover:bg-red-50 disabled:opacity-50"><Ban className="size-5" /></button>
             </header>
 
-            <div className="flex-1 space-y-3 overflow-y-auto p-5">
-              {messages.length === 0 ? <p className="pt-16 text-center text-sm text-white/60">Scrivi il primo messaggio. Mantieni la conversazione rispettosa.</p> : messages.map((message) => {
+            <div className="flex-1 space-y-3 overflow-y-auto bg-slate-50/70 p-5">
+              {messages.length === 0 ? <p className="pt-16 text-center text-sm text-slate-500">Scrivi il primo messaggio. Mantieni la conversazione rispettosa.</p> : messages.map((message) => {
                 const mine = message.senderId === user.uid;
-                return <div key={message.id} className={`flex ${mine ? "justify-end" : "justify-start"}`}><div className={`max-w-[82%] rounded-2xl px-4 py-3 text-sm shadow-lg ${mine ? "rounded-br-md bg-emerald-400 text-[#062b20]" : "rounded-bl-md bg-white/12 text-white"}`}><p className="whitespace-pre-wrap">{message.text}</p><p className={`mt-1 text-right text-[10px] ${mine ? "text-[#062b20]/65" : "text-white/55"}`}>{formatTime(message.createdAt)}</p></div></div>;
+                return <div key={message.id} className={`flex ${mine ? "justify-end" : "justify-start"}`}><div className={`max-w-[82%] rounded-2xl px-4 py-3 text-sm shadow-sm ${mine ? "rounded-br-md bg-emerald-400 text-[#062b20]" : "rounded-bl-md border border-slate-200 bg-white text-slate-800"}`}><p className="whitespace-pre-wrap">{message.text}</p><p className={`mt-1 text-right text-[10px] ${mine ? "text-[#062b20]/65" : "text-slate-400"}`}>{formatTime(message.createdAt)}</p></div></div>;
               })}
             </div>
 
             {canRespondToRequest ? <div className="border-t border-white/10 p-5 text-center"><p className="text-sm text-white/75">{title} vuole avviare una conversazione con te.</p><div className="mt-4 flex gap-3"><button type="button" disabled={busy} onClick={() => void handleRequestResponse("reject")} className="flex h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-red-500 font-bold text-white transition hover:bg-red-400 disabled:opacity-50"><X className="size-4" /> Rifiuta</button><button type="button" disabled={busy} onClick={() => void handleRequestResponse("accept")} className="flex h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-emerald-400 font-bold text-[#062b20] transition hover:bg-emerald-300 disabled:opacity-50"><Check className="size-4" /> Accetta</button></div></div> : !canSendMessages ? <div className="border-t border-white/10 p-5 text-center text-sm text-white/70">{activeThread?.status === "REJECTED" ? "Questa richiesta non è stata accettata." : "Richiesta inviata. Potrai scrivere solo dopo l'accettazione."}</div> : <form onSubmit={handleSubmit} className="border-t border-white/10 p-4">
-              {error ? <p role="alert" className="mb-3 text-center text-sm text-red-300">{error}</p> : null}
-              <div className="flex items-end gap-3"><textarea value={text} maxLength={500} onChange={(event) => setText(event.target.value)} placeholder="Scrivi un messaggio..." rows={2} className="min-h-12 flex-1 resize-none rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-white outline-none placeholder:text-white/45 focus:border-emerald-300" /><button disabled={busy || !text.trim()} className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-400 text-[#062b20] transition hover:bg-emerald-300 disabled:opacity-50" aria-label="Invia messaggio"><Send className="size-5" /></button></div>
-              <p className="mt-2 text-right text-xs text-white/45">{text.length}/500</p>
+              {error ? <p role="alert" className="mb-3 text-center text-sm text-red-500">{error}</p> : null}
+              <div className="flex items-end gap-3"><textarea value={text} maxLength={500} onChange={(event) => setText(event.target.value)} placeholder="Scrivi un messaggio..." rows={2} className="min-h-12 flex-1 resize-none rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-800 outline-none placeholder:text-slate-400 focus:border-emerald-400 focus:bg-white" /><button disabled={busy || !text.trim()} className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-500 text-white transition hover:bg-emerald-400 disabled:opacity-50" aria-label="Invia messaggio"><Send className="size-5" /></button></div>
+              <p className="mt-2 text-right text-xs text-slate-400">{text.length}/500</p>
             </form>}
-          </> : <div className="m-auto max-w-sm p-8 text-center"><MessageCircle className="mx-auto size-12 text-emerald-300" /><h2 className="mt-5 text-2xl font-bold">Le tue conversazioni</h2><p className="mt-2 text-white/70">Seleziona una chat oppure avviane una dai commenti sulla mappa.</p></div>}
+          </> : <div className="m-auto max-w-sm p-8 text-center"><MessageCircle className="mx-auto size-12 text-[#1b4b87]" /><h2 className="mt-5 text-2xl font-bold text-[#0F2D5F]">Le tue conversazioni</h2><p className="mt-2 text-slate-500">Seleziona una chat oppure avviane una dai commenti sulla mappa.</p></div>}
         </section>
       </div>
 
