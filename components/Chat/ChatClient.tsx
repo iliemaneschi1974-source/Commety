@@ -1,13 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, Ban, Check, MessageCircle, Send, X } from "lucide-react";
+import Image from "next/image";
+import { ArrowLeft, Ban, Check, Map, MessageCircle, Send, Trash2, X } from "lucide-react";
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 
 import { useAuth } from "@/contexts/AuthContext";
 import {
   getChatInbox,
   getChatMessages,
+  deleteChatThread,
   openChat,
   reportAndBlockChatUser,
   respondToChatRequest,
@@ -31,6 +33,32 @@ function formatLastActivity(value?: string) {
     day: "numeric",
     month: "short",
   }).format(new Date(value));
+}
+
+function ChatAvatar({
+  name,
+  avatarUrl,
+  className = "size-11",
+}: {
+  name: string;
+  avatarUrl?: string;
+  className?: string;
+}) {
+  return (
+    <div className={`relative flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-white/15 font-bold ${className}`}>
+      {avatarUrl ? (
+        <Image
+          src={avatarUrl}
+          alt={name}
+          fill
+          sizes="56px"
+          className="object-cover"
+        />
+      ) : (
+        name.slice(0, 1).toUpperCase()
+      )}
+    </div>
+  );
 }
 
 export default function ChatClient({
@@ -181,6 +209,29 @@ export default function ChatClient({
     }
   }
 
+  async function handleTerminateChat() {
+    if (
+      !activeThread ||
+      !window.confirm(
+        "Vuoi terminare questa chat? La conversazione e tutti i messaggi verranno eliminati definitivamente per entrambi gli utenti."
+      )
+    ) return;
+
+    try {
+      setBusy(true);
+      setError("");
+      await deleteChatThread(activeThread.id);
+      setActiveThread(null);
+      setMessages([]);
+      await loadInbox();
+    } catch (nextError) {
+      console.error("Errore eliminazione chat:", nextError);
+      setError("Non è stato possibile terminare la chat.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
   if (loading) {
     return <main className="p-8 text-center text-slate-500">Caricamento messaggi...</main>;
   }
@@ -200,12 +251,9 @@ export default function ChatClient({
     <main className="min-h-screen bg-[radial-gradient(circle_at_top,#3b67a2_0%,#0F2D5F_34%,#071a3c_100%)] p-3 text-white sm:p-6">
       <div className="mx-auto grid min-h-[calc(100vh-1.5rem)] max-w-6xl overflow-hidden rounded-[2rem] border border-white/15 bg-[#071a3c]/70 shadow-[0_24px_70px_rgba(2,12,34,0.45)] backdrop-blur-xl md:grid-cols-[330px_1fr]">
         <aside className={`${activeThread ? "hidden md:block" : "block"} border-b border-white/10 md:border-b-0 md:border-r`}>
-          <div className="border-b border-white/10 p-5">
-            <Link href="/mappa" className="inline-flex items-center gap-2 text-sm font-semibold text-white/75 transition hover:text-white">
-              <ArrowLeft className="size-4" /> Mappa
-            </Link>
-            <h1 className="mt-5 text-2xl font-bold">Messaggi</h1>
-            <p className="mt-1 text-sm text-white/70">Solo tra utenti registrati</p>
+          <div className="relative border-b border-white/10 p-5">
+            <div className="flex justify-center"><Image src="/logo-header-cropped.png" alt="Commety" width={180} height={48} priority className="h-10 w-auto object-contain [filter:drop-shadow(0_0_10px_rgba(255,255,255,0.75))_drop-shadow(0_6px_8px_rgba(2,16,42,0.7))]" /></div>
+            <div className="mt-4 text-center"><h1 className="text-2xl font-bold">Messaggi</h1><p className="mt-1 text-sm text-white/70">Conversazioni private della community</p></div>
           </div>
 
           <div className="max-h-[calc(100vh-190px)] overflow-y-auto p-3">
@@ -215,7 +263,7 @@ export default function ChatClient({
               </div>
             ) : threads.map((thread) => (
               <button key={thread.id} type="button" onClick={() => void handleSelectThread(thread)} className={`mb-2 flex w-full items-center gap-3 rounded-2xl p-3 text-left transition ${activeThread?.id === thread.id ? "bg-white/15" : "hover:bg-white/10"}`}>
-                <div className="flex size-11 shrink-0 items-center justify-center rounded-full bg-white/15 font-bold">{thread.participant.displayName.slice(0, 1).toUpperCase()}</div>
+                <ChatAvatar name={thread.participant.displayName} avatarUrl={thread.participant.avatarUrl} />
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-bold">{thread.participant.displayName}</p>
                   <p className="truncate text-sm text-white/65">{thread.status === "REQUESTED" ? thread.requestedBy === user.uid ? "Richiesta inviata" : "Nuova richiesta di chat" : thread.status === "REJECTED" ? "Richiesta non accettata" : thread.lastMessage ?? "Inizia la conversazione"}</p>
@@ -230,8 +278,9 @@ export default function ChatClient({
           {activeThread ? <>
             <header className="flex items-center gap-3 border-b border-white/10 p-5">
               <button type="button" onClick={() => setActiveThread(null)} className="md:hidden"><ArrowLeft className="size-5" /></button>
-              <div className="flex size-11 items-center justify-center rounded-full bg-emerald-400 font-bold text-[#0F2D5F]">{title.slice(0, 1).toUpperCase()}</div>
+              <ChatAvatar name={title} avatarUrl={activeThread.participant.avatarUrl} className="size-11 ring-2 ring-emerald-300" />
               <div className="min-w-0 flex-1"><h2 className="truncate font-bold">{title}</h2><p className="text-sm text-emerald-200">Utente registrato</p></div>
+              <button type="button" onClick={() => void handleTerminateChat()} disabled={busy} title="Termina chat" className="flex size-10 items-center justify-center rounded-xl text-red-200 transition hover:bg-red-500/20 disabled:opacity-50 sm:size-auto sm:gap-1 sm:px-3 sm:py-2 sm:text-xs sm:font-bold"><Trash2 className="size-4" /><span className="hidden sm:inline">Termina chat</span></button>
               <button type="button" onClick={() => void handleReportAndBlock()} disabled={busy} title="Segnala e blocca utente" className="flex size-10 items-center justify-center rounded-xl text-red-200 transition hover:bg-red-500/20 disabled:opacity-50"><Ban className="size-5" /></button>
             </header>
 
@@ -250,6 +299,15 @@ export default function ChatClient({
           </> : <div className="m-auto max-w-sm p-8 text-center"><MessageCircle className="mx-auto size-12 text-emerald-300" /><h2 className="mt-5 text-2xl font-bold">Le tue conversazioni</h2><p className="mt-2 text-white/70">Seleziona una chat oppure avviane una dai commenti sulla mappa.</p></div>}
         </section>
       </div>
+
+      <Link
+        href="/mappa"
+        aria-label="Torna alla mappa"
+        title="Torna alla mappa"
+        className="fixed bottom-6 right-6 z-50 flex size-16 items-center justify-center rounded-full border border-white/25 bg-[linear-gradient(135deg,#071a3c_0%,#0F2D5F_45%,#1b4b87_100%)] text-white shadow-[0_12px_28px_rgba(2,16,42,0.38)] transition hover:scale-105 hover:brightness-110 active:scale-95"
+      >
+        <Map className="size-7" aria-hidden="true" />
+      </Link>
     </main>
   );
 }

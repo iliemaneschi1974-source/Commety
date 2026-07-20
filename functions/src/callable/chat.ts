@@ -17,7 +17,8 @@ type ChatAction =
   | "messages"
   | "send"
   | "respond"
-  | "reportAndBlock";
+  | "reportAndBlock"
+  | "delete";
 
 type ChatRequest = {
   action?: ChatAction;
@@ -292,6 +293,12 @@ export const chat = onCall(
       ]);
 
       return { blocked: true };
+    }
+
+    if (data.action === "delete") {
+      await adminDb.recursiveDelete(threadRef);
+
+      return { deleted: true };
     }
 
     if (data.action === "messages") {

@@ -71,3 +71,9 @@ export async function reportAndBlockChatUser(
 ): Promise<ChatResponse> {
   return callChat("reportAndBlock", { threadId });
 }
+
+export async function deleteChatThread(
+  threadId: string
+): Promise<ChatResponse> {
+  return callChat("delete", { threadId });
+}
