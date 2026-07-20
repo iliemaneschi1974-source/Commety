@@ -51,6 +51,11 @@ export default function PrivacyPage() {
             categoria, data e posizione geografica della segnalazione;
           </li>
           <li>
+            coordinate tecniche di visi e testo rilevato nelle foto e nei
+            fotogrammi dei video, esclusivamente per oscurare dati personali,
+            targhe e altre informazioni leggibili prima della pubblicazione;
+          </li>
+          <li>
             messaggi privati, richieste di contatto, blocchi e segnalazioni
             tra utenti registrati, quando utilizzi la chat;
           </li>
@@ -97,6 +102,12 @@ export default function PrivacyPage() {
             e degli utenti;
           </li>
           <li>
+            rilevare e oscurare automaticamente visi, targhe e testo leggibile
+            nei media caricati prima della loro pubblicazione: legittimo
+            interesse del titolare e degli utenti alla protezione dei dati
+            personali e alla sicurezza della community;
+          </li>
+          <li>
             adempiere a obblighi di legge, richieste delle autorità e difesa di
             diritti: obbligo legale o legittimo interesse;
           </li>
@@ -117,7 +128,10 @@ export default function PrivacyPage() {
         <p>
           Per mantenere la community sicura, alcuni contenuti possono essere
           sottoposti a controlli automatici contro linguaggio offensivo, spam e
-          contenuti non conformi. Questi controlli supportano la moderazione e
+          contenuti non conformi. Foto e video possono inoltre essere analizzati
+          per rilevare visi e testo leggibile: prima della pubblicazione,
+          Commety genera e utilizza una copia con tali aree sfocate. Questi
+          controlli supportano la moderazione e
           non producono decisioni automatizzate con effetti giuridici o
           analogamente significativi sulla persona. Puoi chiedere chiarimenti o
           contestare una decisione scrivendo a privacy@commety.it.
@@ -130,7 +144,9 @@ export default function PrivacyPage() {
           Per erogare il servizio utilizziamo fornitori che trattano dati per
           nostro conto o secondo le proprie condizioni: Google Firebase
           (autenticazione, database, archiviazione delle immagini e funzioni
-          tecniche), Vercel (hosting e infrastruttura) e Google Analytics
+          tecniche), Google Cloud Vision (rilevamento tecnico di visi e testo
+          nei media per l&apos;oscuramento automatico), Vercel (hosting e
+          infrastruttura) e Google Analytics
           (misurazione del traffico). I dati possono essere trattati anche da
           fornitori situati fuori dallo Spazio Economico Europeo; in tali casi
           vengono adottate le garanzie previste dalla normativa applicabile,

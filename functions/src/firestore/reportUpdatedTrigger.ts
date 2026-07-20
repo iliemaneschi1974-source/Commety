@@ -1,6 +1,7 @@
 import * as logger from "firebase-functions/logger";
 import { defineSecret } from "firebase-functions/params";
 import { onDocumentUpdated } from "firebase-functions/v2/firestore";
+import { FieldValue } from "firebase-admin/firestore";
 
 import { ReportModerationUpdater } from "./ReportModerationUpdater";
 import { ReportAIAnalysisUpdater } from "../firestore/ReportAIAnalysisUpdater";
@@ -11,6 +12,9 @@ import { VisionAnalysisRequest } from "../ai/dto/VisionAnalysisRequest";
 import { AIPipeline } from "../ai/pipeline/AIPipeline";
 
 import { StorageImageDownloader } from "../storage/StorageImageDownloader";
+import { SensitiveMediaRedactor } from "../privacy/SensitiveMediaRedactor";
+import { SanitizedMediaStorage } from "../privacy/SanitizedMediaStorage";
+import { adminDb } from "../config/firebaseAdmin";
 
 import { ModerationRequest } from "../application/ModerationRequest";
 import { ModerationService } from "../application/ModerationService";
@@ -77,18 +81,57 @@ export const reportUpdatedTrigger =
       const hasNewVideoFrames =
         beforeVideoFrames === 0 && afterVideoFrames.length > 0;
 
+      const needsPrivacyRedaction =
+        (hasNewPhotos || hasNewVideoFrames) &&
+        after.mediaPrivacy?.state !== "REDACTED";
+
+      if (needsPrivacyRedaction) {
+        try {
+          await redactSensitiveMedia(
+            event.params.reportId,
+            afterImages,
+            after.video,
+            afterVideoFrames
+          );
+
+          logger.info("Sensitive media redacted before moderation.", {
+            reportId: event.params.reportId,
+          });
+        } catch (error) {
+          logger.error("Sensitive media redaction failed.", {
+            reportId: event.params.reportId,
+            error: error instanceof Error ? error.message : error,
+          });
+
+          await adminDb.collection("reports").doc(event.params.reportId).update({
+            isVisible: false,
+            mediaPrivacy: {
+              state: "FAILED",
+              message: "Impossibile proteggere automaticamente i dati sensibili nel media.",
+              failedAt: FieldValue.serverTimestamp(),
+            },
+          });
+        }
+
+        return;
+      }
+
+      const becamePrivacyRedacted =
+        before.mediaPrivacy?.state !== "REDACTED" &&
+        after.mediaPrivacy?.state === "REDACTED";
+
       /**
        * Avvia la pipeline soltanto
        * quando vengono aggiunte
        * per la prima volta le immagini.
        */
       if (
-        !hasNewPhotos && !hasNewVideoFrames
+        !hasNewPhotos && !hasNewVideoFrames && !becamePrivacyRedacted
       ) {
         return;
       }
 
-      const moderationImages = hasNewVideoFrames
+      const moderationImages = afterVideoFrames.length > 0
         ? afterVideoFrames
         : afterImages;
 
@@ -271,3 +314,77 @@ const moderationResult =
 
     }
   );
+
+async function redactSensitiveMedia(
+  reportId: string,
+  images: ReportImageReference[],
+  video: {
+    storagePath?: string;
+    url?: string;
+    durationSeconds?: number;
+  } | undefined,
+  moderationFrames: ReportImageReference[]
+): Promise<void> {
+  const downloader = new StorageImageDownloader();
+  const redactor = new SensitiveMediaRedactor();
+  const storage = new SanitizedMediaStorage();
+
+  if (images.length > 0) {
+    const sourceImages = await downloader.download(images);
+    const redactedImages = await Promise.all(
+      sourceImages.map((image) => redactor.redactImage(image.bytes))
+    );
+    const savedImages = await Promise.all(
+      redactedImages.map((image) => storage.saveImage(reportId, image.bytes))
+    );
+
+    await adminDb.collection("reports").doc(reportId).update({
+      images: savedImages,
+      mediaPrivacy: {
+        state: "REDACTED",
+        imageRegions: redactedImages.reduce((total, image) => total + image.boxes.length, 0),
+        redactedAt: FieldValue.serverTimestamp(),
+      },
+      updatedAt: FieldValue.serverTimestamp(),
+    });
+
+    await Promise.all(images.map((image) => storage.delete(image.storagePath)));
+    return;
+  }
+
+  if (!video?.storagePath || !video.url || moderationFrames.length !== 3) {
+    throw new Error("Il video non contiene i dati necessari per l'oscuramento.");
+  }
+
+  const [sourceVideo] = await downloader.download([
+    { storagePath: video.storagePath, url: video.url },
+  ]);
+  const sourceFrames = await downloader.download(moderationFrames);
+  const redactedVideo = await redactor.redactVideo(
+    sourceVideo.bytes,
+    sourceFrames.map((frame) => frame.bytes)
+  );
+  const [savedVideo, savedFrames] = await Promise.all([
+    storage.saveVideo(reportId, redactedVideo.bytes),
+    Promise.all(redactedVideo.redactedFrames.map((frame) => storage.saveImage(reportId, frame.bytes))),
+  ]);
+
+  await adminDb.collection("reports").doc(reportId).update({
+    video: {
+      ...savedVideo,
+      durationSeconds: video.durationSeconds ?? 5,
+      moderationFrames: savedFrames,
+    },
+    mediaPrivacy: {
+      state: "REDACTED",
+      videoRegions: redactedVideo.frameBoxes.reduce((total, boxes) => total + boxes.length, 0),
+      redactedAt: FieldValue.serverTimestamp(),
+    },
+    updatedAt: FieldValue.serverTimestamp(),
+  });
+
+  await Promise.all([
+    storage.delete(video.storagePath),
+    ...moderationFrames.map((frame) => storage.delete(frame.storagePath)),
+  ]);
+}

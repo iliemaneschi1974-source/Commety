@@ -131,6 +131,11 @@ export default function HelpPage() {
         </p>
         <ul>
           <li>Foto e video passano un controllo di sicurezza e coerenza con la segnalazione.</li>
+          <li>
+            Prima della pubblicazione Commety prova a sfocare automaticamente
+            visi, targhe e testo leggibile; viene mostrata soltanto la copia
+            protetta, non il file originale.
+          </li>
           <li>Il video viene controllato in più momenti, non soltanto nel primo fotogramma.</li>
           <li>Nei video pubblicati compare il watermark Commety.</li>
           <li>
