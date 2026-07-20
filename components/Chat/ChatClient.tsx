@@ -16,6 +16,7 @@ import {
   sendChatMessage,
 } from "@/services/chat";
 import { ChatMessage, ChatThread } from "@/types/chat";
+import CallPanel from "@/components/Chat/CallPanel";
 
 function formatTime(value?: string) {
   if (!value) return "";
@@ -289,6 +290,7 @@ export default function ChatClient({
               <button type="button" onClick={() => setActiveThread(null)} className="text-[#0F2D5F] md:hidden"><ArrowLeft className="size-5" /></button>
               <ChatAvatar name={title} avatarUrl={activeThread.participant.avatarUrl} className="size-11 ring-2 ring-emerald-300" />
               <div className="min-w-0 flex-1"><h2 className="truncate font-bold text-[#0F2D5F]">{title}</h2><p className="text-sm text-emerald-600">Utente registrato</p></div>
+              {canSendMessages ? <CallPanel threadId={activeThread.id} currentUserId={user.uid} participantName={title} participantAvatarUrl={activeThread.participant.avatarUrl} /> : null}
               <button type="button" onClick={() => void handleTerminateChat()} disabled={busy} title="Termina chat" className="flex size-10 items-center justify-center rounded-xl text-red-500 transition hover:bg-red-50 disabled:opacity-50 sm:size-auto sm:gap-1 sm:px-3 sm:py-2 sm:text-xs sm:font-bold"><Trash2 className="size-4" /><span className="hidden sm:inline">Termina chat</span></button>
               <button type="button" onClick={() => void handleReportAndBlock()} disabled={busy} title="Segnala e blocca utente" className="flex size-10 items-center justify-center rounded-xl text-red-500 transition hover:bg-red-50 disabled:opacity-50"><Ban className="size-5" /></button>
             </header>

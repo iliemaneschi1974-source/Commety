@@ -5,6 +5,7 @@ import {
   ChatMessage,
   ChatThread,
 } from "@/types/chat";
+import { CallSession } from "@/types/call";
 
 type ChatResponse = {
   threads?: ChatThread[];
@@ -12,14 +13,15 @@ type ChatResponse = {
   messages?: ChatMessage[];
   sent?: boolean;
   error?: string;
+  call?: CallSession | null;
 };
 
 async function callChat(
   action: string,
-  payload: Record<string, string> = {}
+  payload: Record<string, unknown> = {}
 ): Promise<ChatResponse> {
   const chat = httpsCallable<
-    { action: string } & Record<string, string>,
+    { action: string } & Record<string, unknown>,
     ChatResponse
   >(functions, "chat");
 
@@ -76,4 +78,25 @@ export async function deleteChatThread(
   threadId: string
 ): Promise<ChatResponse> {
   return callChat("delete", { threadId });
+}
+
+export async function getCallState(threadId: string): Promise<CallSession | null> {
+  const result = await callChat("callState", { threadId });
+  return result.call ?? null;
+}
+
+export async function startCall(threadId: string, offer: string) {
+  return callChat("callStart", { threadId, offer });
+}
+
+export async function answerCall(threadId: string, answer: string) {
+  return callChat("callAnswer", { threadId, answer });
+}
+
+export async function sendCallCandidate(threadId: string, candidate: string) {
+  return callChat("callSignal", { threadId, candidate });
+}
+
+export async function endCall(threadId: string) {
+  return callChat("callEnd", { threadId });
 }

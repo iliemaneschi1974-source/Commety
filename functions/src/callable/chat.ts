@@ -37,7 +37,12 @@ type ChatAction =
   | "send"
   | "respond"
   | "reportAndBlock"
-  | "delete";
+  | "delete"
+  | "callStart"
+  | "callAnswer"
+  | "callSignal"
+  | "callState"
+  | "callEnd";
 
 type ChatRequest = {
   action?: ChatAction;
@@ -45,6 +50,9 @@ type ChatRequest = {
   threadId?: string;
   text?: string;
   response?: "accept" | "reject";
+  offer?: string;
+  answer?: string;
+  candidate?: string;
 };
 
 type UserData = {
@@ -173,6 +181,31 @@ async function requireMember(
   return threadRef;
 }
 
+async function requireAcceptedThread(
+  threadRef: FirebaseFirestore.DocumentReference
+) {
+  const thread = await threadRef.get();
+
+  if (thread.data()?.status !== "ACCEPTED") {
+    throw new HttpsError(
+      "failed-precondition",
+      "Le chiamate sono disponibili solo nelle chat accettate."
+    );
+  }
+
+  return thread;
+}
+
+function requirePayload(value: unknown, field: string, maxLength: number) {
+  const payload = requireString(value, field);
+
+  if (payload.length > maxLength) {
+    throw new HttpsError("invalid-argument", `${field} troppo lungo.`);
+  }
+
+  return payload;
+}
+
 export const chat = onCall(
   { region: "europe-west1" },
   async (request) => {
@@ -252,6 +285,117 @@ export const chat = onCall(
 
     const threadId = requireString(data.threadId, "Conversazione");
     const threadRef = await requireMember(threadId, userId);
+
+    if (data.action === "callState") {
+      await requireAcceptedThread(threadRef);
+      const call = await threadRef.collection("call").doc("current").get();
+
+      if (!call.exists) {
+        return { call: null };
+      }
+
+      const callData = call.data() ?? {};
+      const candidates = Array.isArray(callData.candidates)
+        ? callData.candidates
+            .filter((candidate) =>
+              typeof candidate?.senderId === "string" &&
+              typeof candidate?.candidate === "string"
+            )
+            .slice(0, 40)
+        : [];
+
+      return {
+        call: {
+          callerId: String(callData.callerId ?? ""),
+          offer: typeof callData.offer === "string" ? callData.offer : undefined,
+          answer: typeof callData.answer === "string" ? callData.answer : undefined,
+          candidates,
+          createdAt: toIso(callData.createdAt),
+        },
+      };
+    }
+
+    if (data.action === "callStart") {
+      await requireAcceptedThread(threadRef);
+      const offer = requirePayload(data.offer, "Offerta", 20_000);
+      const callRef = threadRef.collection("call").doc("current");
+      const existingCall = await callRef.get();
+
+      if (existingCall.exists) {
+        const startedAt = existingCall.data()?.createdAt;
+        const unansweredForTooLong =
+          startedAt instanceof Timestamp &&
+          !existingCall.data()?.answer &&
+          Date.now() - startedAt.toMillis() > 60_000;
+
+        if (unansweredForTooLong) {
+          await callRef.delete();
+        } else {
+          throw new HttpsError(
+            "already-exists",
+            "È già presente una chiamata in corso."
+          );
+        }
+      }
+
+      await callRef.set({
+        callerId: userId,
+        offer,
+        candidates: [],
+        createdAt: FieldValue.serverTimestamp(),
+      });
+
+      return { started: true };
+    }
+
+    if (data.action === "callAnswer") {
+      await requireAcceptedThread(threadRef);
+      const answer = requirePayload(data.answer, "Risposta", 20_000);
+      const callRef = threadRef.collection("call").doc("current");
+      const call = await callRef.get();
+
+      if (!call.exists || call.data()?.callerId === userId) {
+        throw new HttpsError("failed-precondition", "Chiamata non disponibile.");
+      }
+
+      await callRef.update({
+        answer,
+        answeredBy: userId,
+        answeredAt: FieldValue.serverTimestamp(),
+      });
+
+      return { answered: true };
+    }
+
+    if (data.action === "callSignal") {
+      await requireAcceptedThread(threadRef);
+      const candidate = requirePayload(data.candidate, "Segnale", 4_000);
+      const callRef = threadRef.collection("call").doc("current");
+      const call = await callRef.get();
+
+      if (!call.exists) {
+        throw new HttpsError("not-found", "Chiamata non disponibile.");
+      }
+
+      const candidates = Array.isArray(call.data()?.candidates)
+        ? call.data()?.candidates
+        : [];
+      if (candidates.length >= 40) {
+        return { received: true };
+      }
+
+      await callRef.update({
+        candidates: FieldValue.arrayUnion({ senderId: userId, candidate }),
+      });
+
+      return { received: true };
+    }
+
+    if (data.action === "callEnd") {
+      await requireAcceptedThread(threadRef);
+      await threadRef.collection("call").doc("current").delete();
+      return { ended: true };
+    }
 
     if (data.action === "respond") {
       const thread = await threadRef.get();
