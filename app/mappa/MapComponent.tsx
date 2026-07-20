@@ -241,21 +241,15 @@ if (!reportId) {
   return false;
 }
 
-/**
- * Nessuna immagine:
- * la segnalazione è già pubblicata.
- */
 const hasMedia = data.images.length > 0 || Boolean(data.video);
 
 /**
- * Sono presenti immagini:
- * attendiamo la moderazione AI.
+ * Tutte le segnalazioni attendono la moderazione: quelle testuali seguono
+ * il controllo backend del testo, foto e video la pipeline di analisi media.
  */
-if (hasMedia) {
-  processingOverlay.showProcessing(
-    data.video ? "video" : "image"
-  );
-}
+processingOverlay.showProcessing(
+  data.video ? "video" : "image"
+);
 
 return new Promise((resolve) => {
   const unsubscribe = listenModerationDecision(
@@ -269,21 +263,17 @@ return new Promise((resolve) => {
         event.decision === "LIMITATO"
       ) {
 
-        if (hasMedia) {
-          processingOverlay.showSuccess();
+        processingOverlay.showSuccess();
 
-          setTimeout(() => {
-            processingOverlay.hide();
-          }, 2000);
-        }
+        setTimeout(() => {
+          processingOverlay.hide();
+        }, 2000);
 
         resolve(true);
         return;
       }
 
-      if (hasMedia) {
-        processingOverlay.hide();
-      }
+      processingOverlay.hide();
 
       setMessageDialogTitle(
         "Segnalazione non pubblicata"
