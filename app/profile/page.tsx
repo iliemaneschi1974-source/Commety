@@ -1,7 +1,5 @@
 "use client";
 
-import { Map } from "lucide-react";
-import Link from "next/link";
 
 import { ProfileGallery } from "@/components/Profile/ProfileGallery";
 import { ProfileHeader } from "@/components/Profile/ProfileHeader";
@@ -69,7 +67,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <main className="mx-auto flex w-full max-w-3xl flex-col gap-8 p-6">
+    <main className="mx-auto flex w-full max-w-3xl flex-col gap-8 p-6 pb-28">
       <ProfileHeader
         profile={profileHeader}
         onSaveNickname={handleSaveNickname}
@@ -83,14 +81,6 @@ export default function ProfilePage() {
 
       <AccountActions />
 
-      <Link
-        href="/mappa"
-        aria-label="Torna alla mappa"
-        title="Torna alla mappa"
-        className="fixed bottom-6 right-6 z-40 flex h-16 w-16 items-center justify-center rounded-full border border-white/25 bg-[linear-gradient(135deg,#071a3c_0%,#0F2D5F_45%,#1b4b87_100%)] text-white shadow-[0_12px_28px_rgba(2,16,42,0.38)] transition hover:scale-105 hover:brightness-110 active:scale-95"
-      >
-        <Map className="size-7" aria-hidden="true" />
-      </Link>
     </main>
   );
 }

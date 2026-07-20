@@ -50,6 +50,10 @@ interface MapContextType {
   fitBounds: (
     bounds: BoundingBox
   ) => void;
+
+  reportComposerRequest: number;
+
+  requestReportComposer: () => void;
 }
 
 const MapContext = createContext<MapContextType | null>(null);
@@ -73,6 +77,13 @@ export function MapProvider({
 
   const [filter, setFilter] =
     useState<ReportFilter>("all");
+
+  const [reportComposerRequest, setReportComposerRequest] =
+    useState(0);
+
+  const requestReportComposer = useCallback(() => {
+    setReportComposerRequest((current) => current + 1);
+  }, []);
 
   const flyTo = useCallback(
   (
@@ -112,6 +123,9 @@ export function MapProvider({
 
         flyTo,
         fitBounds,
+
+        reportComposerRequest,
+        requestReportComposer,
       }}
     >
       {children}

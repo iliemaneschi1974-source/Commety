@@ -7,6 +7,7 @@ import ProcessingOverlay from "@/components/ProcessingOverlay/ProcessingOverlay"
 import LegalConsentGate from "@/components/Auth/LegalConsentGate";
 
 import { AuthProvider } from "@/contexts/AuthContext";
+import BottomAppNav from "@/components/Navigation/BottomAppNav";
 import { MapProvider } from "@/contexts/MapContext";
 import { ProcessingOverlayProvider } from "@/contexts/ProcessingOverlayContext";
 
@@ -74,6 +75,8 @@ export default function RootLayout({
           <MapProvider>
             <ProcessingOverlayProvider>
               {children}
+
+              <BottomAppNav />
 
               <ProcessingOverlay />
               <LegalConsentGate />

@@ -200,7 +200,7 @@ function LiveMapPreview() {
 
 export default function Home() {
   return (
-    <main className="min-h-screen overflow-hidden bg-[radial-gradient(circle_at_50%_20%,#174a87_0%,#0F2D5F_35%,#061735_100%)] text-white">
+    <main className="min-h-screen overflow-hidden bg-[radial-gradient(circle_at_50%_20%,#174a87_0%,#0F2D5F_35%,#061735_100%)] pb-24 text-white">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -353,14 +353,6 @@ export default function Home() {
         </div>
       </footer>
 
-      <a
-        href="/mappa"
-        aria-label="Apri la mappa"
-        className="fixed bottom-6 right-6 z-50 inline-flex h-16 items-center justify-center gap-2 rounded-full border border-emerald-200/50 bg-emerald-500 px-5 font-bold text-white shadow-[0_16px_34px_rgba(5,60,43,0.48)] transition hover:scale-105 hover:bg-emerald-400 active:scale-95 sm:px-6"
-      >
-        <MapPin className="size-6" />
-        <span className="hidden sm:inline">Apri la mappa</span>
-      </a>
     </main>
   );
 }

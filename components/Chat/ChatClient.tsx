@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowLeft, Ban, Check, Map, MessageCircle, Send, Trash2, X } from "lucide-react";
+import { ArrowLeft, Ban, Check, MessageCircle, Send, Trash2, X } from "lucide-react";
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 
 import { useAuth } from "@/contexts/AuthContext";
@@ -248,8 +248,8 @@ export default function ChatClient({
   }
 
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top,#3b67a2_0%,#0F2D5F_34%,#071a3c_100%)] p-3 text-white sm:p-6">
-      <div className="mx-auto grid min-h-[calc(100vh-1.5rem)] max-w-6xl overflow-hidden rounded-[2rem] border border-white/15 bg-[#071a3c]/70 shadow-[0_24px_70px_rgba(2,12,34,0.45)] backdrop-blur-xl md:grid-cols-[330px_1fr]">
+    <main className="min-h-screen bg-[radial-gradient(circle_at_top,#3b67a2_0%,#0F2D5F_34%,#071a3c_100%)] p-3 pb-24 text-white sm:p-6 sm:pb-24">
+      <div className="mx-auto grid min-h-[calc(100vh-7rem)] max-w-6xl overflow-hidden rounded-[2rem] border border-white/15 bg-[#071a3c]/70 shadow-[0_24px_70px_rgba(2,12,34,0.45)] backdrop-blur-xl md:grid-cols-[330px_1fr]">
         <aside className={`${activeThread ? "hidden md:block" : "block"} border-b border-white/10 md:border-b-0 md:border-r`}>
           <div className="relative border-b border-white/10 p-5">
             <div className="flex justify-center"><Image src="/logo-header-cropped.png" alt="Commety" width={180} height={48} priority className="h-10 w-auto object-contain [filter:drop-shadow(0_0_10px_rgba(255,255,255,0.75))_drop-shadow(0_6px_8px_rgba(2,16,42,0.7))]" /></div>
@@ -300,14 +300,6 @@ export default function ChatClient({
         </section>
       </div>
 
-      <Link
-        href="/mappa"
-        aria-label="Torna alla mappa"
-        title="Torna alla mappa"
-        className="fixed bottom-6 right-6 z-50 flex size-16 items-center justify-center rounded-full border border-white/25 bg-[linear-gradient(135deg,#071a3c_0%,#0F2D5F_45%,#1b4b87_100%)] text-white shadow-[0_12px_28px_rgba(2,16,42,0.38)] transition hover:scale-105 hover:brightness-110 active:scale-95"
-      >
-        <Map className="size-7" aria-hidden="true" />
-      </Link>
     </main>
   );
 }
