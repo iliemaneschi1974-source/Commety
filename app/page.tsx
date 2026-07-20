@@ -399,7 +399,7 @@ export default function Home() {
             <Image src="/logo-header-cropped.png" alt="Commety" width={150} height={40} className="h-9 w-auto object-contain" style={{ width: "auto" }} />
             <p className="mt-3 text-sm text-white/60">La mappa del mondo reale.</p>
           </div>
-          <div className="flex flex-wrap gap-x-6 gap-y-3 text-sm text-white/70"><a className="transition hover:text-white" href="/privacy">Privacy Policy</a><a className="transition hover:text-white" href="/termini">Termini di utilizzo</a><a className="transition hover:text-white" href="mailto:privacy@commety.it">Contatti</a></div>
+          <div className="flex flex-wrap gap-x-6 gap-y-3 text-sm text-white/70"><a className="transition hover:text-white" href="/aiuto">Aiuto</a><a className="transition hover:text-white" href="/privacy">Privacy Policy</a><a className="transition hover:text-white" href="/termini">Termini di utilizzo</a><a className="transition hover:text-white" href="mailto:privacy@commety.it">Contatti</a></div>
           <p className="text-sm text-white/45">© 2026 Commety</p>
         </div>
       </footer>
