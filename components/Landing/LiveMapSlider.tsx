@@ -1,13 +1,17 @@
 "use client";
 
+import Image from "next/image";
 import {
   Check,
   CloudRain,
   Heart,
+  MapPin,
   MessageCircle,
   PartyPopper,
   PawPrint,
   Send,
+  ShieldCheck,
+  Star,
   TriangleAlert,
   UserRound,
   Waves,
@@ -61,19 +65,34 @@ function ProfileScene() {
   return (
     <div className="absolute inset-0 bg-[radial-gradient(circle_at_82%_13%,rgba(89,164,244,0.58),transparent_26%),radial-gradient(circle_at_15%_85%,rgba(46,181,141,0.28),transparent_25%),linear-gradient(145deg,#071a3c_0%,#123c77_56%,#081d43_100%)]">
       <div className="absolute inset-0 opacity-25 [background-image:linear-gradient(rgba(255,255,255,0.12)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.12)_1px,transparent_1px)] [background-size:38px_38px]" />
-      <div className="commety-preview-profile absolute inset-x-4 top-[12%] bottom-[12%] rounded-[1.7rem] border border-white/20 bg-white/95 p-5 text-[#102d5e] shadow-[0_25px_55px_rgba(0,9,30,0.42)] sm:inset-x-6 sm:p-6">
-        <div className="absolute inset-x-0 top-0 h-28 rounded-t-[1.7rem] bg-[linear-gradient(135deg,#071a3c,#245a9b_70%,#0d2b5f)]" />
-        <div className="relative flex items-end gap-3 pt-14">
-          <div className="flex size-16 items-center justify-center rounded-2xl border-4 border-white bg-[linear-gradient(135deg,#88b5df,#1e4b80)] text-white shadow-lg"><UserRound className="size-8" /></div>
-          <div className="pb-1"><p className="font-black">Martina R.</p><p className="text-xs font-semibold text-emerald-600">Membro verificato</p></div>
+      <div className="commety-preview-profile absolute inset-x-4 top-[8%] bottom-[8%] overflow-hidden rounded-[1.7rem] border border-white/20 bg-[linear-gradient(135deg,#071a3c_0%,#0F2D5F_40%,#1b4b87_64%,#0a2553_100%)] p-4 text-white shadow-[0_25px_55px_rgba(0,9,30,0.42)] sm:inset-x-6 sm:p-5">
+        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(115deg,transparent_25%,rgba(255,255,255,0.16)_48%,transparent_62%)]" />
+        <div className="relative flex justify-center">
+          <Image src="/logo-header-cropped.png" alt="Commety" width={130} height={35} className="h-7 w-auto object-contain [filter:drop-shadow(0_0_7px_rgba(255,255,255,0.7))]" />
         </div>
-        <div className="mt-5 grid grid-cols-3 gap-2 text-center">
+        <div className="relative mt-3 flex flex-col items-center text-center">
+          <div className="relative size-[4.4rem] overflow-hidden rounded-full ring-4 ring-white/75 shadow-lg sm:size-20">
+            <Image src="/landing-maria-rossi.png" alt="Maria Rossi" fill sizes="80px" className="object-cover" />
+          </div>
+          <p className="mt-2 text-lg font-black leading-none sm:text-xl">Maria Rossi</p>
+          <p className="mt-1 flex items-center gap-1 text-[10px] text-white/85"><MapPin className="size-3" /> Roma · Iscritta da poco</p>
+          <div className="mt-2 flex flex-wrap justify-center gap-1.5">
+            <span className="inline-flex items-center gap-1 rounded-full bg-white px-2 py-1 text-[9px] font-black text-[#0F2D5F]"><Star className="size-3 fill-current" /> Livello 5</span>
+            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-400 px-2 py-1 text-[9px] font-black text-[#063d2b]"><ShieldCheck className="size-3" /> Affidabile</span>
+          </div>
+        </div>
+        <div className="relative mt-3 border-t border-white/25 pt-3">
+          <div className="flex items-center justify-between text-[10px] font-bold"><span>Livello 5</span><span>582 / 750 XP</span></div>
+          <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/25"><div className="commety-preview-xp h-full w-[78%] rounded-full bg-white" /></div>
+          <p className="mt-2 text-center text-[9px] text-white/80">Mancano 168 XP al livello successivo</p>
+        </div>
+        <div className="relative mt-3 grid grid-cols-3 gap-2 text-center">
           <ProfileStat label="Segnalazioni" value="24" />
           <ProfileStat label="Foto e video" value="18" />
-          <ProfileStat label="Livello" value="5" />
+          <ProfileStat label="Commenti" value="36" />
         </div>
-        <div className="mt-4 rounded-2xl bg-[#edf5ff] p-3 text-xs font-semibold text-[#26558f]">
-          <Heart className="mr-1 inline size-3.5 text-rose-500" /> Ama eventi, mare e vita locale
+        <div className="relative mt-3 rounded-xl border border-white/15 bg-white/10 p-2 text-center text-[9px] font-semibold text-white/90">
+          <Heart className="mr-1 inline size-3 text-rose-300" /> Eventi, mare e vita locale
         </div>
       </div>
     </div>
@@ -81,7 +100,7 @@ function ProfileScene() {
 }
 
 function ProfileStat({ label, value }: { label: string; value: string }) {
-  return <div className="rounded-xl bg-slate-100 px-1 py-2"><p className="text-base font-black">{value}</p><p className="mt-0.5 text-[9px] font-bold text-slate-500">{label}</p></div>;
+  return <div className="rounded-xl border border-white/15 bg-white/10 px-1 py-2"><p className="text-base font-black leading-none">{value}</p><p className="mt-1 text-[8px] font-bold text-white/70">{label}</p></div>;
 }
 
 function ChatScene() {
