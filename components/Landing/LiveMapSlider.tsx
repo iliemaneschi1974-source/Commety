@@ -61,7 +61,7 @@ function ProfileScene() {
   return (
     <div className="absolute inset-0 bg-[radial-gradient(circle_at_82%_13%,rgba(89,164,244,0.58),transparent_26%),radial-gradient(circle_at_15%_85%,rgba(46,181,141,0.28),transparent_25%),linear-gradient(145deg,#071a3c_0%,#123c77_56%,#081d43_100%)]">
       <div className="absolute inset-0 opacity-25 [background-image:linear-gradient(rgba(255,255,255,0.12)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.12)_1px,transparent_1px)] [background-size:38px_38px]" />
-      <div className="commety-preview-profile absolute left-1/2 top-1/2 w-[78%] max-w-[390px] -translate-x-1/2 -translate-y-1/2 rounded-[1.7rem] border border-white/20 bg-white/95 p-5 text-[#102d5e] shadow-[0_25px_55px_rgba(0,9,30,0.42)] sm:p-6">
+      <div className="commety-preview-profile absolute inset-x-4 top-[12%] bottom-[12%] rounded-[1.7rem] border border-white/20 bg-white/95 p-5 text-[#102d5e] shadow-[0_25px_55px_rgba(0,9,30,0.42)] sm:inset-x-6 sm:p-6">
         <div className="absolute inset-x-0 top-0 h-28 rounded-t-[1.7rem] bg-[linear-gradient(135deg,#071a3c,#245a9b_70%,#0d2b5f)]" />
         <div className="relative flex items-end gap-3 pt-14">
           <div className="flex size-16 items-center justify-center rounded-2xl border-4 border-white bg-[linear-gradient(135deg,#88b5df,#1e4b80)] text-white shadow-lg"><UserRound className="size-8" /></div>
@@ -88,7 +88,7 @@ function ChatScene() {
   return (
     <div className="absolute inset-0 bg-[radial-gradient(circle_at_84%_16%,rgba(72,190,163,0.42),transparent_26%),radial-gradient(circle_at_10%_80%,rgba(72,134,227,0.38),transparent_28%),linear-gradient(145deg,#071a3c_0%,#123b77_56%,#061735_100%)]">
       <div className="absolute inset-0 opacity-20 [background-image:linear-gradient(rgba(255,255,255,0.12)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.12)_1px,transparent_1px)] [background-size:38px_38px]" />
-      <div className="commety-preview-chat absolute inset-x-[8%] top-1/2 -translate-y-1/2 overflow-hidden rounded-[1.65rem] border border-white/25 bg-[#f8fbff] shadow-[0_25px_55px_rgba(0,9,30,0.42)]">
+      <div className="commety-preview-chat absolute inset-x-4 top-[12%] bottom-[12%] overflow-hidden rounded-[1.65rem] border border-white/25 bg-[#f8fbff] shadow-[0_25px_55px_rgba(0,9,30,0.42)] sm:inset-x-6">
         <div className="flex items-center gap-3 bg-[linear-gradient(135deg,#071a3c,#245a9b)] px-5 py-4 text-white">
           <div className="flex size-10 items-center justify-center rounded-xl bg-emerald-400/20 text-emerald-200"><UserRound className="size-5" /></div>
           <div><p className="font-black">Luca M.</p><p className="text-xs text-emerald-200">Utente registrato</p></div>

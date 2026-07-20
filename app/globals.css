@@ -323,24 +323,24 @@ body {
 @keyframes commetyPreviewCardEnter {
   0% {
     opacity: 0;
-    transform: translate(-50%, calc(-50% + 18px)) scale(0.96);
+    transform: translateY(18px) scale(0.96);
   }
 
   100% {
     opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
+    transform: translateY(0) scale(1);
   }
 }
 
 @keyframes commetyPreviewChatEnter {
   0% {
     opacity: 0;
-    transform: translateY(calc(-50% + 18px)) scale(0.96);
+    transform: translateY(18px) scale(0.96);
   }
 
   100% {
     opacity: 1;
-    transform: translateY(-50%) scale(1);
+    transform: translateY(0) scale(1);
   }
 }
 
