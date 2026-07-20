@@ -298,7 +298,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="commety-map-watermark relative overflow-hidden bg-white py-20">
+      <section className="border-y border-white/10 bg-[#071d43]/70 py-20">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className={`${METALLIC_PANEL} commety-metallic-sweep p-8 text-white sm:p-12`}>
             <div className="relative z-10 grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
