@@ -13,6 +13,7 @@ interface BottomSheetProps {
   onClose: () => void;
   children: ReactNode;
   animation?: "standard" | "report";
+  contentKey?: string | null;
 }
 
 export default function BottomSheet({
@@ -20,11 +21,13 @@ export default function BottomSheet({
   onClose,
   children,
   animation = "standard",
+  contentKey,
 }: BottomSheetProps) {
   const [animationPhase, setAnimationPhase] = useState<
     "hidden" | "entering" | "exiting"
   >("hidden");
   const hasOpened = useRef(false);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!open) return;
@@ -36,6 +39,12 @@ export default function BottomSheet({
       document.body.style.overflow = originalOverflow;
     };
   }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+
+    contentRef.current?.scrollTo({ top: 0, behavior: "instant" });
+  }, [open, contentKey]);
 
   useEffect(() => {
     if (open) {
@@ -148,7 +157,7 @@ export default function BottomSheet({
         </div>
 
         {/* Content */}
-        <div className="relative z-10 overflow-y-auto max-h-[calc(85vh-32px)]">
+        <div ref={contentRef} className="relative z-10 overflow-y-auto max-h-[calc(85vh-32px)]">
           {children}
         </div>
 

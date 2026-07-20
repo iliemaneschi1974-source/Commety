@@ -68,7 +68,7 @@ export default function ReportBottomSheet({
   }
 
   return (
-    <BottomSheet open={open} onClose={onClose} animation="report">
+    <BottomSheet open={open} onClose={onClose} animation="report" contentKey={report.id}>
       <div className="px-5 pb-8 text-white sm:px-6">
         <section className="relative overflow-hidden rounded-3xl border border-white/15 bg-[#061d43]/45 p-5 shadow-[0_16px_34px_rgba(1,15,42,0.28)] before:pointer-events-none before:absolute before:inset-0 before:bg-[linear-gradient(115deg,transparent_28%,rgba(255,255,255,0.12)_50%,transparent_66%)]">
           <div className="absolute -right-10 -top-12 size-36 rounded-full opacity-40 blur-2xl" style={{ backgroundColor: category.color }} />
