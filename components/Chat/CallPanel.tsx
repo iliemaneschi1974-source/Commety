@@ -257,6 +257,17 @@ export default function CallPanel({
   const calling = session && session.callerId === currentUserId && !session.answer;
   const controlSize = active ? "size-10" : "size-14";
 
+  useEffect(() => {
+    const callOpen = Boolean(session || starting);
+    document.documentElement.classList.toggle("commety-call-active", callOpen);
+    document.body.classList.toggle("commety-call-active", callOpen);
+
+    return () => {
+      document.documentElement.classList.remove("commety-call-active");
+      document.body.classList.remove("commety-call-active");
+    };
+  }, [session, starting]);
+
   return (
     <>
       {showTrigger ? <button
