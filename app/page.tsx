@@ -380,13 +380,15 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-5xl px-6 pb-24 pt-16 text-center">
-        <div className={`${METALLIC_PANEL} commety-metallic-sweep px-7 py-12 text-white sm:px-14 sm:py-16`}>
-          <div className="relative z-10">
-            <MapPin className="mx-auto size-10 text-[#a9d5ff]" />
-            <h2 className="mx-auto mt-5 max-w-3xl text-4xl font-black leading-tight sm:text-5xl">Pronto a scoprire cosa accade intorno a te?</h2>
-            <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-white/80">Entra in Commety ed esplora la mappa delle segnalazioni, degli eventi e delle occasioni in tempo reale create dalla community.</p>
-            <a href="/mappa" className="mt-8 inline-flex items-center gap-2 rounded-2xl bg-emerald-500 px-8 py-4 text-lg font-bold text-white shadow-[0_14px_30px_rgba(16,185,129,0.28)] transition hover:-translate-y-0.5 hover:bg-emerald-400">Apri la mappa <ArrowRight className="size-5" /></a>
+      <section className="commety-map-watermark relative overflow-hidden bg-white py-16 text-center sm:py-20">
+        <div className="relative z-10 mx-auto max-w-5xl px-6">
+          <div className={`${METALLIC_PANEL} commety-metallic-sweep px-7 py-12 text-white sm:px-14 sm:py-16`}>
+            <div className="relative z-10">
+              <MapPin className="mx-auto size-10 text-[#a9d5ff]" />
+              <h2 className="mx-auto mt-5 max-w-3xl text-4xl font-black leading-tight sm:text-5xl">Pronto a scoprire cosa accade intorno a te?</h2>
+              <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-white/80">Entra in Commety ed esplora la mappa delle segnalazioni, degli eventi e delle occasioni in tempo reale create dalla community.</p>
+              <a href="/mappa" className="mt-8 inline-flex items-center gap-2 rounded-2xl bg-emerald-500 px-8 py-4 text-lg font-bold text-white shadow-[0_14px_30px_rgba(16,185,129,0.28)] transition hover:-translate-y-0.5 hover:bg-emerald-400">Apri la mappa <ArrowRight className="size-5" /></a>
+            </div>
           </div>
         </div>
       </section>
