@@ -712,7 +712,3 @@ body {
   font-weight: 500;
   line-height: 1.8;
 }
-html.commety-call-active,
-body.commety-call-active {
-  overscroll-behavior-y: none;
-}

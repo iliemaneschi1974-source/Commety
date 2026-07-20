@@ -17,7 +17,7 @@ export default function PrivacyPage() {
     <LegalPageLayout
       eyebrow="Trasparenza e protezione dei dati"
       title="Privacy Policy"
-      updatedAt="20 luglio 2026 – aggiornamento chiamate audio"
+      updatedAt="20 luglio 2026"
     >
       <p className="commety-legal-lead">
         Questa informativa spiega come Commety tratta i dati personali di chi
@@ -55,11 +55,6 @@ export default function PrivacyPage() {
             tra utenti registrati, quando utilizzi la chat;
           </li>
           <li>
-            dati tecnici strettamente necessari per avviare una chiamata audio
-            tra due utenti che hanno accettato la chat, inclusi segnali di
-            connessione WebRTC e candidati di rete (ICE);
-          </li>
-          <li>
             identificativi tecnici del dispositivo e dati di utilizzo necessari
             a prevenire abusi, duplicazioni e frodi;
           </li>
@@ -89,35 +84,11 @@ export default function PrivacyPage() {
       </section>
 
       <section>
-        <h2>2-ter. Chiamate audio</h2>
-        <p>
-          Le chiamate audio sono disponibili esclusivamente tra utenti con una
-          chat già accettata e richiedono l&apos;autorizzazione esplicita del
-          microfono nel browser o nel dispositivo. L&apos;audio viene trasmesso in
-          tempo reale direttamente tra i dispositivi tramite WebRTC e Commety
-          non registra né conserva il contenuto delle chiamate.
-        </p>
-        <p>
-          Per stabilire la connessione trattiamo temporaneamente i segnali
-          tecnici di chiamata e i candidati ICE, che possono contenere
-          informazioni di rete come indirizzi IP. Questi dati sono eliminati
-          alla chiusura della chiamata; le chiamate senza risposta scadono
-          automaticamente dopo un breve intervallo. Non utilizzare questa
-          funzione per comunicazioni di emergenza.
-        </p>
-      </section>
-
-      <section>
         <h2>3. Finalità e basi giuridiche</h2>
         <ul>
           <li>
             erogare la piattaforma, gestire l&apos;account e consentire la
             pubblicazione dei contenuti: esecuzione del servizio richiesto
-            dall&apos;utente;
-          </li>
-          <li>
-            stabilire le chiamate audio richieste volontariamente dagli utenti
-            che hanno una chat accettata: esecuzione del servizio richiesto
             dall&apos;utente;
           </li>
           <li>
@@ -159,8 +130,7 @@ export default function PrivacyPage() {
           Per erogare il servizio utilizziamo fornitori che trattano dati per
           nostro conto o secondo le proprie condizioni: Google Firebase
           (autenticazione, database, archiviazione delle immagini e funzioni
-          tecniche), Google STUN per il supporto tecnico alla connessione
-          WebRTC, Vercel (hosting e infrastruttura) e Google Analytics
+          tecniche), Vercel (hosting e infrastruttura) e Google Analytics
           (misurazione del traffico). I dati possono essere trattati anche da
           fornitori situati fuori dallo Spazio Economico Europeo; in tali casi
           vengono adottate le garanzie previste dalla normativa applicabile,
@@ -190,12 +160,6 @@ export default function PrivacyPage() {
           cancellazione dell&apos;account di uno dei due utenti, salvo la
           conservazione strettamente necessaria per obblighi di legge, tutela
           dei diritti o gestione di abusi.
-        </p>
-        <p>
-          I segnali tecnici delle chiamate audio sono conservati soltanto per
-          la durata della chiamata e vengono eliminati alla sua chiusura o alla
-          scadenza di una chiamata senza risposta. L&apos;audio non viene archiviato
-          da Commety.
         </p>
       </section>
 

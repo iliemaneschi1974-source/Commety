@@ -6,7 +6,6 @@ import "./globals.css";
 import ProcessingOverlay from "@/components/ProcessingOverlay/ProcessingOverlay";
 import LegalConsentGate from "@/components/Auth/LegalConsentGate";
 import PreferencesOnboarding from "@/components/Auth/PreferencesOnboarding";
-import GlobalCallHost from "@/components/Chat/GlobalCallHost";
 
 import { AuthProvider } from "@/contexts/AuthContext";
 import BottomAppNav from "@/components/Navigation/BottomAppNav";
@@ -79,7 +78,6 @@ export default function RootLayout({
               {children}
 
               <BottomAppNav />
-              <GlobalCallHost />
 
               <ProcessingOverlay />
               <LegalConsentGate />

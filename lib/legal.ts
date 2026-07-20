@@ -1,1 +1,1 @@
-export const LEGAL_DOCUMENT_VERSION = "2026-07-20-call";
+export const LEGAL_DOCUMENT_VERSION = "2026-07-20-calls-removed";
