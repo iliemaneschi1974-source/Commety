@@ -286,13 +286,17 @@ export default function ChatClient({
 
         <section className={`${activeThread ? "flex" : "hidden md:flex"} min-w-0 min-h-0 flex-col bg-white`}>
           {activeThread ? <>
-            <header className="flex items-center gap-3 border-b border-slate-200 p-5">
-              <button type="button" onClick={() => setActiveThread(null)} className="text-[#0F2D5F] md:hidden"><ArrowLeft className="size-5" /></button>
-              <ChatAvatar name={title} avatarUrl={activeThread.participant.avatarUrl} className="size-11 ring-2 ring-emerald-300" />
-              <div className="min-w-0 flex-1"><h2 className="truncate font-bold text-[#0F2D5F]">{title}</h2><p className="text-sm text-emerald-600">Utente registrato</p></div>
-              {canSendMessages ? <CallPanel threadId={activeThread.id} currentUserId={user.uid} participantName={title} participantAvatarUrl={activeThread.participant.avatarUrl} /> : null}
-              <button type="button" onClick={() => void handleTerminateChat()} disabled={busy} title="Termina chat" className="flex size-10 items-center justify-center rounded-xl text-red-500 transition hover:bg-red-50 disabled:opacity-50 sm:size-auto sm:gap-1 sm:px-3 sm:py-2 sm:text-xs sm:font-bold"><Trash2 className="size-4" /><span className="hidden sm:inline">Termina chat</span></button>
-              <button type="button" onClick={() => void handleReportAndBlock()} disabled={busy} title="Segnala e blocca utente" className="flex size-10 items-center justify-center rounded-xl text-red-500 transition hover:bg-red-50 disabled:opacity-50"><Ban className="size-5" /></button>
+            <header className="flex flex-wrap items-center gap-3 border-b border-slate-200 p-5 sm:flex-nowrap">
+              <div className="flex min-w-0 flex-1 items-center gap-3">
+                <button type="button" onClick={() => setActiveThread(null)} className="shrink-0 text-[#0F2D5F] md:hidden"><ArrowLeft className="size-5" /></button>
+                <ChatAvatar name={title} avatarUrl={activeThread.participant.avatarUrl} className="size-11 ring-2 ring-emerald-300" />
+                <div className="min-w-0 flex-1"><h2 className="break-words font-bold leading-5 text-[#0F2D5F]">{title}</h2><p className="mt-0.5 text-sm text-emerald-600">Utente registrato</p></div>
+              </div>
+              <div className="ml-auto flex w-full justify-end gap-2 sm:w-auto">
+                {canSendMessages ? <CallPanel threadId={activeThread.id} currentUserId={user.uid} participantName={title} participantAvatarUrl={activeThread.participant.avatarUrl} /> : null}
+                <button type="button" onClick={() => void handleTerminateChat()} disabled={busy} title="Termina chat" className="flex size-10 items-center justify-center rounded-xl text-red-500 transition hover:bg-red-50 disabled:opacity-50 sm:size-auto sm:gap-1 sm:px-3 sm:py-2 sm:text-xs sm:font-bold"><Trash2 className="size-4" /><span className="hidden sm:inline">Termina chat</span></button>
+                <button type="button" onClick={() => void handleReportAndBlock()} disabled={busy} title="Segnala e blocca utente" className="flex size-10 items-center justify-center rounded-xl text-red-500 transition hover:bg-red-50 disabled:opacity-50"><Ban className="size-5" /></button>
+              </div>
             </header>
 
             <div className="flex-1 space-y-3 overflow-y-auto bg-slate-50/70 p-5">
