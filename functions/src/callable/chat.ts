@@ -273,17 +273,18 @@ export const chat = onCall(
         const participants = Array.isArray(thread.data()?.participants)
           ? thread.data()?.participants
           : [];
-        const requester = participants.find(
-          (entry: { uid?: string }) => entry.uid === requestedBy
+        const acceptingUser = participants.find(
+          (entry: { uid?: string }) => entry.uid === userId
         ) as { displayName?: string } | undefined;
-        const requesterName = requester?.displayName || "un utente Commety";
+        const acceptingUserName =
+          acceptingUser?.displayName || "un utente Commety";
         const welcomeMessage =
-          `Ciao, è un piacere parlare con te. Io sono ${requesterName}.`;
+          `Ciao, è un piacere parlare con te. Io sono ${acceptingUserName}.`;
 
         await Promise.all([
           threadRef.collection("messages").add({
             text: welcomeMessage,
-            senderId: requestedBy,
+            senderId: userId,
             createdAt: FieldValue.serverTimestamp(),
             automatic: true,
           }),
