@@ -1,6 +1,6 @@
 "use client";
 
-import { LogOut, User } from "lucide-react";
+import { LogOut, MessageCircle, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { signOutUser } from "@/services/auth";
@@ -28,6 +28,12 @@ export default function UserMenu({
 
   function handleProfile() {
     router.push("/profile");
+
+    onClose();
+  }
+
+  function handleChat() {
+    router.push("/chat");
 
     onClose();
   }
@@ -71,6 +77,27 @@ export default function UserMenu({
           <User size={20} />
 
           <span>Il mio profilo</span>
+        </button>
+
+        <div className="h-px bg-slate-200" />
+
+        <button
+          type="button"
+          onClick={handleChat}
+          className="
+            flex
+            w-full
+            items-center
+            gap-3
+            px-5
+            py-4
+            transition
+            hover:bg-slate-50
+          "
+        >
+          <MessageCircle size={20} />
+
+          <span>Messaggi</span>
         </button>
 
         <div className="h-px bg-slate-200" />

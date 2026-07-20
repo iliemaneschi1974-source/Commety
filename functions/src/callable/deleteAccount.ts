@@ -6,11 +6,12 @@ import { adminDb } from "../config/firebaseAdmin";
 
 async function deleteCollectionGroupEntries(
   collectionId: string,
-  userId: string
+  userId: string,
+  fieldName = "userId"
 ): Promise<void> {
   const snapshot = await adminDb
     .collectionGroup(collectionId)
-    .where("userId", "==", userId)
+    .where(fieldName, "==", userId)
     .get();
 
   const writer = adminDb.bulkWriter();
@@ -37,6 +38,11 @@ export const deleteAccount = onCall(
       .where("userId", "==", userId)
       .get();
 
+    const chatThreads = await adminDb
+      .collection("chatThreads")
+      .where("members", "array-contains", userId)
+      .get();
+
     const bucket = getStorage().bucket();
 
     await Promise.all(
@@ -48,9 +54,18 @@ export const deleteAccount = onCall(
       })
     );
 
+    await Promise.all(
+      chatThreads.docs.map((thread) =>
+        adminDb.recursiveDelete(thread.ref)
+      )
+    );
+
     await Promise.all([
       deleteCollectionGroupEntries("comments", userId),
       deleteCollectionGroupEntries("confirmations", userId),
+      deleteCollectionGroupEntries("blockedUsers", userId, "ownerId"),
+      deleteCollectionGroupEntries("chatReports", userId, "reporterId"),
+      deleteCollectionGroupEntries("chatReports", userId, "reportedUserId"),
     ]);
 
     await adminDb.collection("users").doc(userId).delete();

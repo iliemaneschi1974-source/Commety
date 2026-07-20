@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import MessageDialog from "@/components/ui/MessageDialog";
 import { useComments } from "@/hooks/useComments";
 import { getDeviceId } from "@/services/device";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface CommentsProps {
   reportId: string;
@@ -30,6 +31,7 @@ export default function Comments({
   } | null>(null);
 
   const deviceId = getDeviceId();
+  const { user } = useAuth();
 
   async function handleSubmit() {
     const value = text.trim();
@@ -92,6 +94,11 @@ export default function Comments({
               comment={comment}
               isMine={comment.deviceId === deviceId}
               onDelete={() => handleDelete(comment.id)}
+              chatHref={
+                comment.userId && comment.userId !== user?.uid
+                  ? `/chat?utente=${encodeURIComponent(comment.userId)}`
+                  : undefined
+              }
             />
           ))
         )}

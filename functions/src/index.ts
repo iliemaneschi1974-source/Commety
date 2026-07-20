@@ -7,6 +7,7 @@ import { testOpenAI } from "./http/testOpenAI";
 
 import { expirationScheduler } from "./schedulers/expirationScheduler";
 import { deleteAccount } from "./callable/deleteAccount";
+import { chat } from "./callable/chat";
 
 /**
  * Configurazione globale delle Cloud Functions.
@@ -39,3 +40,8 @@ export { testOpenAI };
  * Cancellazione definitiva dell'account e dei relativi contenuti.
  */
 export { deleteAccount };
+
+/**
+ * Chat privata per utenti registrati.
+ */
+export { chat };

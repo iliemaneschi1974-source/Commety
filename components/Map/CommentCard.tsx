@@ -1,6 +1,7 @@
 "use client";
 
-import { Trash2 } from "lucide-react";
+import Link from "next/link";
+import { MessageCircle, Trash2 } from "lucide-react";
 
 import {
   Avatar,
@@ -16,6 +17,7 @@ interface CommentCardProps {
   comment: Comment;
   isMine: boolean;
   onDelete: () => void;
+  chatHref?: string;
 }
 
 function getInitials(comment: Comment) {
@@ -36,6 +38,7 @@ export default function CommentCard({
   comment,
   isMine,
   onDelete,
+  chatHref,
 }: CommentCardProps) {
   const author =
     comment.displayName ?? "Anonimo";
@@ -83,6 +86,18 @@ export default function CommentCard({
             </div>
           </div>
 
+          <div className="flex items-center gap-1">
+          {chatHref && (
+            <Link
+              href={chatHref}
+              title={`Scrivi a ${author}`}
+              aria-label={`Scrivi a ${author}`}
+              className="flex size-8 items-center justify-center rounded-lg text-[#0F2D5F] transition hover:bg-blue-50"
+            >
+              <MessageCircle className="size-4" />
+            </Link>
+          )}
+
           {isMine && (
             <Button
               variant="ghost"
@@ -93,6 +108,7 @@ export default function CommentCard({
               <Trash2 className="size-4" />
             </Button>
           )}
+          </div>
         </div>
 
         <p className="whitespace-pre-wrap text-sm leading-relaxed text-slate-800">

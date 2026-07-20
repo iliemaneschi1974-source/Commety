@@ -17,7 +17,7 @@ export default function PrivacyPage() {
     <LegalPageLayout
       eyebrow="Trasparenza e protezione dei dati"
       title="Privacy Policy"
-      updatedAt="19 luglio 2026"
+      updatedAt="20 luglio 2026"
     >
       <p className="commety-legal-lead">
         Questa informativa spiega come Commety tratta i dati personali di chi
@@ -51,6 +51,10 @@ export default function PrivacyPage() {
             categoria, data e posizione geografica della segnalazione;
           </li>
           <li>
+            messaggi privati, richieste di contatto, blocchi e segnalazioni
+            tra utenti registrati, quando utilizzi la chat;
+          </li>
+          <li>
             identificativi tecnici del dispositivo e dati di utilizzo necessari
             a prevenire abusi, duplicazioni e frodi;
           </li>
@@ -64,6 +68,18 @@ export default function PrivacyPage() {
           contenuti pubblicati possono essere visibili pubblicamente agli altri
           visitatori. Non pubblicare dati personali di terzi, immagini di minori
           o informazioni riservate senza una valida base giuridica.
+        </p>
+      </section>
+
+      <section>
+        <h2>2-bis. Messaggi privati</h2>
+        <p>
+          I messaggi privati sono visibili soltanto ai partecipanti della
+          conversazione e al personale autorizzato quando necessario per
+          sicurezza, assistenza o gestione di una segnalazione. La chat
+          richiede una richiesta di contatto accettata dal destinatario. I
+          messaggi non sono pubblicati sulla mappa e non sono indicizzati dai
+          motori di ricerca.
         </p>
       </section>
 
@@ -138,6 +154,12 @@ export default function PrivacyPage() {
           tecnici e di sicurezza sono conservati per il tempo strettamente
           necessario; i dati Analytics seguono le impostazioni di conservazione
           configurate nel relativo servizio e le preferenze di consenso.
+        </p>
+        <p>
+          I messaggi privati restano disponibili ai partecipanti fino alla
+          cancellazione dell&apos;account di uno dei due utenti, salvo la
+          conservazione strettamente necessaria per obblighi di legge, tutela
+          dei diritti o gestione di abusi.
         </p>
       </section>
 

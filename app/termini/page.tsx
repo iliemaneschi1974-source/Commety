@@ -17,7 +17,7 @@ export default function TermsPage() {
     <LegalPageLayout
       eyebrow="Regole della community"
       title="Termini di utilizzo"
-      updatedAt="19 luglio 2026"
+      updatedAt="20 luglio 2026"
     >
       <p className="commety-legal-lead">
         Commety è una piattaforma partecipata che permette di condividere e
@@ -68,6 +68,23 @@ export default function TermsPage() {
           moderare e distribuire il contenuto all&apos;interno del servizio e nelle
           sue condivisioni funzionali. Le segnalazioni e i commenti possono
           essere visibili pubblicamente insieme al nome utente scelto.
+        </p>
+      </section>
+
+      <section>
+        <h2>4-bis. Messaggi privati</h2>
+        <p>
+          La chat è disponibile esclusivamente agli utenti registrati e si
+          attiva solo dopo che il destinatario ha accettato una richiesta di
+          contatto. I messaggi sono privati tra i partecipanti, ma possono
+          essere sottoposti a controlli automatici e verifiche per prevenire
+          abusi. Non usare la chat per emergenze, minacce, molestie, spam,
+          dati personali di terzi o attività illecite.
+        </p>
+        <p>
+          Puoi rifiutare una richiesta, bloccare un utente o segnalarlo. In
+          caso di blocco non potrà più inviarti richieste o messaggi tramite la
+          piattaforma.
         </p>
       </section>
 
