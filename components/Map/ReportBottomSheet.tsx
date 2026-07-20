@@ -7,6 +7,7 @@ import {
   Share2,
   ThumbsUp,
 } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 
 import BottomSheet from "@/components/ui/BottomSheet";
@@ -18,6 +19,7 @@ import { useConfirmation } from "@/hooks/useConfirmation";
 import { REPORT_CATEGORY_CONFIG } from "@/lib/reportCategoryConfig";
 import { buildShareData } from "@/lib/share";
 import { Report } from "@/types/report";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface ReportBottomSheetProps {
   report: Report | null;
@@ -30,6 +32,7 @@ export default function ReportBottomSheet({
   open,
   onClose,
 }: ReportBottomSheetProps) {
+  const { user } = useAuth();
   const { confirmed, loading, isOwner, toggle } = useConfirmation(report);
   const [viewerOpen, setViewerOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
@@ -78,6 +81,17 @@ export default function ReportBottomSheet({
             </div>
             <h2 className="mt-5 text-2xl font-black tracking-tight sm:text-3xl">{report.title}</h2>
             <p className="mt-2 leading-7 text-white/80">{report.description}</p>
+            {report.userId && report.displayName ? (
+              <Link
+                href={report.userId === user?.uid ? "/profile" : `/profile/${encodeURIComponent(report.userId)}`}
+                className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3 py-2 text-sm font-bold text-white transition hover:bg-white/20"
+              >
+                <span className="grid size-7 place-items-center rounded-full bg-white/20 text-xs font-black">
+                  {report.displayName.slice(0, 1).toUpperCase()}
+                </span>
+                Segnalato da {report.displayName}
+              </Link>
+            ) : null}
           </div>
         </section>
 

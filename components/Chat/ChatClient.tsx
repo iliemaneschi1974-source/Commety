@@ -260,14 +260,14 @@ export default function ChatClient({
           <div className="max-h-[calc(100vh-190px)] overflow-y-auto p-3">
             {threads.length === 0 ? (
               <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-5 text-center text-sm leading-6 text-slate-500">
-                Le tue conversazioni appariranno qui. Puoi iniziarne una dal commento di un utente registrato.
+                Le tue conversazioni appariranno qui. Puoi iniziarne una dal profilo o dal commento di un utente registrato.
               </div>
             ) : threads.map((thread) => (
               <button key={thread.id} type="button" onClick={() => void handleSelectThread(thread)} className={`mb-2 flex w-full items-center gap-3 rounded-2xl p-3 text-left transition ${activeThread?.id === thread.id ? "bg-[#eaf2ff]" : "hover:bg-slate-50"}`}>
                 <ChatAvatar name={thread.participant.displayName} avatarUrl={thread.participant.avatarUrl} />
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-bold text-slate-800">{thread.participant.displayName}</p>
-                  <p className="truncate text-sm text-slate-500">{thread.status === "REQUESTED" ? thread.requestedBy === user.uid ? "Richiesta inviata" : "Nuova richiesta di chat" : thread.status === "REJECTED" ? "Richiesta non accettata" : thread.lastMessage ?? "Inizia la conversazione"}</p>
+                  <p className="break-words text-sm leading-5 text-slate-500">{thread.status === "REQUESTED" ? thread.requestedBy === user.uid ? "Richiesta inviata" : "Nuova richiesta di chat" : thread.status === "REJECTED" ? "Richiesta non accettata" : thread.lastMessage ?? "Inizia la conversazione"}</p>
                 </div>
                 <span className="text-xs text-slate-400">{formatLastActivity(thread.lastMessageAt)}</span>
               </button>
@@ -275,7 +275,7 @@ export default function ChatClient({
           </div>
         </aside>
 
-        <section className={`${activeThread ? "flex" : "hidden md:flex"} min-h-0 flex-col bg-white`}>
+        <section className={`${activeThread ? "flex" : "hidden md:flex"} min-w-0 min-h-0 flex-col bg-white`}>
           {activeThread ? <>
             <header className="flex items-center gap-3 border-b border-slate-200 p-5">
               <button type="button" onClick={() => setActiveThread(null)} className="text-[#0F2D5F] md:hidden"><ArrowLeft className="size-5" /></button>
@@ -288,7 +288,7 @@ export default function ChatClient({
             <div className="flex-1 space-y-3 overflow-y-auto bg-slate-50/70 p-5">
               {messages.length === 0 ? <p className="pt-16 text-center text-sm text-slate-500">Scrivi il primo messaggio. Mantieni la conversazione rispettosa.</p> : messages.map((message) => {
                 const mine = message.senderId === user.uid;
-                return <div key={message.id} className={`flex ${mine ? "justify-end" : "justify-start"}`}><div className={`max-w-[82%] rounded-2xl px-4 py-3 text-sm shadow-sm ${mine ? "rounded-br-md bg-emerald-400 text-[#062b20]" : "rounded-bl-md border border-slate-200 bg-white text-slate-800"}`}><p className="whitespace-pre-wrap">{message.text}</p><p className={`mt-1 text-right text-[10px] ${mine ? "text-[#062b20]/65" : "text-slate-400"}`}>{formatTime(message.createdAt)}</p></div></div>;
+                return <div key={message.id} className={`flex min-w-0 ${mine ? "justify-end pr-2 sm:pr-0" : "justify-start"}`}><div className={`max-w-[calc(100%-1rem)] break-words rounded-2xl px-4 py-3 text-sm shadow-sm sm:max-w-[82%] ${mine ? "rounded-br-md bg-emerald-400 text-[#062b20]" : "rounded-bl-md border border-slate-200 bg-white text-slate-800"}`}><p className="whitespace-pre-wrap">{message.text}</p><p className={`mt-1 text-right text-[10px] ${mine ? "text-[#062b20]/65" : "text-slate-400"}`}>{formatTime(message.createdAt)}</p></div></div>;
               })}
             </div>
 
@@ -297,7 +297,7 @@ export default function ChatClient({
               <div className="flex items-end gap-3"><textarea value={text} maxLength={500} onChange={(event) => setText(event.target.value)} placeholder="Scrivi un messaggio..." rows={2} className="min-h-12 flex-1 resize-none rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-800 outline-none placeholder:text-slate-400 focus:border-emerald-400 focus:bg-white" /><button disabled={busy || !text.trim()} className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-500 text-white transition hover:bg-emerald-400 disabled:opacity-50" aria-label="Invia messaggio"><Send className="size-5" /></button></div>
               <p className="mt-2 text-right text-xs text-slate-400">{text.length}/500</p>
             </form>}
-          </> : <div className="m-auto max-w-sm p-8 text-center"><MessageCircle className="mx-auto size-12 text-[#1b4b87]" /><h2 className="mt-5 text-2xl font-bold text-[#0F2D5F]">Le tue conversazioni</h2><p className="mt-2 text-slate-500">Seleziona una chat oppure avviane una dai commenti sulla mappa.</p></div>}
+          </> : <div className="m-auto max-w-sm p-8 text-center"><MessageCircle className="mx-auto size-12 text-[#1b4b87]" /><h2 className="mt-5 text-2xl font-bold text-[#0F2D5F]">Le tue conversazioni</h2><p className="mt-2 text-slate-500">Seleziona una chat oppure avviane una dal profilo o dai commenti sulla mappa.</p></div>}
         </section>
       </div>
 

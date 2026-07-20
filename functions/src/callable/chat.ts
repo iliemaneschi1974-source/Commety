@@ -270,32 +270,11 @@ export const chat = onCall(
       }
 
       if (data.response === "accept") {
-        const participants = Array.isArray(thread.data()?.participants)
-          ? thread.data()?.participants
-          : [];
-        const acceptingUser = participants.find(
-          (entry: { uid?: string }) => entry.uid === userId
-        ) as { displayName?: string } | undefined;
-        const acceptingUserName =
-          acceptingUser?.displayName || "un utente Commety";
-        const welcomeMessage =
-          `Ciao, è un piacere parlare con te. Io sono ${acceptingUserName}.`;
-
-        await Promise.all([
-          threadRef.collection("messages").add({
-            text: welcomeMessage,
-            senderId: userId,
-            createdAt: FieldValue.serverTimestamp(),
-            automatic: true,
-          }),
-          threadRef.update({
-            status: "ACCEPTED",
-            respondedAt: FieldValue.serverTimestamp(),
-            lastMessage: welcomeMessage,
-            lastMessageAt: FieldValue.serverTimestamp(),
-            updatedAt: FieldValue.serverTimestamp(),
-          }),
-        ]);
+        await threadRef.update({
+          status: "ACCEPTED",
+          respondedAt: FieldValue.serverTimestamp(),
+          updatedAt: FieldValue.serverTimestamp(),
+        });
       } else {
         await threadRef.update({
           status: "REJECTED",

@@ -92,8 +92,6 @@ export default function ProfilePage() {
         onSaveNickname={handleSaveNickname}
       />
 
-      <ProfileStats stats={stats} />
-
       <ProfilePreferences
         value={{
           motivation: user?.preferences.commetyMotivation ?? "",
@@ -101,6 +99,8 @@ export default function ProfilePage() {
         }}
         onSave={handleSavePreferences}
       />
+
+      <ProfileStats stats={stats} />
 
       <ProfileReports reports={reports} />
 

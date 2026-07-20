@@ -8,6 +8,7 @@ import { testOpenAI } from "./http/testOpenAI";
 import { expirationScheduler } from "./schedulers/expirationScheduler";
 import { deleteAccount } from "./callable/deleteAccount";
 import { chat } from "./callable/chat";
+import { getPublicProfile } from "./callable/publicProfile";
 
 /**
  * Configurazione globale delle Cloud Functions.
@@ -45,3 +46,6 @@ export { deleteAccount };
  * Chat privata per utenti registrati.
  */
 export { chat };
+
+/** Profilo pubblico, limitato ai dati scelti dall'utente. */
+export { getPublicProfile };
