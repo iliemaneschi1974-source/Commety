@@ -12,8 +12,11 @@ import {
   CloudRain,
   Globe,
   MapPin,
+  MessageCircle,
   PartyPopper,
   PawPrint,
+  Send,
+  ShieldCheck,
   Trees,
   TriangleAlert,
   Users,
@@ -327,6 +330,52 @@ export default function Home() {
             <LandingFeature className="commety-section-card" icon={<Activity className="size-7 text-sky-600" />} title="Tempo reale" description="Le informazioni arrivano dalle persone presenti sul territorio, nel momento in cui accadono." />
             <LandingFeature className="commety-section-card commety-section-card-delay-1" icon={<UsersRound className="size-7 text-emerald-600" />} title="Verificato dalla community" description="Le conferme rendono visibile la fiducia intorno a ogni segnalazione." />
             <LandingFeature className="commety-section-card commety-section-card-delay-2" icon={<Globe className="size-7 text-indigo-600" />} title="Tutto in una mappa" description="Meteo, viabilità, eventi e pericoli raccolti in un'unica esperienza immediata." />
+          </div>
+        </div>
+      </section>
+
+      <section className="border-y border-white/10 bg-[#071d43]/70 py-20">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className={`${METALLIC_PANEL} commety-metallic-sweep p-7 text-white sm:p-12`}>
+            <div className="relative z-10 grid gap-10 lg:grid-cols-[1fr_0.9fr] lg:items-center">
+              <div>
+                <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-bold text-[#d8ecff]">
+                  <MessageCircle className="size-4 text-emerald-300" />
+                  Conversazioni private
+                </div>
+                <h2 className="mt-5 max-w-2xl text-4xl font-black leading-tight sm:text-5xl">
+                  Conosci le persone dietro la community.
+                </h2>
+                <p className="mt-5 max-w-2xl text-lg leading-8 text-white/80">
+                  Su Commety gli utenti registrati possono avviare una conversazione privata, dopo una richiesta accettata da entrambi.
+                </p>
+                <a
+                  href="/chat"
+                  className="mt-8 inline-flex items-center gap-2 rounded-2xl bg-emerald-500 px-6 py-3.5 font-bold text-white shadow-[0_14px_30px_rgba(16,185,129,0.28)] transition hover:-translate-y-0.5 hover:bg-emerald-400"
+                >
+                  Scopri i messaggi
+                  <ArrowRight className="size-5" />
+                </a>
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+                <div className="rounded-2xl border border-white/15 bg-white/10 p-5 backdrop-blur-sm">
+                  <div className="flex size-11 items-center justify-center rounded-xl bg-emerald-400/15 text-emerald-200"><UsersRound className="size-5" /></div>
+                  <p className="mt-4 font-bold">Visita un profilo</p>
+                  <p className="mt-1 text-sm leading-6 text-white/70">Scopri gli altri membri registrati della community.</p>
+                </div>
+                <div className="rounded-2xl border border-white/15 bg-white/10 p-5 backdrop-blur-sm">
+                  <div className="flex size-11 items-center justify-center rounded-xl bg-sky-300/15 text-sky-200"><Send className="size-5" /></div>
+                  <p className="mt-4 font-bold">Invia una richiesta</p>
+                  <p className="mt-1 text-sm leading-6 text-white/70">La conversazione parte solo con il consenso dell&apos;altra persona.</p>
+                </div>
+                <div className="rounded-2xl border border-white/15 bg-white/10 p-5 backdrop-blur-sm">
+                  <div className="flex size-11 items-center justify-center rounded-xl bg-violet-300/15 text-violet-200"><ShieldCheck className="size-5" /></div>
+                  <p className="mt-4 font-bold">Parla in privato</p>
+                  <p className="mt-1 text-sm leading-6 text-white/70">Puoi terminare una chat o bloccare un utente in qualsiasi momento.</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
