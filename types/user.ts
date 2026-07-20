@@ -44,6 +44,15 @@ export interface UserPreferences {
   notificationsEnabled: boolean
 
   darkMode: boolean
+
+  /** Motivo dichiarato dall'utente durante l'onboarding del profilo. */
+  commetyMotivation?: string
+
+  /** Categorie che l'utente desidera seguire maggiormente. */
+  interestedCategories?: import("@/types/report").ReportCategory[]
+
+  /** Evita di mostrare nuovamente l'onboarding delle preferenze. */
+  preferencesOnboardingCompleted?: boolean
 }
 
 export interface UserConsents {

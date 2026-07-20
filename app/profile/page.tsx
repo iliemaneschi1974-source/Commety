@@ -6,6 +6,7 @@ import { ProfileHeader } from "@/components/Profile/ProfileHeader";
 import { ProfileReports } from "@/components/Profile/ProfileReports";
 import { ProfileStats } from "@/components/Profile/ProfileStats";
 import { AccountActions } from "@/components/Profile/AccountActions";
+import { ProfilePreferences } from "@/components/Profile/ProfilePreferences";
 
 import { useProfile } from "@/hooks/useProfile";
 import { useUserReports } from "@/hooks/useUserReports";
@@ -66,6 +67,24 @@ export default function ProfilePage() {
     });
   }
 
+  async function handleSavePreferences(value: {
+    motivation: string;
+    interestedCategories: import("@/types/report").ReportCategory[];
+  }) {
+    if (!user) {
+      return;
+    }
+
+    await updateUser(user.uid, {
+      preferences: {
+        ...user.preferences,
+        commetyMotivation: value.motivation,
+        interestedCategories: value.interestedCategories,
+        preferencesOnboardingCompleted: true,
+      },
+    });
+  }
+
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-col gap-8 p-6 pb-28">
       <ProfileHeader
@@ -74,6 +93,14 @@ export default function ProfilePage() {
       />
 
       <ProfileStats stats={stats} />
+
+      <ProfilePreferences
+        value={{
+          motivation: user?.preferences.commetyMotivation ?? "",
+          interestedCategories: user?.preferences.interestedCategories ?? [],
+        }}
+        onSave={handleSavePreferences}
+      />
 
       <ProfileReports reports={reports} />
 

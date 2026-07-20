@@ -5,6 +5,7 @@ import "./globals.css";
 
 import ProcessingOverlay from "@/components/ProcessingOverlay/ProcessingOverlay";
 import LegalConsentGate from "@/components/Auth/LegalConsentGate";
+import PreferencesOnboarding from "@/components/Auth/PreferencesOnboarding";
 
 import { AuthProvider } from "@/contexts/AuthContext";
 import BottomAppNav from "@/components/Navigation/BottomAppNav";
@@ -80,6 +81,7 @@ export default function RootLayout({
 
               <ProcessingOverlay />
               <LegalConsentGate />
+              <PreferencesOnboarding />
             </ProcessingOverlayProvider>
           </MapProvider>
         </AuthProvider>
