@@ -316,6 +316,66 @@ body {
   animation: commetySliderSceneChange 850ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
+.commety-preview-scene {
+  animation: commetySliderSceneChange 750ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes commetyPreviewCardEnter {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% + 18px)) scale(0.96);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes commetyPreviewChatEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(calc(-50% + 18px)) scale(0.96);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+  }
+}
+
+@keyframes commetyPreviewMessage {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.commety-preview-profile {
+  animation: commetyPreviewCardEnter 750ms 140ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.commety-preview-chat {
+  animation: commetyPreviewChatEnter 750ms 120ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.commety-preview-message {
+  animation: commetyPreviewMessage 460ms 480ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.commety-preview-message-delay {
+  animation-delay: 820ms;
+}
+
+.commety-preview-message-late {
+  animation-delay: 1160ms;
+}
+
 .commety-slider-scene-eventi {
   background:
     radial-gradient(circle at 72% 22%, rgba(200, 144, 255, 0.72), transparent 18%),
@@ -571,6 +631,10 @@ body {
   .commety-slider-waves i,
   .commety-slider-traffic i,
   .commety-slider-alert i,
+  .commety-preview-scene,
+  .commety-preview-profile,
+  .commety-preview-chat,
+  .commety-preview-message,
   .commety-map-watermark::before,
   .commety-section-title,
   .commety-section-card,
