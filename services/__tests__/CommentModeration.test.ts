@@ -69,4 +69,23 @@ describe("moderazione dei commenti", () => {
 
     expect(result.isRejected()).toBe(true);
   });
+
+  it.each([
+    "Dio",
+    "Madonna",
+    "Gesù",
+    "Cristo",
+    "Porco dio",
+  ])("rifiuta anche i riferimenti blasfemi: %s", (text) => {
+    const moderationEngine = new DefaultModerationEngine(
+      new DefaultModerationPolicy()
+    );
+
+    const result = moderationEngine.modera(new UserContent(text, []));
+
+    expect(result.isRejected()).toBe(true);
+    expect(
+      result.evidences.some((evidence) => evidence.tipo === "BESTEMMIE")
+    ).toBe(true);
+  });
 });

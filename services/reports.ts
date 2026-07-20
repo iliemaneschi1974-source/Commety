@@ -1,5 +1,4 @@
 import {
-  addDoc,
   collection,
   deleteDoc,
   doc,
@@ -11,6 +10,7 @@ import {
   query,
   QuerySnapshot,
   serverTimestamp,
+  setDoc,
   updateDoc,
   UpdateData,
   where,
@@ -18,6 +18,7 @@ import {
 
 import { calculateReportExpiration } from "@/lib/reportExpiration";
 import { db } from "@/lib/firebase";
+import { getReportOwnerKey } from "@/services/device";
 import { reverseGeocode } from "@/services/geocoding";
 import { rewardReportCreation } from "@/services/reputation";
 import { uploadImages, uploadVideo } from "@/services/storage";
@@ -69,10 +70,15 @@ export async function createReport(
     maxExpiresAt,
   } = calculateReportExpiration(input.type);
 
-  const reportRef = await addDoc(
-    reportsCollection,
+  const reportRef = doc(reportsCollection);
+  const authorConfirmationKey = await getReportOwnerKey(reportRef.id);
+
+  await setDoc(
+    reportRef,
     {
       ...sanitizedReportData,
+
+      authorConfirmationKey,
 
       address: location.address,
       city: location.city,

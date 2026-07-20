@@ -30,7 +30,7 @@ export default function ReportBottomSheet({
   open,
   onClose,
 }: ReportBottomSheetProps) {
-  const { confirmed, loading, toggle } = useConfirmation(report?.id);
+  const { confirmed, loading, isOwner, toggle } = useConfirmation(report);
   const [viewerOpen, setViewerOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
   const [shareMessageOpen, setShareMessageOpen] = useState(false);
@@ -103,8 +103,8 @@ export default function ReportBottomSheet({
           <div className="rounded-2xl bg-white/8 p-3 text-center"><MapPin className="mx-auto size-5 text-[#f9d47c]" />{report.address ? <><p className="mt-1 break-words text-xs font-medium text-white/90">{report.address}</p>{report.city && <p className="text-xs text-white/60">{report.city}</p>}</> : <p className="mt-1 text-xs text-white/80">{report.lat.toFixed(4)}<br />{report.lng.toFixed(4)}</p>}</div>
         </section>
 
-        <div className="mt-6 grid grid-cols-2 gap-3">
-          <Button onClick={toggle} disabled={loading} variant="secondary" className={confirmed ? "border border-emerald-300/35 bg-emerald-500 text-white hover:bg-emerald-400" : "border border-white/20 bg-white/12 text-white hover:bg-white/20"}>{loading ? "Conferma..." : confirmed ? "Confermato" : "Conferma"}</Button>
+        <div className={`mt-6 grid gap-3 ${isOwner === false ? "grid-cols-2" : "grid-cols-1"}`}>
+          {isOwner === false ? <Button onClick={toggle} disabled={loading} variant="secondary" className={confirmed ? "border border-emerald-300/35 bg-emerald-500 text-white hover:bg-emerald-400" : "border border-white/20 bg-white/12 text-white hover:bg-white/20"}>{loading ? "Conferma..." : confirmed ? "Confermato" : "Conferma"}</Button> : null}
           <Button onClick={handleShare} className="border border-white/20 bg-white text-[#0F2D5F] hover:bg-[#dbeafe]"><Share2 className="size-4" /> Condividi</Button>
         </div>
 

@@ -18,6 +18,12 @@ export class BestemmieRule implements SpamRule {
    * essere ampliato nel tempo.
    */
   private static readonly BESTEMMIE: readonly string[] = [
+    // I riferimenti singoli sono vietati per mantenere il linguaggio pubblico rispettoso.
+    "dio",
+    "madonna",
+    "gesu",
+    "gesù",
+    "cristo",
     "porco dio",
     "porca madonna",
     "dio cane",
@@ -32,7 +38,10 @@ export class BestemmieRule implements SpamRule {
       return [];
     }
 
-    const testo = contenuto.testo!.toLowerCase();
+    const testo = contenuto.testo!
+      .normalize("NFD")
+      .replace(/\p{M}/gu, "")
+      .toLowerCase();
 
     let rilevate = 0;
 

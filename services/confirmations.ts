@@ -12,12 +12,13 @@ import {
 import { db } from "@/lib/firebase";
 
 import { getCurrentUser } from "@/services/auth";
-import { getDeviceId } from "@/services/device";
+import { getDeviceId, getReportOwnerKey } from "@/services/device";
 import { registerReportActivity } from "@/services/reportLifecycle";
 import {
   adjustReliabilityScore,
   incrementReceivedConfirmations,
 } from "@/services/reputation";
+import { Report } from "@/types/report";
 
 /**
  * Restituisce l'identificativo della conferma.
@@ -84,6 +85,8 @@ export async function toggleConfirmation(
   const confirmationId =
     firebaseUser?.uid ?? getDeviceId();
 
+  const ownerKey = await getReportOwnerKey(reportId);
+
   const reportRef = doc(db, "reports", reportId);
 
   const confirmationRef = doc(
@@ -105,6 +108,16 @@ export async function toggleConfirmation(
       }
 
       const reportData = reportSnapshot.data();
+
+      const isOwner =
+        reportData.userId === firebaseUser?.uid ||
+        reportData.authorConfirmationKey === ownerKey;
+
+      if (isOwner) {
+        throw new Error(
+          "Non puoi confermare una segnalazione creata da te."
+        );
+      }
 
       const confirmationSnapshot =
         await transaction.get(confirmationRef);
@@ -222,4 +235,24 @@ export async function deleteReportConfirmations(
   });
 
   await batch.commit();
+}
+
+/**
+ * Stabilisce se il visitatore corrente è l'autore della segnalazione.
+ * La verifica copre sia gli account registrati sia le segnalazioni anonime.
+ */
+export async function isReportOwner(
+  report: Pick<Report, "id" | "userId" | "authorConfirmationKey">
+): Promise<boolean> {
+  const firebaseUser = getCurrentUser();
+
+  if (report.userId && report.userId === firebaseUser?.uid) {
+    return true;
+  }
+
+  if (!report.authorConfirmationKey) {
+    return false;
+  }
+
+  return report.authorConfirmationKey === await getReportOwnerKey(report.id);
 }

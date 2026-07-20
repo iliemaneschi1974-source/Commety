@@ -105,6 +105,12 @@ updatedAt?: Timestamp;
    */
   userId?: string;
 
+  /**
+   * Impronta tecnica, non reversibile e specifica della segnalazione,
+   * usata per impedire all'autore anonimo di auto-confermarla.
+   */
+  authorConfirmationKey?: string;
+
   username?: string;
 
   displayName?: string;
