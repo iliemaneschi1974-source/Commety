@@ -38,6 +38,9 @@ export const reportUpdatedTrigger =
       document: "reports/{reportId}",
       region: "europe-west1",
       secrets: [openAiApiKey],
+      memory: "1GiB",
+      timeoutSeconds: 300,
+      maxInstances: 2,
     },
     async (event) => {
 
