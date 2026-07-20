@@ -45,43 +45,35 @@ export default function LoginModal({
         <Image
           src="/logo.png"
           alt="Commety"
-          width={180}
-          height={60}
+          width={150}
+          height={50}
           priority
-          className="mb-6 h-auto"
+          className="mb-3 h-auto"
         />
 
-        <h2 className="text-center text-2xl font-bold text-slate-900">
+        <h2 className="text-center text-xl font-bold text-slate-900">
           Benvenuto su Commety
         </h2>
 
-        <p className="mt-3 text-center text-sm leading-6 text-slate-500">
-          Continua ad utilizzare Commety anche senza
-          account.
-          <br />
-          Accedendo potrai personalizzare la tua
-          esperienza.
+        <p className="mt-2 text-center text-sm leading-5 text-slate-500">
+          Accedi per avere il tuo spazio personale nella community.
         </p>
 
-        <ul className="mt-6 w-full space-y-3 text-sm text-slate-700">
-          <li>✓ Crea il tuo profilo</li>
-          <li>✓ Ottieni reputazione</li>
-          <li>✓ Visualizza le tue statistiche</li>
-          <li>✓ Ricevi notifiche</li>
+        <ul className="mt-4 grid w-full grid-cols-2 gap-2 text-xs text-slate-700">
+          <li>✓ Profilo e preferenze</li>
+          <li>✓ Reputazione Commety</li>
+          <li>✓ Chat privata</li>
+          <li>✓ Le tue statistiche</li>
         </ul>
 
-        <div className="mt-6 w-full space-y-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-left text-sm text-slate-700">
+        <div className="mt-4 w-full space-y-3 rounded-2xl border border-slate-200 bg-slate-50 p-3 text-left text-xs text-slate-700">
           <label className="flex cursor-pointer items-start gap-3">
-            <input checked={privacyAccepted} className="mt-1 size-4 accent-[#0F2D5F]" onChange={(event) => setPrivacyAccepted(event.target.checked)} type="checkbox" />
-            <span>Ho letto e accetto la <Link className="font-semibold text-[#0F2D5F] underline" href="/privacy" target="_blank">Privacy Policy</Link>.</span>
-          </label>
-          <label className="flex cursor-pointer items-start gap-3">
-            <input checked={termsAccepted} className="mt-1 size-4 accent-[#0F2D5F]" onChange={(event) => setTermsAccepted(event.target.checked)} type="checkbox" />
-            <span>Accetto i <Link className="font-semibold text-[#0F2D5F] underline" href="/termini" target="_blank">Termini di utilizzo</Link>.</span>
+            <input checked={privacyAccepted && termsAccepted} className="mt-0.5 size-4 accent-[#0F2D5F]" onChange={(event) => { setPrivacyAccepted(event.target.checked); setTermsAccepted(event.target.checked); }} type="checkbox" />
+            <span>Accetto <Link className="font-semibold text-[#0F2D5F] underline" href="/privacy" target="_blank">Privacy Policy</Link> e <Link className="font-semibold text-[#0F2D5F] underline" href="/termini" target="_blank">Termini di utilizzo</Link>.</span>
           </label>
           <label className="flex cursor-pointer items-start gap-3 border-t border-slate-200 pt-3">
-            <input checked={analyticsEnabled} className="mt-1 size-4 accent-emerald-600" onChange={(event) => setAnalyticsEnabled(event.target.checked)} type="checkbox" />
-            <span>Aiutaci a migliorare Commety con statistiche anonime di utilizzo.<span className="mt-1 block text-xs text-slate-500">Facoltativo, senza pubblicità né remarketing.</span></span>
+            <input checked={analyticsEnabled} className="mt-0.5 size-4 accent-emerald-600" onChange={(event) => setAnalyticsEnabled(event.target.checked)} type="checkbox" />
+            <span>Statistiche anonime facoltative per migliorare Commety.</span>
           </label>
         </div>
 
@@ -90,7 +82,7 @@ export default function LoginModal({
           onClick={handleGoogleLogin}
           disabled={loading || !privacyAccepted || !termsAccepted}
           className="
-            mt-8
+            mt-5
             flex
             w-full
             items-center
@@ -112,13 +104,11 @@ export default function LoginModal({
             : "Continua con Google"}
         </button>
 
-        {!privacyAccepted || !termsAccepted ? <p className="mt-3 text-center text-xs text-slate-500">Per accedere devi accettare Privacy Policy e Termini di utilizzo.</p> : null}
-
         <button
           type="button"
           onClick={onClose}
           className="
-            mt-4
+            mt-3
             text-sm
             font-medium
             text-slate-500
