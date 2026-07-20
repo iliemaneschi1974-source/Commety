@@ -6,6 +6,7 @@ import {
   MessageCircle,
   Share2,
   ThumbsUp,
+  Trash2,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -19,6 +20,7 @@ import MessageDialog from "@/components/ui/MessageDialog";
 import { useConfirmation } from "@/hooks/useConfirmation";
 import { REPORT_CATEGORY_CONFIG } from "@/lib/reportCategoryConfig";
 import { buildShareData } from "@/lib/share";
+import { cleanupReport } from "@/services/lifecycle/cleanup";
 import { Report } from "@/types/report";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -38,6 +40,8 @@ export default function ReportBottomSheet({
   const [viewerOpen, setViewerOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
   const [shareMessageOpen, setShareMessageOpen] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteErrorOpen, setDeleteErrorOpen] = useState(false);
 
   if (!report) {
     return null;
@@ -64,6 +68,31 @@ export default function ReportBottomSheet({
       setShareMessageOpen(true);
     } catch (error) {
       console.error(error);
+    }
+  }
+
+  async function handleDelete() {
+    if (deleting) {
+      return;
+    }
+
+    const confirmed = window.confirm(
+      "Vuoi eliminare definitivamente questa segnalazione? Verranno rimossi anche eventuali foto, video, commenti e conferme."
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      setDeleting(true);
+      await cleanupReport(currentReport.id);
+      onClose();
+    } catch (error) {
+      console.error("Errore durante l'eliminazione della segnalazione:", error);
+      setDeleteErrorOpen(true);
+    } finally {
+      setDeleting(false);
     }
   }
 
@@ -126,7 +155,8 @@ export default function ReportBottomSheet({
           <div className="rounded-2xl bg-white/8 p-3 text-center"><MapPin className="mx-auto size-5 text-[#f9d47c]" />{report.address ? <><p className="mt-1 break-words text-xs font-medium text-white/90">{report.address}</p>{report.city && <p className="text-xs text-white/60">{report.city}</p>}</> : <p className="mt-1 text-xs text-white/80">{report.lat.toFixed(4)}<br />{report.lng.toFixed(4)}</p>}</div>
         </section>
 
-        <div className={`mt-6 grid gap-3 ${isOwner === false ? "grid-cols-2" : "grid-cols-1"}`}>
+        <div className={`mt-6 grid gap-3 ${isOwner === null ? "grid-cols-1" : "grid-cols-2"}`}>
+          {isOwner === true ? <Button onClick={handleDelete} disabled={deleting} className="border border-red-300/40 bg-red-500 text-white hover:bg-red-400"><Trash2 className="size-4" /> {deleting ? "Eliminazione..." : "Elimina segnalazione"}</Button> : null}
           {isOwner === false ? <Button onClick={toggle} disabled={loading} variant="secondary" className={confirmed ? "border border-emerald-300/35 bg-emerald-500 text-white hover:bg-emerald-400" : "border border-white/20 bg-white/12 text-white hover:bg-white/20"}>{loading ? "Conferma..." : confirmed ? "Confermato" : "Conferma"}</Button> : null}
           <Button onClick={handleShare} className="border border-white/20 bg-white text-[#0F2D5F] hover:bg-[#dbeafe]"><Share2 className="size-4" /> Condividi</Button>
         </div>
@@ -138,6 +168,7 @@ export default function ReportBottomSheet({
 
       <ImageViewer images={report.images.map((image) => image.url)} currentIndex={currentImage} open={viewerOpen} onClose={() => setViewerOpen(false)} onPrevious={() => setCurrentImage((previous) => previous === 0 ? report.images.length - 1 : previous - 1)} onNext={() => setCurrentImage((previous) => previous === report.images.length - 1 ? 0 : previous + 1)} />
       <MessageDialog open={shareMessageOpen} title="Link copiato" message="Il link della segnalazione è stato copiato negli appunti." variant="info" onClose={() => setShareMessageOpen(false)} />
+      <MessageDialog open={deleteErrorOpen} title="Eliminazione non riuscita" message="Non è stato possibile eliminare la segnalazione. Riprova tra qualche istante." variant="error" onClose={() => setDeleteErrorOpen(false)} />
     </BottomSheet>
   );
 }
