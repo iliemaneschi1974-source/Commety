@@ -7,6 +7,7 @@ import {
   Share2,
   ThumbsUp,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -86,8 +87,16 @@ export default function ReportBottomSheet({
                 href={report.userId === user?.uid ? "/profile" : `/profile/${encodeURIComponent(report.userId)}`}
                 className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3 py-2 text-sm font-bold text-white transition hover:bg-white/20"
               >
-                <span className="grid size-7 place-items-center rounded-full bg-white/20 text-xs font-black">
-                  {report.displayName.slice(0, 1).toUpperCase()}
+                <span className="relative grid size-7 place-items-center overflow-hidden rounded-full bg-white/20 text-xs font-black">
+                  {report.avatarUrl ? (
+                    <Image
+                      src={report.avatarUrl}
+                      alt={report.displayName}
+                      fill
+                      sizes="28px"
+                      className="object-cover"
+                    />
+                  ) : report.displayName.slice(0, 1).toUpperCase()}
                 </span>
                 Segnalato da {report.displayName}
               </Link>

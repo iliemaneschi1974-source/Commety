@@ -78,7 +78,15 @@ export default function ChatClient({
     if (!user) return;
 
     try {
-      setThreads(await getChatInbox());
+      const nextThreads = await getChatInbox();
+      setThreads(nextThreads);
+      setActiveThread((currentThread) => {
+        if (!currentThread) return null;
+
+        return nextThreads.find(
+          (thread) => thread.id === currentThread.id
+        ) ?? currentThread;
+      });
     } catch (nextError) {
       console.error("Errore caricamento chat:", nextError);
       setError("Non è stato possibile caricare i messaggi.");
@@ -292,7 +300,7 @@ export default function ChatClient({
               })}
             </div>
 
-            {canRespondToRequest ? <div className="border-t border-white/10 p-5 text-center"><p className="text-sm text-white/75">{title} vuole avviare una conversazione con te.</p><div className="mt-4 flex gap-3"><button type="button" disabled={busy} onClick={() => void handleRequestResponse("reject")} className="flex h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-red-500 font-bold text-white transition hover:bg-red-400 disabled:opacity-50"><X className="size-4" /> Rifiuta</button><button type="button" disabled={busy} onClick={() => void handleRequestResponse("accept")} className="flex h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-emerald-400 font-bold text-[#062b20] transition hover:bg-emerald-300 disabled:opacity-50"><Check className="size-4" /> Accetta</button></div></div> : !canSendMessages ? <div className="border-t border-white/10 p-5 text-center text-sm text-white/70">{activeThread?.status === "REJECTED" ? "Questa richiesta non è stata accettata." : "Richiesta inviata. Potrai scrivere solo dopo l'accettazione."}</div> : <form onSubmit={handleSubmit} className="border-t border-white/10 p-4">
+            {canRespondToRequest ? <div className="border-t border-slate-200 bg-slate-50 p-5 text-center"><p className="text-sm text-slate-600">{title} vuole avviare una conversazione con te.</p><div className="mt-4 flex gap-3"><button type="button" disabled={busy} onClick={() => void handleRequestResponse("reject")} className="flex h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-red-500 font-bold text-white transition hover:bg-red-400 disabled:opacity-50"><X className="size-4" /> Rifiuta</button><button type="button" disabled={busy} onClick={() => void handleRequestResponse("accept")} className="flex h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-emerald-500 font-bold text-white transition hover:bg-emerald-400 disabled:opacity-50"><Check className="size-4" /> Accetta</button></div></div> : !canSendMessages ? <div className="border-t border-slate-200 bg-slate-50 p-5 text-center text-sm text-slate-600">{activeThread?.status === "REJECTED" ? "Questa richiesta non è stata accettata." : "Richiesta inviata. Potrai scrivere solo dopo l'accettazione."}</div> : <form onSubmit={handleSubmit} className="border-t border-slate-200 p-4">
               {error ? <p role="alert" className="mb-3 text-center text-sm text-red-500">{error}</p> : null}
               <div className="flex items-end gap-3"><textarea value={text} maxLength={500} onChange={(event) => setText(event.target.value)} placeholder="Scrivi un messaggio..." rows={2} className="min-h-12 flex-1 resize-none rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-800 outline-none placeholder:text-slate-400 focus:border-emerald-400 focus:bg-white" /><button disabled={busy || !text.trim()} className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-500 text-white transition hover:bg-emerald-400 disabled:opacity-50" aria-label="Invia messaggio"><Send className="size-5" /></button></div>
               <p className="mt-2 text-right text-xs text-slate-400">{text.length}/500</p>
