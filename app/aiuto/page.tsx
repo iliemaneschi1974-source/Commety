@@ -164,6 +164,13 @@ export default function HelpPage() {
           di affidabilità. Se ritiri una conferma, il punteggio viene aggiornato
           di conseguenza.
         </p>
+        <p>
+          Puoi anche indicare se una segnalazione è ancora in corso. Tre
+          risposte distinte <strong>non più in corso</strong> la chiudono in
+          anticipo e la rimuovono dalla mappa; una risposta positiva aiuta
+          invece a mantenerla aggiornata. Anche in questo caso l&apos;autore non
+          può votare la propria segnalazione.
+        </p>
       </section>
 
       <section id="profilo">

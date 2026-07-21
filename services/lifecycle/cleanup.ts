@@ -12,6 +12,10 @@ import {
 } from "@/services/confirmations";
 
 import {
+  deleteReportStatusVotes,
+} from "@/services/reportStatusVotes";
+
+import {
   deleteReport,
   getReportById,
 } from "@/services/reports";
@@ -46,6 +50,8 @@ export async function cleanupReport(
   await deleteReportComments(reportId);
 
   await deleteReportConfirmations(reportId);
+
+  await deleteReportStatusVotes(reportId);
 
   await deleteReport(reportId);
 }

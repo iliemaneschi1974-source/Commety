@@ -67,6 +67,9 @@ export interface Report {
 
   status: ReportStatus;
 
+  /** Motivo della chiusura anticipata, quando deciso dalla community. */
+  resolvedReason?: "COMMUNITY_ENDED";
+
   moderationMode?: ReportModerationMode;
 
 /**
@@ -131,6 +134,12 @@ updatedAt?: Timestamp;
   video?: ReportVideoReference;
 
   confirmations: number;
+
+  /** Risposte della community sul fatto che la segnalazione sia ancora attiva. */
+  activeStatusVotes?: number;
+
+  /** Risposte della community che indicano una segnalazione conclusa o obsoleta. */
+  endedStatusVotes?: number;
 
   commentsCount: number;
 }

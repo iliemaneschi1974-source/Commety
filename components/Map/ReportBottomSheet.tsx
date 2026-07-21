@@ -18,9 +18,11 @@ import Comments from "@/components/Map/Comments";
 import ImageViewer from "@/components/Map/ImageViewer";
 import MessageDialog from "@/components/ui/MessageDialog";
 import { useConfirmation } from "@/hooks/useConfirmation";
+import { useReportStatusVote } from "@/hooks/useReportStatusVote";
 import { REPORT_CATEGORY_CONFIG } from "@/lib/reportCategoryConfig";
 import { buildShareData } from "@/lib/share";
 import { cleanupReport } from "@/services/lifecycle/cleanup";
+import { ENDED_REPORT_VOTES_REQUIRED } from "@/services/reportStatusVotes";
 import { Report } from "@/types/report";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -37,11 +39,13 @@ export default function ReportBottomSheet({
 }: ReportBottomSheetProps) {
   const { user } = useAuth();
   const { confirmed, loading, isOwner, toggle } = useConfirmation(report);
+  const { vote: statusVote, loading: statusVoteLoading, submit: submitStatusVote } = useReportStatusVote(report?.id);
   const [viewerOpen, setViewerOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
   const [shareMessageOpen, setShareMessageOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [deleteErrorOpen, setDeleteErrorOpen] = useState(false);
+  const [statusVoteErrorOpen, setStatusVoteErrorOpen] = useState(false);
 
   if (!report) {
     return null;
@@ -160,6 +164,8 @@ export default function ReportBottomSheet({
           <Button onClick={handleShare} className="border border-white/20 bg-white text-[#0F2D5F] hover:bg-[#dbeafe]"><Share2 className="size-4" /> Condividi</Button>
         </div>
 
+        {isOwner === false ? <section className="mt-6 rounded-3xl border border-white/15 bg-[#061d43]/55 p-4 text-center shadow-[0_12px_26px_rgba(1,15,42,0.22)]"><p className="text-base font-black text-white">Secondo te questa segnalazione è ancora in corso?</p><p className="mt-1 text-xs leading-5 text-white/65">{ENDED_REPORT_VOTES_REQUIRED} risposte “non più in corso” la chiuderanno dalla mappa.</p><div className="mt-4 grid grid-cols-2 gap-3"><Button disabled={statusVoteLoading || statusVote === "ACTIVE"} onClick={() => void submitStatusVote("ACTIVE").catch(() => setStatusVoteErrorOpen(true))} className="h-12 border border-emerald-300/35 bg-emerald-500 text-white hover:bg-emerald-400">{statusVote === "ACTIVE" ? "Ancora attiva" : "Sì, è attiva"}</Button><Button disabled={statusVoteLoading || statusVote === "ENDED"} onClick={() => void submitStatusVote("ENDED").then((closed) => { if (closed) onClose(); }).catch(() => setStatusVoteErrorOpen(true))} className="h-12 border border-red-300/35 bg-red-500 text-white hover:bg-red-400">{statusVote === "ENDED" ? "Segnalata conclusa" : "Non più in corso"}</Button></div></section> : null}
+
         {isOwner === true ? <Button onClick={handleDelete} disabled={deleting} className="mt-6 h-14 w-full border border-red-300/40 bg-red-500 text-base font-black text-white shadow-[0_10px_22px_rgba(220,38,38,0.28)] hover:bg-red-400"><Trash2 className="size-5" /> {deleting ? "Eliminazione in corso..." : "Elimina segnalazione"}</Button> : null}
 
         <div className="mt-8 rounded-3xl bg-white p-5 text-slate-900 shadow-[0_12px_28px_rgba(1,15,42,0.24)]">
@@ -170,6 +176,7 @@ export default function ReportBottomSheet({
       <ImageViewer images={report.images.map((image) => image.url)} currentIndex={currentImage} open={viewerOpen} onClose={() => setViewerOpen(false)} onPrevious={() => setCurrentImage((previous) => previous === 0 ? report.images.length - 1 : previous - 1)} onNext={() => setCurrentImage((previous) => previous === report.images.length - 1 ? 0 : previous + 1)} />
       <MessageDialog open={shareMessageOpen} title="Link copiato" message="Il link della segnalazione è stato copiato negli appunti." variant="info" onClose={() => setShareMessageOpen(false)} />
       <MessageDialog open={deleteErrorOpen} title="Eliminazione non riuscita" message="Non è stato possibile eliminare la segnalazione. Riprova tra qualche istante." variant="error" onClose={() => setDeleteErrorOpen(false)} />
+      <MessageDialog open={statusVoteErrorOpen} title="Aggiornamento non riuscito" message="Non è stato possibile registrare la tua risposta. Riprova tra qualche istante." variant="error" onClose={() => setStatusVoteErrorOpen(false)} />
     </BottomSheet>
   );
 }

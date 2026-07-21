@@ -108,6 +108,8 @@ export async function createReport(
 isVisible: false,
 
 confirmations: 0,
+      activeStatusVotes: 0,
+      endedStatusVotes: 0,
       commentsCount: 0,
       images: [],
 
