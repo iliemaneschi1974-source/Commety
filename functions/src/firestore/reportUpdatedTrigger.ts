@@ -14,6 +14,7 @@ import { AIPipeline } from "../ai/pipeline/AIPipeline";
 import { StorageImageDownloader } from "../storage/StorageImageDownloader";
 import { SensitiveMediaRedactor } from "../privacy/SensitiveMediaRedactor";
 import { SanitizedMediaStorage } from "../privacy/SanitizedMediaStorage";
+import { CommetyWatermark } from "../privacy/CommetyWatermark";
 import { adminDb } from "../config/firebaseAdmin";
 
 import { ModerationRequest } from "../application/ModerationRequest";
@@ -331,6 +332,7 @@ async function redactSensitiveMedia(
   const downloader = new StorageImageDownloader();
   const redactor = new SensitiveMediaRedactor();
   const storage = new SanitizedMediaStorage();
+  const watermark = new CommetyWatermark();
 
   if (images.length > 0) {
     const sourceImages = await downloader.download(images);
@@ -338,15 +340,21 @@ async function redactSensitiveMedia(
       sourceImages.map((image) => redactor.redactImage(image.bytes))
     );
     const savedImages = await Promise.all(
-      redactedImages.map((image) => storage.saveImage(reportId, image.bytes))
+      redactedImages.map(async (image) =>
+        storage.saveImage(reportId, await watermark.apply(image.bytes))
+      )
     );
 
     await adminDb.collection("reports").doc(reportId).update({
       images: savedImages,
       mediaPrivacy: {
-        state: "REDACTED",
-        imageRegions: redactedImages.reduce((total, image) => total + image.boxes.length, 0),
-        redactedAt: FieldValue.serverTimestamp(),
+          state: "REDACTED",
+          imageRegions: redactedImages.reduce((total, image) => total + image.boxes.length, 0),
+          redactedAt: FieldValue.serverTimestamp(),
+          watermark: {
+            appliedAt: FieldValue.serverTimestamp(),
+            brand: "Commety",
+          },
       },
       updatedAt: FieldValue.serverTimestamp(),
     });
