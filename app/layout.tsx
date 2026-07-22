@@ -44,7 +44,7 @@ export const metadata: Metadata = {
 
     images: [
       {
-        url: `${appUrl}/og-image.png`,
+        url: `${appUrl}/opengraph-image`,
         width: 1200,
         height: 630,
         alt: "Commety",
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
     title: "Commety | La mappa del mondo reale",
     description:
       "Scopri cosa sta succedendo vicino a te con le segnalazioni in tempo reale della community Commety.",
-    images: [`${appUrl}/og-image.png`],
+    images: [`${appUrl}/opengraph-image`],
   },
 };
 
