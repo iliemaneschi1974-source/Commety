@@ -65,6 +65,9 @@ export default function LegalPageLayout({
             Commety, la mappa del mondo reale.
           </p>
           <nav className="flex gap-5">
+            <Link className="transition hover:text-white" href="/news">
+              News
+            </Link>
             <Link className="transition hover:text-white" href="/aiuto">
               Aiuto
             </Link>

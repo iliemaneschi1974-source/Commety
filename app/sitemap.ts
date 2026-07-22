@@ -18,5 +18,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "hourly",
       priority: 0.9,
     },
+    {
+      url: `${siteUrl}/news`,
+      lastModified: new Date("2026-07-22T09:00:00+02:00"),
+      changeFrequency: "weekly",
+      priority: 0.7,
+    },
+    {
+      url: `${siteUrl}/news/commety-su-gofundme`,
+      lastModified: new Date("2026-07-22T09:00:00+02:00"),
+      changeFrequency: "monthly",
+      priority: 0.8,
+      images: [`${siteUrl}/og-institutional-map.png`, `${siteUrl}/landing-maria-rossi.png`],
+    },
   ];
 }
