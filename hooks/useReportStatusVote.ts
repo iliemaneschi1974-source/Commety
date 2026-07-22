@@ -23,6 +23,7 @@ export function useReportStatusVote(reportId?: string) {
     try {
       setLoading(true);
       const result = await submitReportStatusVote(reportId, nextVote);
+      setVote(nextVote);
       return result.closed;
     } finally {
       setLoading(false);

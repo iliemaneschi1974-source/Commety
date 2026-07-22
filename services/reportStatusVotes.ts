@@ -112,7 +112,14 @@ export async function submitReportStatusVote(
   });
 
   if (result.refreshActivity) {
-    await registerReportActivity(reportId, "confirmation");
+    try {
+      await registerReportActivity(reportId, "confirmation");
+    } catch (error) {
+      console.error(
+        "Impossibile aggiornare la scadenza dopo il voto sullo stato:",
+        error
+      );
+    }
   }
 
   return { closed: result.closed };

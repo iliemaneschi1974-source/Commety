@@ -172,34 +172,47 @@ export async function toggleConfirmation(
     firebaseUser?.uid !== result.reportOwnerId;
 
   if (isEligibleForReliability && result.reportOwnerId) {
-    await adjustReliabilityScore(
-      result.reportOwnerId,
-      result.created ? 2 : -2
-    );
+    try {
+      await adjustReliabilityScore(
+        result.reportOwnerId,
+        result.created ? 2 : -2
+      );
+    } catch (error) {
+      console.error(
+        "Impossibile aggiornare l'affidabilità dopo la conferma:",
+        error
+      );
+    }
   }
 
   if (!result.created) {
     return false;
   }
 
-  const reportSnapshot = await getDoc(reportRef);
-
-  if (!reportSnapshot.exists()) {
-    return true;
+  if (result.reportOwnerId) {
+    try {
+      await incrementReceivedConfirmations(
+        result.reportOwnerId
+      );
+    } catch (error) {
+      console.error(
+        "Impossibile aggiornare le statistiche dopo la conferma:",
+        error
+      );
+    }
   }
 
-  const report = reportSnapshot.data();
-
-  if (report.userId) {
-    await incrementReceivedConfirmations(
-      report.userId
+  try {
+    await registerReportActivity(
+      reportId,
+      "confirmation"
+    );
+  } catch (error) {
+    console.error(
+      "Impossibile aggiornare la scadenza dopo la conferma:",
+      error
     );
   }
-
-  await registerReportActivity(
-    reportId,
-    "confirmation"
-  );
 
   return true;
 }
