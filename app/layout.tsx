@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 
 import ProcessingOverlay from "@/components/ProcessingOverlay/ProcessingOverlay";
+import GoogleAnalytics from "@/components/Analytics/GoogleAnalytics";
 import LegalConsentGate from "@/components/Auth/LegalConsentGate";
 import PreferencesOnboarding from "@/components/Auth/PreferencesOnboarding";
 
@@ -24,6 +25,9 @@ const appUrl =
 
 export const metadata: Metadata = {
   metadataBase: new URL(appUrl),
+  verification: {
+    google: "NW93TABpolzyjT84jxThajBWxlbv-YdSgKAFBOzIXkw",
+  },
 
   title: {
     default: "Commety | La mappa del mondo reale",
@@ -78,6 +82,8 @@ export default function RootLayout({
               {children}
 
               <BottomAppNav />
+
+              <GoogleAnalytics />
 
               <ProcessingOverlay />
               <LegalConsentGate />
