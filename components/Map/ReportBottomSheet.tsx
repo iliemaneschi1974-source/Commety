@@ -44,6 +44,7 @@ export default function ReportBottomSheet({
   const [shareMessageOpen, setShareMessageOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [deleteErrorOpen, setDeleteErrorOpen] = useState(false);
+  const [confirmationErrorOpen, setConfirmationErrorOpen] = useState(false);
   const [statusVoteErrorOpen, setStatusVoteErrorOpen] = useState(false);
 
   if (!report) {
@@ -159,7 +160,7 @@ export default function ReportBottomSheet({
         </section>
 
         <div className={`mt-6 grid gap-3 ${isOwner === false ? "grid-cols-2" : "grid-cols-1"}`}>
-          {isOwner === false ? <Button onClick={toggle} disabled={loading} variant="secondary" className={confirmed ? "border border-emerald-300/35 bg-emerald-500 text-white hover:bg-emerald-400" : "border border-white/20 bg-white/12 text-white hover:bg-white/20"}>{loading ? "Conferma..." : confirmed ? "Confermato" : "Conferma"}</Button> : null}
+          {isOwner === false ? <Button type="button" onClick={() => void toggle().catch((error) => { console.error("Errore conferma:", error); setConfirmationErrorOpen(true); })} disabled={loading} variant="secondary" className={confirmed ? "border border-emerald-300/35 bg-emerald-500 text-white hover:bg-emerald-400" : "border border-white/20 bg-white/12 text-white hover:bg-white/20"}>{loading ? "Conferma..." : confirmed ? "Confermato" : "Conferma"}</Button> : null}
           <Button onClick={handleShare} className="border border-white/20 bg-white text-[#0F2D5F] hover:bg-[#dbeafe]"><Share2 className="size-4" /> Condividi</Button>
         </div>
 
@@ -175,6 +176,7 @@ export default function ReportBottomSheet({
       <ImageViewer images={report.images.map((image) => image.url)} currentIndex={currentImage} open={viewerOpen} onClose={() => setViewerOpen(false)} onPrevious={() => setCurrentImage((previous) => previous === 0 ? report.images.length - 1 : previous - 1)} onNext={() => setCurrentImage((previous) => previous === report.images.length - 1 ? 0 : previous + 1)} />
       <MessageDialog open={shareMessageOpen} title="Link copiato" message="Il link della segnalazione è stato copiato negli appunti." variant="info" onClose={() => setShareMessageOpen(false)} />
       <MessageDialog open={deleteErrorOpen} title="Eliminazione non riuscita" message="Non è stato possibile eliminare la segnalazione. Riprova tra qualche istante." variant="error" onClose={() => setDeleteErrorOpen(false)} />
+      <MessageDialog open={confirmationErrorOpen} title="Conferma non riuscita" message="Non è stato possibile registrare la tua conferma. Riprova tra qualche istante." variant="error" onClose={() => setConfirmationErrorOpen(false)} />
       <MessageDialog open={statusVoteErrorOpen} title="Aggiornamento non riuscito" message="Non è stato possibile registrare la tua risposta. Riprova tra qualche istante." variant="error" onClose={() => setStatusVoteErrorOpen(false)} />
     </BottomSheet>
   );

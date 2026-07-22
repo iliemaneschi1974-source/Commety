@@ -31,12 +31,12 @@ describe("ModerationService", () => {
           armi: 0,
           animalCruelty: 0,
 
-          aiGenerated: 1,
+          aiGenerated: 5,
           screenshot: 0,
-          watermark: 1,
+          watermark: 5,
           meme: 0,
 
-          volti: 1,
+          volti: 5,
           targhe: 0,
           documenti: 0,
 

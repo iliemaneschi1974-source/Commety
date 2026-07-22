@@ -63,9 +63,9 @@ export function useConfirmation(report?: Report | null) {
     setLoading(true);
 
     try {
-      await toggleConfirmation(reportId);
-    } catch (error) {
-      console.error("Errore conferma:", error);
+      const nextConfirmed = await toggleConfirmation(reportId);
+      setConfirmed(nextConfirmed);
+      return nextConfirmed;
     } finally {
       setLoading(false);
     }
