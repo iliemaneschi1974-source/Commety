@@ -1,6 +1,7 @@
 import Image from "next/image";
 import type { Metadata } from "next";
 import { LiveMapSlider } from "@/components/Landing/LiveMapSlider";
+import NewsSlider from "@/components/News/NewsSlider";
 import {
   Activity,
   ArrowRight,
@@ -392,6 +393,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <NewsSlider />
 
       <footer className="border-t border-white/10 bg-[#061735] text-white">
         <div className="mx-auto flex max-w-7xl flex-col gap-8 px-6 py-10 sm:flex-row sm:items-center sm:justify-between lg:px-8">

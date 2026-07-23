@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, HeartHandshake, Newspaper } from "lucide-react";
+import { ArrowRight, HeartHandshake, Newspaper, RadioTower } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "News | Commety",
@@ -30,7 +30,23 @@ export default function NewsPage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-6 pb-16 sm:px-8 sm:pb-20">
+      <section className="mx-auto grid max-w-6xl gap-6 px-6 pb-16 sm:px-8 sm:pb-20">
+        <Link href="/news/segnalazioni-in-tempo-reale-perche-sono-importanti" className="group block overflow-hidden rounded-[2rem] border border-white/15 bg-[linear-gradient(135deg,#071a3c_0%,#0F2D5F_42%,#17698b_100%)] shadow-[0_22px_55px_rgba(2,16,42,0.3)] transition hover:-translate-y-1 hover:border-white/30">
+          <div className="grid lg:grid-cols-[1.2fr_0.8fr]">
+            <div className="p-8 sm:p-12">
+              <div className="flex size-12 items-center justify-center rounded-2xl bg-cyan-400/15 text-cyan-200"><RadioTower className="size-6" /></div>
+              <p className="mt-7 text-sm font-bold uppercase tracking-[0.16em] text-[#a9d5ff]">23 luglio 2026</p>
+              <h2 className="mt-3 max-w-2xl text-3xl font-black leading-tight sm:text-5xl">Segnalazioni in tempo reale: perch&eacute; sono importanti?</h2>
+              <p className="mt-5 max-w-2xl text-lg leading-8 text-white/75">Come le informazioni tempestive e geolocalizzate aiutano le persone a capire il territorio e prendere decisioni migliori.</p>
+              <span className="mt-8 inline-flex items-center gap-2 font-bold text-cyan-200">Leggi l&apos;articolo <ArrowRight className="size-5 transition group-hover:translate-x-1" /></span>
+            </div>
+            <div className="relative min-h-64 bg-[radial-gradient(circle_at_50%_45%,rgba(34,211,238,0.85),transparent_14%),radial-gradient(circle_at_50%_45%,rgba(59,130,246,0.35),transparent_40%),linear-gradient(145deg,#17698b,#071a3c_70%)]">
+              <div className="absolute inset-0 opacity-35 [background-image:linear-gradient(rgba(255,255,255,0.22)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.22)_1px,transparent_1px)] [background-size:34px_34px]" />
+              <RadioTower className="absolute left-1/2 top-1/2 size-24 -translate-x-1/2 -translate-y-1/2 text-white/90 drop-shadow-[0_0_24px_rgba(103,232,249,0.7)]" />
+            </div>
+          </div>
+        </Link>
+
         <Link href="/news/commety-su-gofundme" className="group block overflow-hidden rounded-[2rem] border border-white/15 bg-[linear-gradient(135deg,#071a3c_0%,#0F2D5F_42%,#1b4b87_64%,#0a2553_100%)] shadow-[0_22px_55px_rgba(2,16,42,0.3)] transition hover:-translate-y-1 hover:border-white/30">
           <div className="grid lg:grid-cols-[1.2fr_0.8fr]">
             <div className="p-8 sm:p-12">

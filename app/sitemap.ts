@@ -20,9 +20,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: `${siteUrl}/news`,
-      lastModified: new Date("2026-07-22T09:00:00+02:00"),
+      lastModified: new Date("2026-07-23T09:00:00+02:00"),
       changeFrequency: "weekly",
       priority: 0.7,
+    },
+    {
+      url: `${siteUrl}/news/segnalazioni-in-tempo-reale-perche-sono-importanti`,
+      lastModified: new Date("2026-07-23T09:00:00+02:00"),
+      changeFrequency: "monthly",
+      priority: 0.8,
+      images: [`${siteUrl}/og-institutional-map.png`],
     },
     {
       url: `${siteUrl}/news/commety-su-gofundme`,
