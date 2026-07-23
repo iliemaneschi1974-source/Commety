@@ -275,7 +275,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className={`${METALLIC_PANEL} mx-auto w-full max-w-[620px] p-3 sm:p-5`}>
+          <div className={`${METALLIC_PANEL} mx-auto w-full max-w-[620px] p-3 sm:p-5 lg:max-w-[390px]`}>
             <div className="relative z-10 overflow-hidden rounded-[1.45rem] border border-white/20 shadow-[0_18px_36px_rgba(1,14,39,0.36)]">
               <LiveMapPreview />
             </div>

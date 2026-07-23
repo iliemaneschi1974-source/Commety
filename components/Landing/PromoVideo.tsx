@@ -39,13 +39,14 @@ export default function PromoVideo() {
 
     const nextMuted = !video.muted;
     video.muted = nextMuted;
+    video.volume = 1;
     setMuted(nextMuted);
   }
 
   return (
     <div
       aria-label="Video promozionale Commety"
-      className="relative min-h-[500px] overflow-hidden rounded-[1.45rem] bg-[#061735] sm:min-h-[600px]"
+      className="relative min-h-[500px] overflow-hidden rounded-[1.45rem] bg-[#061735] sm:min-h-[600px] lg:aspect-[9/16] lg:min-h-0"
     >
       <Image
         src="/videos/commety-promo-poster.jpg"
@@ -61,7 +62,7 @@ export default function PromoVideo() {
       <video
         ref={videoRef}
         autoPlay
-        muted
+        muted={muted}
         loop
         playsInline
         preload="metadata"
