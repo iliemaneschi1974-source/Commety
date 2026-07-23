@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, HeartHandshake, Newspaper, RadioTower } from "lucide-react";
+import { ArrowRight, HeartHandshake, Newspaper, RadioTower, WifiOff } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "News | Commety",
@@ -31,6 +31,22 @@ export default function NewsPage() {
       </section>
 
       <section className="mx-auto grid max-w-6xl gap-6 px-6 pb-16 sm:px-8 sm:pb-20">
+        <Link href="/news/segnalazioni-guasti-windtre-iliad-tim-fastweb-vodafone" className="group block overflow-hidden rounded-[2rem] border border-white/15 bg-[linear-gradient(135deg,#071a3c_0%,#0F2D5F_42%,#9f3f35_100%)] shadow-[0_22px_55px_rgba(2,16,42,0.3)] transition hover:-translate-y-1 hover:border-white/30">
+          <div className="grid lg:grid-cols-[1.2fr_0.8fr]">
+            <div className="p-8 sm:p-12">
+              <div className="flex size-12 items-center justify-center rounded-2xl bg-orange-400/15 text-orange-200"><WifiOff className="size-6" /></div>
+              <p className="mt-7 text-sm font-bold uppercase tracking-[0.16em] text-[#a9d5ff]">23 luglio 2026</p>
+              <h2 className="mt-3 max-w-2xl text-3xl font-black leading-tight sm:text-5xl">Segnalazioni guasti WINDTRE, iliad, TIM, Fastweb e Vodafone</h2>
+              <p className="mt-5 max-w-2xl text-lg leading-8 text-white/75">Numeri utili, canali ufficiali e guida pratica per segnalare problemi a internet, fibra e rete mobile.</p>
+              <span className="mt-8 inline-flex items-center gap-2 font-bold text-orange-200">Leggi la guida <ArrowRight className="size-5 transition group-hover:translate-x-1" /></span>
+            </div>
+            <div className="relative min-h-64">
+              <Image src="/news-guasti-rete-hero.png" alt="Guasti di rete visualizzati su una mappa digitale" fill sizes="(max-width: 1024px) 100vw, 40vw" className="object-cover" />
+              <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(7,26,60,0.35),transparent)]" />
+            </div>
+          </div>
+        </Link>
+
         <Link href="/news/segnalazioni-in-tempo-reale-perche-sono-importanti" className="group block overflow-hidden rounded-[2rem] border border-white/15 bg-[linear-gradient(135deg,#071a3c_0%,#0F2D5F_42%,#17698b_100%)] shadow-[0_22px_55px_rgba(2,16,42,0.3)] transition hover:-translate-y-1 hover:border-white/30">
           <div className="grid lg:grid-cols-[1.2fr_0.8fr]">
             <div className="p-8 sm:p-12">

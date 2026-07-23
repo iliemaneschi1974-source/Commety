@@ -32,6 +32,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
       images: [`${siteUrl}/og-institutional-map.png`],
     },
     {
+      url: `${siteUrl}/news/segnalazioni-guasti-windtre-iliad-tim-fastweb-vodafone`,
+      lastModified: new Date("2026-07-23T12:00:00+02:00"),
+      changeFrequency: "monthly",
+      priority: 0.8,
+      images: [
+        `${siteUrl}/news-guasti-rete-hero.png`,
+        `${siteUrl}/news-guasti-rete-community.png`,
+      ],
+    },
+    {
       url: `${siteUrl}/news/commety-su-gofundme`,
       lastModified: new Date("2026-07-22T09:00:00+02:00"),
       changeFrequency: "monthly",

@@ -7,6 +7,15 @@ import { useRef } from "react";
 
 const news = [
   {
+    href: "/news/segnalazioni-guasti-windtre-iliad-tim-fastweb-vodafone",
+    image: "/news-guasti-rete-hero.png",
+    imageAlt: "Guasti di rete visualizzati su una mappa digitale",
+    date: "23 luglio 2026",
+    title: "Guasti WINDTRE, iliad, TIM, Fastweb e Vodafone: come segnalarli",
+    abstract:
+      "Numeri utili, canali ufficiali e controlli da fare quando internet, fibra o rete mobile non funzionano.",
+  },
+  {
     href: "/news/segnalazioni-in-tempo-reale-perche-sono-importanti",
     image: "/og-institutional-map.png",
     imageAlt: "Segnalazioni geolocalizzate sulla mappa di Commety",
