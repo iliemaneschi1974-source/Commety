@@ -1,6 +1,6 @@
 import Image from "next/image";
 import type { Metadata } from "next";
-import { LiveMapSlider } from "@/components/Landing/LiveMapSlider";
+import PromoVideo from "@/components/Landing/PromoVideo";
 import NewsSlider from "@/components/News/NewsSlider";
 import {
   Activity,
@@ -129,7 +129,7 @@ function LandingFeature({
 }
 
 function LiveMapPreview() {
-  return <LiveMapSlider />;
+  return <PromoVideo />;
 
   /*
   return (
