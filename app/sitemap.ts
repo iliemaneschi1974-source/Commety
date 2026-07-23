@@ -42,6 +42,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
       ],
     },
     {
+      url: `${siteUrl}/news/cosa-fare-animale-abbandonato-o-maltrattato`,
+      lastModified: new Date("2026-07-23T16:00:00+02:00"),
+      changeFrequency: "monthly",
+      priority: 0.8,
+      images: [
+        `${siteUrl}/news-animale-abbandonato-hero.png`,
+        `${siteUrl}/news-animale-soccorso-veterinario.png`,
+      ],
+    },
+    {
       url: `${siteUrl}/news/commety-su-gofundme`,
       lastModified: new Date("2026-07-22T09:00:00+02:00"),
       changeFrequency: "monthly",

@@ -7,6 +7,15 @@ import { useRef } from "react";
 
 const news = [
   {
+    href: "/news/cosa-fare-animale-abbandonato-o-maltrattato",
+    image: "/news-animale-abbandonato-hero.png",
+    imageAlt: "Una persona presta assistenza in sicurezza a un cane abbandonato",
+    date: "23 luglio 2026",
+    title: "Cosa fare se vediamo un animale abbandonato o maltrattato",
+    abstract:
+      "Numeri utili, procedure corrette e precauzioni per aiutare un animale senza mettere nessuno in pericolo.",
+  },
+  {
     href: "/news/segnalazioni-guasti-windtre-iliad-tim-fastweb-vodafone",
     image: "/news-guasti-rete-hero.png",
     imageAlt: "Guasti di rete visualizzati su una mappa digitale",
