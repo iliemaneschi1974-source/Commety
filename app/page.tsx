@@ -257,7 +257,7 @@ export default function Home() {
               <span className="rounded-full border border-[#8B5CF6]/45 bg-[#8B5CF6]/15 px-4 py-2 text-sm font-semibold text-white"><PartyPopper className="mr-1.5 inline size-4 text-[#8B5CF6]" />Eventi</span>
               <span className="rounded-full border border-[#06B6D4]/45 bg-[#06B6D4]/15 px-4 py-2 text-sm font-semibold text-white"><Waves className="mr-1.5 inline size-4 text-[#06B6D4]" />Mare</span>
               <span className="rounded-full border border-[#F97316]/45 bg-[#F97316]/15 px-4 py-2 text-sm font-semibold text-white"><PawPrint className="mr-1.5 inline size-4 text-[#F97316]" />Animali</span>
-              <span className="rounded-full border border-[#F59E0B]/45 bg-[#F59E0B]/15 px-4 py-2 text-sm font-semibold text-white"><Car className="mr-1.5 inline size-4 text-[#F59E0B]" />Viabilità</span>
+              <span className="rounded-full border border-[#F59E0B]/45 bg-[#F59E0B]/15 px-4 py-2 text-sm font-semibold text-white"><Car className="mr-1.5 inline size-4 text-[#F59E0B]" />Traffico</span>
               <span className="rounded-full border border-[#DB2777]/45 bg-[#DB2777]/15 px-4 py-2 text-sm font-semibold text-white"><Wifi className="mr-1.5 inline size-4 text-[#DB2777]" />Rete</span>
               <span className="rounded-full border border-[#65A30D]/45 bg-[#65A30D]/15 px-4 py-2 text-sm font-semibold text-white"><BusFront className="mr-1.5 inline size-4 text-[#84CC16]" />Trasporti</span>
               <span className="rounded-full border border-[#475569]/60 bg-[#475569]/25 px-4 py-2 text-sm font-semibold text-white"><Accessibility className="mr-1.5 inline size-4 text-slate-300" />Accessibilità</span>
