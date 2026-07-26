@@ -46,6 +46,13 @@ const FILTERS: {
     title: "Evento",
     icon: PartyPopper,
   },
+];
+
+const RIGHT_FILTERS: {
+  id: ReportFilter;
+  title: string;
+  icon: React.ElementType;
+}[] = [
   {
     id: "mare",
     title: "Mare",
@@ -56,13 +63,6 @@ const FILTERS: {
     title: "Animali",
     icon: PawPrint,
   },
-];
-
-const RIGHT_FILTERS: {
-  id: ReportFilter;
-  title: string;
-  icon: React.ElementType;
-}[] = [
   {
     id: "rete",
     title: "Rete",
