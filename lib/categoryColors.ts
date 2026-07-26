@@ -12,4 +12,10 @@ export const CATEGORY_COLORS = {
   mare: "#06B6D4",
 
   animali: "#F97316",
+
+  rete: "#DB2777",
+
+  trasporti: "#65A30D",
+
+  accessibilita: "#475569",
 } as const;

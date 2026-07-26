@@ -6,7 +6,46 @@ export type ReportCategory =
   | "pericolo"
   | "evento"
   | "mare"
-  | "animali";
+  | "animali"
+  | "rete"
+  | "trasporti"
+  | "accessibilita";
+
+export type NetworkService =
+  | "internet"
+  | "rete-fissa"
+  | "5g"
+  | "tutte";
+
+export interface NetworkReportDetails {
+  operator: string;
+  service: NetworkService;
+  startedAt: string;
+}
+
+export type TransportMode =
+  | "metro"
+  | "autobus"
+  | "tram"
+  | "treno"
+  | "altro";
+
+export interface TransportReportDetails {
+  mode: TransportMode;
+  line?: string;
+}
+
+export type AccessibilityReportKind =
+  | "spazio-accessibile"
+  | "ostacolo"
+  | "parcheggio"
+  | "rampa"
+  | "ascensore"
+  | "altro";
+
+export interface AccessibilityReportDetails {
+  kind: AccessibilityReportKind;
+}
 
 export type ReportStatus =
   | "ACTIVE"
@@ -57,6 +96,10 @@ export interface Report {
 
   title: string;
   description: string;
+
+  networkDetails?: NetworkReportDetails;
+  transportDetails?: TransportReportDetails;
+  accessibilityDetails?: AccessibilityReportDetails;
 
   lat: number;
   lng: number;
@@ -150,6 +193,10 @@ export interface CreateReportInput {
   title: string;
 
   description: string;
+
+  networkDetails?: NetworkReportDetails;
+  transportDetails?: TransportReportDetails;
+  accessibilityDetails?: AccessibilityReportDetails;
 
   lat: number;
 

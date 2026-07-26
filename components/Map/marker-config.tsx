@@ -1,10 +1,13 @@
 import {
+  Accessibility,
+  BusFront,
   Car,
   CloudRain,
   PartyPopper,
   PawPrint,
   TriangleAlert,
   Waves,
+  Wifi,
 } from "lucide-react"
 import { ReactElement } from "react"
 
@@ -44,5 +47,17 @@ export const MARKER_CONFIG: Record<ReportCategory, MarkerConfig> = {
   animali: {
     color: "#F97316",
     icon: <PawPrint size={20} color="white" />,
+  },
+  rete: {
+    color: "#DB2777",
+    icon: <Wifi size={20} color="white" />,
+  },
+  trasporti: {
+    color: "#65A30D",
+    icon: <BusFront size={20} color="white" />,
+  },
+  accessibilita: {
+    color: "#475569",
+    icon: <Accessibility size={20} color="white" />,
   },
 }

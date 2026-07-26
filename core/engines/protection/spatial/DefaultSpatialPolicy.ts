@@ -15,6 +15,10 @@ export class DefaultSpatialPolicy implements SpatialPolicy {
     meteo: 10_000,
     evento: 200,
     mare: 5_000,
+    animali: 500,
+    rete: 5_000,
+    trasporti: 1_000,
+    accessibilita: 300,
   };
 
   getInfluenceRadius(category: string): number {

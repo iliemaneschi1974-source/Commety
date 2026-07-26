@@ -30,6 +30,9 @@ export const REPORT_CATEGORIES: ReportCategory[] = [
   "evento",
   "mare",
   "animali",
+  "rete",
+  "trasporti",
+  "accessibilita",
 ];
 
 export const MAX_MOTIVATION_LENGTH = 280;

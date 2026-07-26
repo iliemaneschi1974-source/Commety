@@ -19,6 +19,10 @@ export class DefaultTemporalPolicy implements TemporalPolicy {
     pericolo: 3 * 60 * 60 * 1000,
     evento: 24 * 60 * 60 * 1000,
     mare: 3 * 60 * 60 * 1000,
+    animali: 24 * 60 * 60 * 1000,
+    rete: 4 * 60 * 60 * 1000,
+    trasporti: 4 * 60 * 60 * 1000,
+    accessibilita: 24 * 60 * 60 * 1000,
   };
 
   getValidityDuration(

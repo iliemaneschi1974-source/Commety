@@ -14,6 +14,9 @@ const CATEGORY_ICONS: Record<Report["type"], string> = {
   evento: "🎉",
   mare: "🏖️",
   animali: "🐾",
+  rete: "Wi-Fi",
+  trasporti: "Bus",
+  accessibilita: "Accesso",
 };
 
 const CATEGORY_LABELS: Record<Report["type"], string> = {
@@ -23,6 +26,9 @@ const CATEGORY_LABELS: Record<Report["type"], string> = {
   evento: "Evento",
   mare: "Mare",
   animali: "Animali",
+  rete: "Rete",
+  trasporti: "Trasporti",
+  accessibilita: "Accessibilità",
 };
 
 export default function ReportCard({

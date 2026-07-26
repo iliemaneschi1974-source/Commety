@@ -5,7 +5,12 @@ import { useState } from "react";
 import ImagePicker from "@/components/Map/ImagePicker";
 import VideoRecorder from "@/components/Map/VideoRecorder";
 import { REPORT_CATEGORY_CONFIG } from "@/lib/reportCategoryConfig";
-import { ReportCategory } from "@/types/report";
+import {
+  AccessibilityReportKind,
+  NetworkService,
+  ReportCategory,
+  TransportMode,
+} from "@/types/report";
 
 export interface ReportFormData {
   type: ReportCategory;
@@ -14,6 +19,18 @@ export interface ReportFormData {
   images: File[];
   video?: File;
   videoModerationFrames?: File[];
+  networkDetails?: {
+    operator: string;
+    service: NetworkService;
+    startedAt: string;
+  };
+  transportDetails?: {
+    mode: TransportMode;
+    line?: string;
+  };
+  accessibilityDetails?: {
+    kind: AccessibilityReportKind;
+  };
 }
 
 interface ReportFormProps {
@@ -29,6 +46,18 @@ const INITIAL_FORM: ReportFormData = {
   images: [],
   video: undefined,
   videoModerationFrames: [],
+  networkDetails: {
+    operator: "",
+    service: "internet",
+    startedAt: "",
+  },
+  transportDetails: {
+    mode: "autobus",
+    line: "",
+  },
+  accessibilityDetails: {
+    kind: "ostacolo",
+  },
 };
 
 const CATEGORY_OPTIONS: ReportCategory[] = [
@@ -38,6 +67,9 @@ const CATEGORY_OPTIONS: ReportCategory[] = [
   "evento",
   "mare",
   "animali",
+  "rete",
+  "trasporti",
+  "accessibilita",
 ];
 
 export default function ReportForm({
@@ -53,6 +85,16 @@ export default function ReportForm({
 
   const isCommunityEvent = form.type === "evento";
   const isAnimalReport = form.type === "animali";
+  const isNetworkReport = form.type === "rete";
+  const isTransportReport = form.type === "trasporti";
+  const isAccessibilityReport = form.type === "accessibilita";
+  const hasRequiredCategoryDetails =
+    !isNetworkReport ||
+    Boolean(
+      form.networkDetails?.operator.trim() &&
+        form.networkDetails.service &&
+        form.networkDetails.startedAt
+    );
 
   if (!open) {
     return null;
@@ -65,7 +107,7 @@ export default function ReportForm({
   }
 
   async function handleSubmit() {
-    if (!form.title.trim() || submitting) {
+    if (!form.title.trim() || !hasRequiredCategoryDetails || submitting) {
       return;
     }
 
@@ -79,6 +121,11 @@ export default function ReportForm({
         images: form.images,
         video: form.video,
         videoModerationFrames: form.videoModerationFrames,
+        networkDetails: isNetworkReport ? form.networkDetails : undefined,
+        transportDetails: isTransportReport ? form.transportDetails : undefined,
+        accessibilityDetails: isAccessibilityReport
+          ? form.accessibilityDetails
+          : undefined,
       });
 
       if (shouldClose) {
@@ -116,6 +163,9 @@ export default function ReportForm({
           <option value="evento">🎉 Evento</option>
           <option value="mare">🏖️ Mare</option>
           <option value="animali">🐾 Animali</option>
+          <option value="rete">Rete</option>
+          <option value="trasporti">Trasporti</option>
+          <option value="accessibilita">Accessibilità</option>
         </select>
 
         <fieldset className="mb-5">
@@ -134,7 +184,17 @@ export default function ReportForm({
                   type="button"
                   aria-pressed={selected}
                   onClick={() =>
-                    setForm((prev) => ({ ...prev, type: category }))
+                    setForm((prev) => ({
+                      ...prev,
+                      type: category,
+                      ...(category === "rete"
+                        ? {
+                            images: [],
+                            video: undefined,
+                            videoModerationFrames: [],
+                          }
+                        : {}),
+                    }))
                   }
                   style={
                     selected
@@ -204,6 +264,151 @@ export default function ReportForm({
           }
         />
 
+        {isNetworkReport ? (
+          <fieldset className="mb-4 space-y-3 rounded-2xl border border-white/20 bg-white/10 p-4">
+            <legend className="px-2 text-xs font-bold uppercase tracking-[0.14em] text-white/75">
+              Dettagli del disservizio
+            </legend>
+            <label className="block text-sm font-semibold">
+              Operatore
+              <input
+                type="text"
+                required
+                placeholder="Es. TIM, Vodafone, Iliad"
+                value={form.networkDetails?.operator ?? ""}
+                onChange={(event) =>
+                  setForm((previous) => ({
+                    ...previous,
+                    networkDetails: {
+                      operator: event.target.value,
+                      service: previous.networkDetails?.service ?? "internet",
+                      startedAt: previous.networkDetails?.startedAt ?? "",
+                    },
+                  }))
+                }
+                className="mt-1.5 w-full rounded-xl border border-white/70 bg-white/95 p-3 text-slate-900 outline-none placeholder:text-slate-400 focus:ring-4 focus:ring-white/20"
+              />
+            </label>
+            <label className="block text-sm font-semibold">
+              Linea coinvolta
+              <select
+                value={form.networkDetails?.service ?? "internet"}
+                onChange={(event) =>
+                  setForm((previous) => ({
+                    ...previous,
+                    networkDetails: {
+                      operator: previous.networkDetails?.operator ?? "",
+                      service: event.target.value as NetworkService,
+                      startedAt: previous.networkDetails?.startedAt ?? "",
+                    },
+                  }))
+                }
+                className="mt-1.5 w-full rounded-xl border border-white/70 bg-white/95 p-3 text-slate-900 outline-none focus:ring-4 focus:ring-white/20"
+              >
+                <option value="internet">Linea Internet</option>
+                <option value="rete-fissa">Rete fissa</option>
+                <option value="5g">Rete 5G</option>
+                <option value="tutte">Tutte le linee</option>
+              </select>
+            </label>
+            <label className="block text-sm font-semibold">
+              Inizio del disservizio
+              <input
+                type="datetime-local"
+                required
+                value={form.networkDetails?.startedAt ?? ""}
+                onChange={(event) =>
+                  setForm((previous) => ({
+                    ...previous,
+                    networkDetails: {
+                      operator: previous.networkDetails?.operator ?? "",
+                      service: previous.networkDetails?.service ?? "internet",
+                      startedAt: event.target.value,
+                    },
+                  }))
+                }
+                className="mt-1.5 w-full rounded-xl border border-white/70 bg-white/95 p-3 text-slate-900 outline-none focus:ring-4 focus:ring-white/20"
+              />
+            </label>
+            <p className="text-xs leading-5 text-white/70">
+              Le segnalazioni Rete sono esclusivamente testuali.
+            </p>
+          </fieldset>
+        ) : null}
+
+        {isTransportReport ? (
+          <fieldset className="mb-4 grid grid-cols-2 gap-3 rounded-2xl border border-white/20 bg-white/10 p-4">
+            <legend className="px-2 text-xs font-bold uppercase tracking-[0.14em] text-white/75">
+              Dettagli del trasporto
+            </legend>
+            <label className="text-sm font-semibold">
+              Mezzo
+              <select
+                value={form.transportDetails?.mode ?? "autobus"}
+                onChange={(event) =>
+                  setForm((previous) => ({
+                    ...previous,
+                    transportDetails: {
+                      mode: event.target.value as TransportMode,
+                      line: previous.transportDetails?.line ?? "",
+                    },
+                  }))
+                }
+                className="mt-1.5 w-full rounded-xl border border-white/70 bg-white/95 p-3 text-slate-900 outline-none"
+              >
+                <option value="metro">Metro</option>
+                <option value="autobus">Autobus</option>
+                <option value="tram">Tram</option>
+                <option value="treno">Treno</option>
+                <option value="altro">Altro</option>
+              </select>
+            </label>
+            <label className="text-sm font-semibold">
+              Linea
+              <input
+                type="text"
+                placeholder="Es. 64, M1"
+                value={form.transportDetails?.line ?? ""}
+                onChange={(event) =>
+                  setForm((previous) => ({
+                    ...previous,
+                    transportDetails: {
+                      mode: previous.transportDetails?.mode ?? "autobus",
+                      line: event.target.value,
+                    },
+                  }))
+                }
+                className="mt-1.5 w-full rounded-xl border border-white/70 bg-white/95 p-3 text-slate-900 outline-none placeholder:text-slate-400"
+              />
+            </label>
+          </fieldset>
+        ) : null}
+
+        {isAccessibilityReport ? (
+          <label className="mb-4 block rounded-2xl border border-white/20 bg-white/10 p-4 text-sm font-semibold">
+            Tipo di segnalazione
+            <select
+              value={form.accessibilityDetails?.kind ?? "ostacolo"}
+              onChange={(event) =>
+                setForm((previous) => ({
+                  ...previous,
+                  accessibilityDetails: {
+                    kind: event.target.value as AccessibilityReportKind,
+                  },
+                }))
+              }
+              className="mt-1.5 w-full rounded-xl border border-white/70 bg-white/95 p-3 text-slate-900 outline-none"
+            >
+              <option value="spazio-accessibile">Spazio accessibile</option>
+              <option value="ostacolo">Ostacolo o barriera</option>
+              <option value="parcheggio">Parcheggio riservato</option>
+              <option value="rampa">Rampa</option>
+              <option value="ascensore">Ascensore</option>
+              <option value="altro">Altro</option>
+            </select>
+          </label>
+        ) : null}
+
         {isCommunityEvent ? (
           <p className="-mt-1 mb-4 text-center text-xs leading-5 text-white/75">
             Gli Eventi raccontano la vita del territorio: momenti belli,
@@ -218,12 +423,16 @@ export default function ReportForm({
           </p>
         ) : null}
 
+        {!isNetworkReport ? (
+        <>
         <div className="mb-4 grid grid-cols-2 rounded-xl border border-white/20 bg-white/10 p-1 text-sm font-bold">
           <button type="button" onClick={() => { setMediaMode("photo"); setForm((prev) => ({ ...prev, video: undefined, videoModerationFrames: [] })); }} className={`rounded-lg py-2 transition ${mediaMode === "photo" ? "bg-white text-[#0F2D5F]" : "text-white/75"}`}>Foto</button>
           <button type="button" onClick={() => { setMediaMode("video"); setForm((prev) => ({ ...prev, images: [] })); }} className={`rounded-lg py-2 transition ${mediaMode === "video" ? "bg-white text-[#0F2D5F]" : "text-white/75"}`}>Video · 5 s</button>
         </div>
 
         {mediaMode === "photo" ? <ImagePicker maxImages={1} onChange={(images) => setForm((prev) => ({ ...prev, images, video: undefined, videoModerationFrames: [] }))} /> : <VideoRecorder onChange={(video, videoModerationFrames) => setForm((prev) => ({ ...prev, video: video ?? undefined, images: [], videoModerationFrames }))} />}
+        </>
+        ) : null}
 
         </div>
 
@@ -244,7 +453,9 @@ export default function ReportForm({
             disabled={
               submitting ||
               !form.title.trim() ||
-              (mediaMode === "video" &&
+              !hasRequiredCategoryDetails ||
+              (!isNetworkReport &&
+                mediaMode === "video" &&
                 (!form.video || form.videoModerationFrames?.length !== 3))
             }
             className="flex-1 rounded-xl border border-emerald-300/70 bg-emerald-500 py-3 font-medium text-white shadow-sm transition hover:bg-emerald-600 disabled:cursor-not-allowed disabled:bg-emerald-700/70"

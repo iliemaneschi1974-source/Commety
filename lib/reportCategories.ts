@@ -1,4 +1,6 @@
 import {
+  Accessibility,
+  BusFront,
   Globe,
   CloudRain,
   Car,
@@ -6,6 +8,7 @@ import {
   PartyPopper,
   PawPrint,
   Waves,
+  Wifi,
 } from "lucide-react";
 
 import { ReportFilter } from "@/contexts/MapContext";
@@ -68,5 +71,26 @@ export const REPORT_CATEGORIES: Record<
     label: "Animali",
     color: "#F97316",
     icon: PawPrint,
+  },
+
+  rete: {
+    id: "rete",
+    label: "Rete",
+    color: "#DB2777",
+    icon: Wifi,
+  },
+
+  trasporti: {
+    id: "trasporti",
+    label: "Trasporti",
+    color: "#65A30D",
+    icon: BusFront,
+  },
+
+  accessibilita: {
+    id: "accessibilita",
+    label: "Accessibilità",
+    color: "#475569",
+    icon: Accessibility,
   },
 };

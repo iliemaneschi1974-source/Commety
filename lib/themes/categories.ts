@@ -1,10 +1,13 @@
 import {
+  Accessibility,
+  BusFront,
   Car,
   CloudRain,
   PartyPopper,
   PawPrint,
   TriangleAlert,
   Waves,
+  Wifi,
   LucideIcon,
 } from "lucide-react"
 
@@ -52,5 +55,20 @@ export const CategoryThemes: Record<ReportCategory, CategoryTheme> = {
     label: "Animali",
     color: "#F97316",
     icon: PawPrint,
+  },
+  rete: {
+    label: "Rete",
+    color: "#DB2777",
+    icon: Wifi,
+  },
+  trasporti: {
+    label: "Trasporti",
+    color: "#65A30D",
+    icon: BusFront,
+  },
+  accessibilita: {
+    label: "Accessibilità",
+    color: "#475569",
+    icon: Accessibility,
   },
 }

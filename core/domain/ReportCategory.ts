@@ -9,6 +9,10 @@ export const REPORT_CATEGORIES = [
   "pericolo",
   "evento",
   "mare",
+  "animali",
+  "rete",
+  "trasporti",
+  "accessibilita",
 ] as const;
 
 /**

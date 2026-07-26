@@ -4,6 +4,8 @@ import { useMapContext, ReportFilter } from "@/contexts/MapContext";
 import { CATEGORY_COLORS } from "@/lib/categoryColors";
 
 import {
+  Accessibility,
+  BusFront,
   Globe,
   CloudRain,
   Car,
@@ -11,6 +13,7 @@ import {
   PartyPopper,
   PawPrint,
   Waves,
+  Wifi,
 } from "lucide-react";
 
 const FILTERS: {
@@ -55,6 +58,28 @@ const FILTERS: {
   },
 ];
 
+const RIGHT_FILTERS: {
+  id: ReportFilter;
+  title: string;
+  icon: React.ElementType;
+}[] = [
+  {
+    id: "rete",
+    title: "Rete",
+    icon: Wifi,
+  },
+  {
+    id: "trasporti",
+    title: "Trasporti",
+    icon: BusFront,
+  },
+  {
+    id: "accessibilita",
+    title: "Accessibilità",
+    icon: Accessibility,
+  },
+];
+
 export function CategoryRail() {
   return (
     <aside
@@ -66,14 +91,27 @@ export function CategoryRail() {
   );
 }
 
+export function SecondaryCategoryRail() {
+  return (
+    <aside
+      aria-label="Filtri categorie aggiuntive"
+      className="fixed right-0 top-[60%] z-[1100] flex -translate-y-1/2 flex-col gap-1 rounded-l-3xl border border-white/15 bg-[linear-gradient(145deg,#071a3c_0%,#0F2D5F_55%,#123b73_100%)] p-1 shadow-[0_18px_42px_rgba(2,16,42,0.38)] sm:top-1/2 sm:gap-2 sm:p-2"
+    >
+      <CategoryButtons compact filters={RIGHT_FILTERS} />
+    </aside>
+  );
+}
+
 function CategoryButtons({
   compact = false,
+  filters = FILTERS,
 }: {
   compact?: boolean;
+  filters?: typeof FILTERS;
 }) {
   const { filter, setFilter } = useMapContext();
 
-  return FILTERS.map((item) => {
+  return filters.map((item) => {
     const Icon = item.icon;
     const active = filter === item.id;
 

@@ -1,11 +1,14 @@
 import { ReactElement } from "react";
 import {
+  Accessibility,
+  BusFront,
   Car,
   CloudRain,
   PartyPopper,
   PawPrint,
   TriangleAlert,
   Waves,
+  Wifi,
 } from "lucide-react";
 
 import { ReportCategory } from "@/types/report";
@@ -65,5 +68,23 @@ export const REPORT_CATEGORY_CONFIG: Record<
     label: "Animali",
     color: "#F97316",
     icon: <PawPrint size={20} color="white" />,
+  },
+
+  rete: {
+    label: "Rete",
+    color: "#DB2777",
+    icon: <Wifi size={20} color="white" />,
+  },
+
+  trasporti: {
+    label: "Trasporti",
+    color: "#65A30D",
+    icon: <BusFront size={20} color="white" />,
+  },
+
+  accessibilita: {
+    label: "Accessibilità",
+    color: "#475569",
+    icon: <Accessibility size={20} color="white" />,
   },
 };

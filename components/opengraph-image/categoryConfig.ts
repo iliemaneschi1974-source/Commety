@@ -1,24 +1,8 @@
 import { ReportCategory } from "@/types/report";
 
 export interface OpenGraphCategoryConfig {
-  /**
-   * Nome visualizzato.
-   */
   readonly label: string;
-
-  /**
-   * Colore ufficiale della categoria.
-   */
   readonly color: string;
-
-  /**
-   * Emoji utilizzata dal renderer
-   * Open Graph.
-   *
-   * Le emoji sono pienamente supportate
-   * da @vercel/og e non richiedono
-   * librerie client.
-   */
   readonly emoji: string;
 }
 
@@ -31,25 +15,21 @@ export const OPEN_GRAPH_CATEGORY_CONFIG: Record<
     color: "#2563FF",
     emoji: "🌧️",
   },
-
   traffico: {
     label: "Traffico",
     color: "#F59E0B",
     emoji: "🚗",
   },
-
   pericolo: {
     label: "Pericolo",
     color: "#EF4444",
     emoji: "⚠️",
   },
-
   evento: {
     label: "Evento",
     color: "#8B5CF6",
     emoji: "🎉",
   },
-
   mare: {
     label: "Mare",
     color: "#06B6D4",
@@ -59,5 +39,20 @@ export const OPEN_GRAPH_CATEGORY_CONFIG: Record<
     label: "Animali",
     color: "#F97316",
     emoji: "🐾",
+  },
+  rete: {
+    label: "Rete",
+    color: "#DB2777",
+    emoji: "Wi-Fi",
+  },
+  trasporti: {
+    label: "Trasporti",
+    color: "#65A30D",
+    emoji: "Bus",
+  },
+  accessibilita: {
+    label: "Accessibilità",
+    color: "#475569",
+    emoji: "Accesso",
   },
 };

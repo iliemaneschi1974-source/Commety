@@ -115,6 +115,32 @@ export default function ReportBottomSheet({
             </div>
             <h2 className="mt-5 text-2xl font-black tracking-tight sm:text-3xl">{report.title}</h2>
             <p className="mt-2 leading-7 text-white/80">{report.description}</p>
+            {report.networkDetails ? (
+              <div className="mt-4 grid gap-2 rounded-2xl border border-white/15 bg-white/10 p-4 text-sm sm:grid-cols-3">
+                <ReportDetail label="Operatore" value={report.networkDetails.operator} />
+                <ReportDetail label="Linea" value={NETWORK_SERVICE_LABELS[report.networkDetails.service]} />
+                <ReportDetail
+                  label="Disservizio iniziato"
+                  value={formatLocalDateTime(report.networkDetails.startedAt)}
+                />
+              </div>
+            ) : null}
+            {report.transportDetails ? (
+              <div className="mt-4 grid gap-2 rounded-2xl border border-white/15 bg-white/10 p-4 text-sm sm:grid-cols-2">
+                <ReportDetail label="Mezzo" value={TRANSPORT_MODE_LABELS[report.transportDetails.mode]} />
+                {report.transportDetails.line ? (
+                  <ReportDetail label="Linea" value={report.transportDetails.line} />
+                ) : null}
+              </div>
+            ) : null}
+            {report.accessibilityDetails ? (
+              <div className="mt-4 rounded-2xl border border-white/15 bg-white/10 p-4 text-sm">
+                <ReportDetail
+                  label="Tipo"
+                  value={ACCESSIBILITY_KIND_LABELS[report.accessibilityDetails.kind]}
+                />
+              </div>
+            ) : null}
             {report.userId && report.displayName ? (
               <Link
                 href={report.userId === user?.uid ? "/profile" : `/profile/${encodeURIComponent(report.userId)}`}
@@ -184,6 +210,52 @@ export default function ReportBottomSheet({
 
 function Stat({ icon, value, label }: { icon: React.ReactNode; value: number; label: string }) {
   return <div className="rounded-2xl bg-white/8 p-3 text-center">{icon}<p className="mt-1 font-bold">{value}</p><p className="text-xs text-white/60">{label}</p></div>;
+}
+
+const NETWORK_SERVICE_LABELS = {
+  internet: "Linea Internet",
+  "rete-fissa": "Rete fissa",
+  "5g": "Rete 5G",
+  tutte: "Tutte le linee",
+} as const;
+
+const TRANSPORT_MODE_LABELS = {
+  metro: "Metro",
+  autobus: "Autobus",
+  tram: "Tram",
+  treno: "Treno",
+  altro: "Altro",
+} as const;
+
+const ACCESSIBILITY_KIND_LABELS = {
+  "spazio-accessibile": "Spazio accessibile",
+  ostacolo: "Ostacolo o barriera",
+  parcheggio: "Parcheggio riservato",
+  rampa: "Rampa",
+  ascensore: "Ascensore",
+  altro: "Altro",
+} as const;
+
+function ReportDetail({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <p className="text-xs font-semibold uppercase tracking-wide text-white/55">{label}</p>
+      <p className="mt-1 font-bold text-white">{value}</p>
+    </div>
+  );
+}
+
+function formatLocalDateTime(value: string): string {
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return value;
+  }
+
+  return new Intl.DateTimeFormat("it-IT", {
+    dateStyle: "short",
+    timeStyle: "short",
+  }).format(date);
 }
 
 function ReportVideo({ src }: { src: string }) {
