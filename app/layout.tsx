@@ -35,12 +35,12 @@ export const metadata: Metadata = {
   },
 
   description:
-    "Scopri cosa sta succedendo vicino a te con le segnalazioni in tempo reale della community Commety.",
+    "Scopri meteo, viabilità, rete, trasporti, accessibilità, eventi e pericoli con le segnalazioni in tempo reale della community Commety.",
 
   openGraph: {
     title: "Commety | La mappa del mondo reale",
     description:
-      "Scopri cosa sta succedendo vicino a te con le segnalazioni in tempo reale della community Commety.",
+      "Scopri meteo, viabilità, rete, trasporti, accessibilità, eventi e pericoli con le segnalazioni in tempo reale della community Commety.",
     url: appUrl,
     siteName: "Commety",
     locale: "it_IT",
@@ -60,7 +60,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Commety | La mappa del mondo reale",
     description:
-      "Scopri cosa sta succedendo vicino a te con le segnalazioni in tempo reale della community Commety.",
+      "Scopri meteo, viabilità, rete, trasporti, accessibilità, eventi e pericoli con le segnalazioni in tempo reale della community Commety.",
     images: [`${appUrl}/opengraph-image`],
   },
 };

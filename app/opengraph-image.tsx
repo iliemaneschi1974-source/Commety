@@ -70,7 +70,7 @@ export default async function OpenGraphImage() {
             <span style={{ display: "flex" }}>mondo reale.</span>
           </div>
           <div style={{ display: "flex", flexDirection: "column", marginTop: "28px", fontSize: "25px", lineHeight: 1.34, color: "rgba(255,255,255,0.84)", fontWeight: 500 }}>
-            <span style={{ display: "flex" }}>Eventi, avvisi e vita locale.</span>
+            <span style={{ display: "flex" }}>Rete, trasporti, accessibilità e vita locale.</span>
             <span style={{ display: "flex" }}>Tutto quello che accade, in tempo reale.</span>
           </div>
           <div style={{ display: "flex", alignItems: "center", marginTop: "auto", fontSize: "18px", fontWeight: 700, color: "#a9d5ff", letterSpacing: "0.4px" }}>

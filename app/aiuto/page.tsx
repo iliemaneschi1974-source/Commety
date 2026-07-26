@@ -5,7 +5,7 @@ import LegalPageLayout from "@/components/Legal/LegalPageLayout";
 export const metadata: Metadata = {
   title: "Aiuto e guida a Commety",
   description:
-    "Scopri come usare Commety: segnalazioni, foto, video, conferme, reputazione, XP, profili e messaggi privati.",
+    "Scopri come usare Commety e segnalare meteo, rete, trasporti, accessibilità, eventi, pericoli e altri aggiornamenti locali.",
   alternates: { canonical: "/aiuto" },
   robots: {
     index: true,
@@ -28,7 +28,7 @@ export default function HelpPage() {
     <LegalPageLayout
       eyebrow="Guida alla community"
       title="Come usare Commety"
-      updatedAt="20 luglio 2026"
+      updatedAt="26 luglio 2026"
     >
       <p className="commety-legal-lead">
         Commety è la mappa partecipata di ciò che accade davvero intorno a te:
@@ -89,6 +89,13 @@ export default function HelpPage() {
       <section id="categorie">
         <h2>2. Tipi di segnalazione e durata</h2>
         <p>
+          Oltre alle categorie dedicate alla vita locale, Commety include
+          <strong> Rete</strong>, <strong>Trasporti</strong> e
+          <strong> Accessibilità</strong>. Per queste segnalazioni il modulo
+          raccoglie alcuni dettagli specifici, così la community può capire
+          subito quale servizio o situazione è coinvolta.
+        </p>
+        <p>
           Ogni categoria ha un tempo di visibilità pensato per quanto
           l&apos;informazione resta utile. Le segnalazioni scadute spariscono dalla
           mappa e dalle sezioni recenti del profilo; i totali storici del
@@ -111,6 +118,9 @@ export default function HelpPage() {
               <tr><td className="px-4 py-3 font-bold text-cyan-200">Mare</td><td className="px-4 py-3">12 ore</td><td className="px-4 py-3">48 ore</td><td className="px-4 py-3">Mare mosso, condizioni della spiaggia</td></tr>
               <tr><td className="px-4 py-3 font-bold text-violet-200">Eventi</td><td className="px-4 py-3">24 ore</td><td className="px-4 py-3">72 ore</td><td className="px-4 py-3">Musica, sport, iniziative e momenti locali</td></tr>
               <tr><td className="px-4 py-3 font-bold text-orange-200">Animali</td><td className="px-4 py-3">24 ore</td><td className="px-4 py-3">72 ore</td><td className="px-4 py-3">Animali in difficoltà e luoghi pet-friendly</td></tr>
+              <tr><td className="px-4 py-3 font-bold text-pink-300">Rete</td><td className="px-4 py-3">4 ore</td><td className="px-4 py-3">12 ore</td><td className="px-4 py-3">Down Internet, rete fissa, 5G o disservizi completi</td></tr>
+              <tr><td className="px-4 py-3 font-bold text-lime-300">Trasporti</td><td className="px-4 py-3">4 ore</td><td className="px-4 py-3">12 ore</td><td className="px-4 py-3">Problemi su metro, autobus, tram e treni</td></tr>
+              <tr><td className="px-4 py-3 font-bold text-slate-300">Accessibilità</td><td className="px-4 py-3">24 ore</td><td className="px-4 py-3">72 ore</td><td className="px-4 py-3">Spazi accessibili, ostacoli, rampe, parcheggi e ascensori</td></tr>
             </tbody>
           </table>
         </div>
@@ -118,10 +128,29 @@ export default function HelpPage() {
           Un&apos;attività utile della community vicino alla scadenza può prolungare
           la visibilità, senza superare il limite massimo della categoria.
         </p>
+        <h3 className="mt-6 text-lg font-black text-white">Dettagli richiesti</h3>
+        <ul>
+          <li>
+            <strong>Rete:</strong> operatore, linea coinvolta e orario di
+            inizio. È una segnalazione esclusivamente testuale.
+          </li>
+          <li>
+            <strong>Trasporti:</strong> mezzo interessato e, quando
+            disponibile, numero o nome della linea.
+          </li>
+          <li>
+            <strong>Accessibilità:</strong> spazio accessibile, ostacolo,
+            parcheggio riservato, rampa, ascensore o altra situazione.
+          </li>
+        </ul>
       </section>
 
       <section id="media">
         <h2>3. Foto e video: cosa posso pubblicare?</h2>
+        <p>
+          La categoria <strong>Rete</strong> non accetta contenuti
+          multimediali: i dati sul disservizio sostituiscono foto e video.
+        </p>
         <p>
           Per ogni segnalazione puoi scegliere <strong>una foto</strong> oppure
           <strong> un video</strong>. La foto può essere scattata o scelta dalla
@@ -236,6 +265,8 @@ export default function HelpPage() {
           <li>Condividi solo informazioni reali, recenti e collocate nel punto giusto.</li>
           <li>Evita duplicati, segnalazioni ripetute e pubblicazioni in massa: Commety limita i comportamenti spam.</li>
           <li>Non insultare, non discriminare e non diffondere dati personali di altre persone.</li>
+          <li>Per l&apos;accessibilità descrivi il luogo o l&apos;ostacolo, senza identificare o fotografare persone fragili.</li>
+          <li>Per rete e trasporti indica soltanto disservizi osservati direttamente e dati verificabili.</li>
           <li>Per maltrattamenti di animali, pericoli immediati o emergenze, contatta prima i servizi competenti.</li>
           <li>Se qualcosa non va, non pubblicarlo di nuovo: correggilo oppure scrivi a <a href="mailto:privacy@commety.it">privacy@commety.it</a>.</li>
         </ul>

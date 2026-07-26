@@ -3,11 +3,13 @@ import type { Metadata } from "next";
 import PromoVideo from "@/components/Landing/PromoVideo";
 import NewsSlider from "@/components/News/NewsSlider";
 import {
+  Accessibility,
   Activity,
   ArrowRight,
   BadgeCheck,
   Bell,
   Bike,
+  BusFront,
   Car,
   CirclePlus,
   CloudRain,
@@ -23,6 +25,7 @@ import {
   Users,
   UsersRound,
   Waves,
+  Wifi,
 } from "lucide-react";
 
 const METALLIC_PANEL =
@@ -35,7 +38,7 @@ const siteUrl =
 export const metadata: Metadata = {
   title: "Segnalazioni in tempo reale sulla mappa",
   description:
-    "Scopri segnalazioni in tempo reale su meteo, viabilità, pericoli, eventi, mare e animali vicino a te. Commety è la mappa partecipata del mondo reale.",
+    "Scopri segnalazioni in tempo reale su meteo, viabilità, rete, trasporti, accessibilità, pericoli, eventi, mare e animali vicino a te.",
   keywords: [
     "segnalazioni in tempo reale",
     "mappa segnalazioni",
@@ -45,6 +48,9 @@ export const metadata: Metadata = {
     "eventi locali",
     "mare",
     "animali",
+    "guasti rete internet",
+    "trasporto pubblico",
+    "accessibilità urbana",
     "aree cani",
     "pet-friendly",
     "community",
@@ -67,7 +73,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Commety | Segnalazioni in tempo reale sulla mappa",
     description:
-      "La mappa partecipata per sapere cosa accade davvero vicino a te.",
+      "Meteo, viabilità, rete, trasporti e accessibilità: scopri cosa accade davvero vicino a te.",
     url: siteUrl,
     siteName: "Commety",
     locale: "it_IT",
@@ -85,7 +91,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Commety | Segnalazioni in tempo reale sulla mappa",
     description:
-      "La mappa partecipata per sapere cosa accade davvero vicino a te.",
+      "Meteo, viabilità, rete, trasporti e accessibilità: scopri cosa accade davvero vicino a te.",
     images: ["/og-image.png"],
   },
 };
@@ -97,7 +103,7 @@ const structuredData = {
   url: siteUrl,
   inLanguage: "it-IT",
   description:
-    "La mappa partecipata con segnalazioni in tempo reale su ciò che accade sul territorio.",
+    "La mappa partecipata con segnalazioni in tempo reale su meteo, mobilità, rete, trasporti, accessibilità e vita locale.",
 };
 
 interface LandingFeatureProps {
@@ -252,6 +258,9 @@ export default function Home() {
               <span className="rounded-full border border-[#06B6D4]/45 bg-[#06B6D4]/15 px-4 py-2 text-sm font-semibold text-white"><Waves className="mr-1.5 inline size-4 text-[#06B6D4]" />Mare</span>
               <span className="rounded-full border border-[#F97316]/45 bg-[#F97316]/15 px-4 py-2 text-sm font-semibold text-white"><PawPrint className="mr-1.5 inline size-4 text-[#F97316]" />Animali</span>
               <span className="rounded-full border border-[#F59E0B]/45 bg-[#F59E0B]/15 px-4 py-2 text-sm font-semibold text-white"><Car className="mr-1.5 inline size-4 text-[#F59E0B]" />Viabilità</span>
+              <span className="rounded-full border border-[#DB2777]/45 bg-[#DB2777]/15 px-4 py-2 text-sm font-semibold text-white"><Wifi className="mr-1.5 inline size-4 text-[#DB2777]" />Rete</span>
+              <span className="rounded-full border border-[#65A30D]/45 bg-[#65A30D]/15 px-4 py-2 text-sm font-semibold text-white"><BusFront className="mr-1.5 inline size-4 text-[#84CC16]" />Trasporti</span>
+              <span className="rounded-full border border-[#475569]/60 bg-[#475569]/25 px-4 py-2 text-sm font-semibold text-white"><Accessibility className="mr-1.5 inline size-4 text-slate-300" />Accessibilità</span>
             </div>
 
             <p className="mt-5 text-sm font-medium text-[#c7e4ff]">
@@ -292,9 +301,41 @@ export default function Home() {
 
           <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
             <LandingFeature className="commety-section-card" icon={<MapPin className="size-7" />} title="Osserva" description="Guarda in tempo reale cosa sta accadendo vicino a te sulla mappa." />
-            <LandingFeature className="commety-section-card commety-section-card-delay-1" icon={<CirclePlus className="size-7 text-emerald-600" />} title="Segnala" description="Invia una segnalazione in pochi secondi: meteo, traffico, eventi o pericoli." />
+            <LandingFeature className="commety-section-card commety-section-card-delay-1" icon={<CirclePlus className="size-7 text-emerald-600" />} title="Segnala" description="Invia in pochi secondi segnalazioni su meteo, mobilità, rete, accessibilità, eventi e pericoli." />
             <LandingFeature className="commety-section-card commety-section-card-delay-2" icon={<BadgeCheck className="size-7 text-amber-500" />} title="Conferma" description="La community verifica le segnalazioni e rende le informazioni più affidabili." />
             <LandingFeature className="commety-section-card commety-section-card-delay-3" icon={<Bell className="size-7 text-violet-600" />} title="Rimani informato" description="Ricevi aggiornamenti sulle situazioni che ti interessano davvero." />
+          </div>
+        </div>
+      </section>
+
+      <section className="border-y border-white/10 bg-[#071d43]/70 py-20">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="text-sm font-bold uppercase tracking-[0.22em] text-[#a9d5ff]">Più utile, ogni giorno</p>
+            <h2 className="mt-4 text-4xl font-black tracking-tight text-white sm:text-5xl">
+              Anche rete, trasporti e accessibilità diventano informazioni condivise.
+            </h2>
+            <p className="mt-5 text-lg leading-8 text-white/75">
+              Tre categorie dedicate aiutano la community a riconoscere disservizi digitali,
+              problemi del trasporto pubblico e condizioni di accessibilità degli spazi.
+            </p>
+          </div>
+          <div className="mt-12 grid gap-5 lg:grid-cols-3">
+            <LandingFeature
+              icon={<Wifi className="size-7 text-pink-300" />}
+              title="Rete"
+              description="Segnala down degli operatori indicando linea coinvolta e orario di inizio del disservizio."
+            />
+            <LandingFeature
+              icon={<BusFront className="size-7 text-lime-300" />}
+              title="Trasporti"
+              description="Condividi problemi che interessano autobus, tram, metropolitana, treni e relative linee."
+            />
+            <LandingFeature
+              icon={<Accessibility className="size-7 text-slate-300" />}
+              title="Accessibilità"
+              description="Indica spazi accessibili, ostacoli, parcheggi riservati, rampe e ascensori."
+            />
           </div>
         </div>
       </section>
@@ -330,7 +371,7 @@ export default function Home() {
           <div className="mt-12 grid gap-5 lg:grid-cols-3">
             <LandingFeature className="commety-section-card" icon={<Activity className="size-7 text-sky-600" />} title="Tempo reale" description="Le informazioni arrivano dalle persone presenti sul territorio, nel momento in cui accadono." />
             <LandingFeature className="commety-section-card commety-section-card-delay-1" icon={<UsersRound className="size-7 text-emerald-600" />} title="Verificato dalla community" description="Le conferme rendono visibile la fiducia intorno a ogni segnalazione." />
-            <LandingFeature className="commety-section-card commety-section-card-delay-2" icon={<Globe className="size-7 text-indigo-600" />} title="Tutto in una mappa" description="Meteo, viabilità, eventi e pericoli raccolti in un'unica esperienza immediata." />
+            <LandingFeature className="commety-section-card commety-section-card-delay-2" icon={<Globe className="size-7 text-indigo-600" />} title="Tutto in una mappa" description="Meteo, viabilità, rete, trasporti, accessibilità, eventi e pericoli in un'unica esperienza." />
           </div>
         </div>
       </section>
