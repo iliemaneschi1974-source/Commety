@@ -22,6 +22,10 @@
 /functions/lib
 /public/video-source/
 
+# confidential sale data room - never publish
+/vendita-commety/
+/Commety-data-room-vendita.zip
+
 # misc
 .DS_Store
 *.pem
