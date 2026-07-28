@@ -1,6 +1,7 @@
 "use client";
 
 import Script from "next/script";
+import { usePathname } from "next/navigation";
 
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -12,9 +13,13 @@ const MEASUREMENT_ID = "G-DD7CJT3NQ9";
  * Privacy Policy and avoids tracking visitors who have not opted in.
  */
 export default function GoogleAnalytics() {
+  const pathname = usePathname();
   const { user } = useAuth();
 
-  if (!user?.consents?.analyticsEnabled) {
+  if (
+    pathname?.startsWith("/admin-comune") ||
+    !user?.consents?.analyticsEnabled
+  ) {
     return null;
   }
 

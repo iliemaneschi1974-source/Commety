@@ -5,6 +5,7 @@ import { ModerationRequest } from "../application/ModerationRequest";
 import { ModerationService } from "../application/ModerationService";
 import { ReportModerationUpdater } from "./ReportModerationUpdater";
 import { ReportSpamGuard } from "./ReportSpamGuard";
+import { resolveRomaTerritory } from "../territory/RomaTerritoryResolver";
 
 /**
  * Modera i report creati senza immagini.
@@ -24,6 +25,18 @@ export const reportCreatedTrigger =
 
       if (!report) {
         return;
+      }
+
+      const territory = resolveRomaTerritory(
+        report.lat,
+        report.lng
+      );
+      if (territory) {
+        await event.data?.ref.update({territory});
+        logger.info("Municipality resolved from coordinates.", {
+          reportId: event.params.reportId,
+          municipalityCode: territory.municipalityCode,
+        });
       }
 
       const spamGuard = new ReportSpamGuard();

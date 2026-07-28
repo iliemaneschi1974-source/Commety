@@ -108,6 +108,19 @@ export interface Report {
   address?: string;
   city?: string;
 
+  /**
+   * Territorio amministrativo determinato automaticamente dal backend
+   * attraverso le coordinate della segnalazione.
+   */
+  territory?: {
+    municipalityCode: string;
+    municipalityName: string;
+    provinceCode: string;
+    regionCode: string;
+    regionName: string;
+    source: string;
+  };
+
   status: ReportStatus;
 
   /** Motivo della chiusura anticipata, quando deciso dalla community. */

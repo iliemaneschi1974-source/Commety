@@ -1,12 +1,14 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 import { useAuth } from "@/contexts/AuthContext";
 import { LEGAL_DOCUMENT_VERSION } from "@/lib/legal";
 
 export default function LegalConsentGate() {
+  const pathname = usePathname();
   const { acceptLegalConsent, loading, signOut, user } = useAuth();
   const [analyticsEnabled, setAnalyticsEnabled] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -16,7 +18,7 @@ export default function LegalConsentGate() {
     user?.consents?.termsVersion !== LEGAL_DOCUMENT_VERSION
   );
 
-  if (!requiresConsent) {
+  if (pathname?.startsWith("/admin-comune") || !requiresConsent) {
     return null;
   }
 

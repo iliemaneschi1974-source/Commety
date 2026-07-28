@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 import {
@@ -17,6 +18,7 @@ const EMPTY_PREFERENCES: CommetyPreferencesValue = {
 };
 
 export default function PreferencesOnboarding() {
+  const pathname = usePathname();
   const { user } = useAuth();
   const currentUser = user;
   const [draft, setDraft] = useState<CommetyPreferencesValue>(EMPTY_PREFERENCES);
@@ -26,7 +28,13 @@ export default function PreferencesOnboarding() {
 
   const shouldShow = Boolean(currentUser) && !currentUser?.preferences.preferencesOnboardingCompleted;
 
-  if (!currentUser || !shouldShow) return null;
+  if (
+    pathname?.startsWith("/admin-comune") ||
+    !currentUser ||
+    !shouldShow
+  ) {
+    return null;
+  }
 
   async function handleSave() {
     if (!currentUser) return;

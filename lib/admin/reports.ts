@@ -1,0 +1,197 @@
+import "server-only";
+
+import { FieldValue, Timestamp } from "firebase-admin/firestore";
+
+import { adminDb } from "@/lib/firebase-admin";
+import {
+  AdminPriority,
+  AdminReport,
+  AdminReportStatus,
+} from "@/lib/admin/dashboard-types";
+
+const ROMA_MUNICIPALITY_CODE = "058091";
+const REPORT_LIMIT = 500;
+
+const categoryLabels: Record<string, AdminReport["category"]> = {
+  traffico: "Traffico",
+  pericolo: "Pericolo",
+  trasporti: "Trasporti",
+  accessibilita: "Accessibilità",
+  rete: "Rete",
+  animali: "Animali",
+  meteo: "Meteo",
+  evento: "Evento",
+  mare: "Meteo",
+};
+
+function asDate(value: unknown): Date {
+  if (value instanceof Timestamp) return value.toDate();
+  if (
+    value &&
+    typeof value === "object" &&
+    "toDate" in value &&
+    typeof value.toDate === "function"
+  ) {
+    return value.toDate();
+  }
+  return new Date(0);
+}
+
+function asStatus(value: unknown): AdminReportStatus {
+  const allowed: AdminReportStatus[] = [
+    "NEW",
+    "TAKEN",
+    "IN_PROGRESS",
+    "RESOLVED",
+    "OUT_OF_SCOPE",
+    "DUPLICATE",
+    "HIDDEN",
+  ];
+  return allowed.includes(value as AdminReportStatus)
+    ? (value as AdminReportStatus)
+    : "NEW";
+}
+
+function asPriority(value: unknown): AdminPriority {
+  const allowed: AdminPriority[] = [
+    "LOW",
+    "MEDIUM",
+    "HIGH",
+    "URGENT",
+  ];
+  return allowed.includes(value as AdminPriority)
+    ? (value as AdminPriority)
+    : "MEDIUM";
+}
+
+function initialStatus(
+  workflowStatus: unknown,
+  publicStatus: unknown
+): AdminReportStatus {
+  if (workflowStatus) return asStatus(workflowStatus);
+  return publicStatus === "RESOLVED" ? "RESOLVED" : "NEW";
+}
+
+export async function getRomaAdminReports(): Promise<AdminReport[]> {
+  const snapshot = await adminDb
+    .collection("reports")
+    .where(
+      "territory.municipalityCode",
+      "==",
+      ROMA_MUNICIPALITY_CODE
+    )
+    .limit(REPORT_LIMIT)
+    .get();
+
+  return snapshot.docs
+    .filter((document) => document.data().isVisible === true)
+    .map((document) => {
+      const data = document.data();
+      const workflow = data.municipalWorkflow ?? {};
+      const firstImage = Array.isArray(data.images)
+        ? data.images[0]
+        : undefined;
+      const createdAt = asDate(data.createdAt);
+
+      return {
+        id: document.id,
+        title: String(data.title ?? "Segnalazione senza titolo"),
+        description: String(data.description ?? ""),
+        category:
+          categoryLabels[String(data.type)] ?? "Pericolo",
+        status: initialStatus(workflow.status, data.status),
+        priority: asPriority(workflow.priority),
+        municipality: "Roma",
+        district: String(
+          data.territory?.districtName ?? "Municipio non assegnato"
+        ),
+        address: String(
+          data.address ?? "Indirizzo non disponibile"
+        ),
+        createdAt: createdAt.toISOString(),
+        author: {
+          displayName: data.userId
+            ? String(
+                data.displayName ??
+                  data.username ??
+                  "Utente registrato"
+              )
+            : "Utente anonimo",
+          kind: data.userId
+            ? ("Registrato" as const)
+            : ("Anonimo" as const),
+        },
+        confirmations: Number(data.confirmations ?? 0),
+        activeVotes: Number(data.activeStatusVotes ?? 0),
+        expiredVotes: Number(data.endedStatusVotes ?? 0),
+        media: firstImage?.url
+          ? {
+              type: "image" as const,
+              url: String(firstImage.url),
+              alt: `Foto della segnalazione ${String(data.title ?? "")}`,
+            }
+          : data.video?.url
+            ? {
+                type: "video" as const,
+                url: String(data.video.url),
+                alt: `Video della segnalazione ${String(data.title ?? "")}`,
+              }
+            : undefined,
+        institutionalNote:
+          typeof workflow.institutionalNote === "string"
+            ? workflow.institutionalNote
+            : undefined,
+      } satisfies AdminReport;
+    })
+    .sort(
+      (first, second) =>
+        new Date(second.createdAt).getTime() -
+        new Date(first.createdAt).getTime()
+    );
+}
+
+export interface AdminReportUpdate {
+  status?: AdminReportStatus;
+  priority?: AdminPriority;
+  institutionalNote?: string;
+}
+
+export async function updateRomaAdminReport(
+  reportId: string,
+  update: AdminReportUpdate,
+  adminEmail: string
+): Promise<void> {
+  const reportRef = adminDb.collection("reports").doc(reportId);
+
+  await adminDb.runTransaction(async (transaction) => {
+    const snapshot = await transaction.get(reportRef);
+    if (!snapshot.exists) {
+      throw new Error("REPORT_NOT_FOUND");
+    }
+    if (
+      snapshot.data()?.territory?.municipalityCode !==
+      ROMA_MUNICIPALITY_CODE
+    ) {
+      throw new Error("REPORT_OUTSIDE_TERRITORY");
+    }
+
+    const fields: Record<string, unknown> = {
+      "municipalWorkflow.updatedAt": FieldValue.serverTimestamp(),
+      "municipalWorkflow.updatedBy": adminEmail,
+      "municipalWorkflow.municipalityCode":
+        ROMA_MUNICIPALITY_CODE,
+    };
+    if (update.status) {
+      fields["municipalWorkflow.status"] = update.status;
+    }
+    if (update.priority) {
+      fields["municipalWorkflow.priority"] = update.priority;
+    }
+    if (update.institutionalNote !== undefined) {
+      fields["municipalWorkflow.institutionalNote"] =
+        update.institutionalNote;
+    }
+
+    transaction.update(reportRef, fields);
+  });
+}
