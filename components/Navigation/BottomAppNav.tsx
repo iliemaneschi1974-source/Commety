@@ -8,7 +8,10 @@ import { House, LogIn, LogOut, Map, MessageCircle, UserRound } from "lucide-reac
 import LoginModal from "@/components/Auth/LoginModal";
 import { useAuth } from "@/contexts/AuthContext";
 import { getChatInbox } from "@/services/chat";
-import { getNotificationInbox } from "@/services/notifications";
+import {
+  getNotificationInbox,
+  NOTIFICATIONS_CHANGED_EVENT,
+} from "@/services/notifications";
 
 type NavigationItemProps = {
   href: string;
@@ -95,6 +98,21 @@ export default function BottomAppNav() {
       window.clearTimeout(timeout);
       window.clearInterval(interval);
     };
+  }, [loadPendingRequests]);
+
+  useEffect(() => {
+    const refreshNotifications = () => {
+      void loadPendingRequests();
+    };
+    window.addEventListener(
+      NOTIFICATIONS_CHANGED_EVENT,
+      refreshNotifications
+    );
+    return () =>
+      window.removeEventListener(
+        NOTIFICATIONS_CHANGED_EVENT,
+        refreshNotifications
+      );
   }, [loadPendingRequests]);
 
   if (

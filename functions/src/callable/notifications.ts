@@ -134,6 +134,19 @@ export const notifications = onCall(
       return {success: true};
     }
 
+    if (action === "deleteAll") {
+      const snapshot = await adminDb
+        .collection("userNotifications")
+        .where("userId", "==", uid)
+        .get();
+      const writer = adminDb.bulkWriter();
+      snapshot.docs.forEach((document) => {
+        writer.delete(document.ref);
+      });
+      await writer.close();
+      return {success: true};
+    }
+
     throw new HttpsError(
       "invalid-argument",
       "Azione aggiornamenti non valida."

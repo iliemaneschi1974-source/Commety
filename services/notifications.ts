@@ -7,8 +7,11 @@ type NotificationResponse = NotificationInbox & {
   success?: boolean;
 };
 
+export const NOTIFICATIONS_CHANGED_EVENT =
+  "commety-notifications-changed";
+
 async function callNotifications(
-  action: "inbox" | "markRead" | "markAllRead",
+  action: "inbox" | "markRead" | "markAllRead" | "deleteAll",
   payload: Record<string, unknown> = {}
 ): Promise<NotificationResponse> {
   const callable = httpsCallable<
@@ -35,4 +38,8 @@ export async function markNotificationRead(
 
 export async function markAllNotificationsRead(): Promise<void> {
   await callNotifications("markAllRead");
+}
+
+export async function deleteAllNotifications(): Promise<void> {
+  await callNotifications("deleteAll");
 }

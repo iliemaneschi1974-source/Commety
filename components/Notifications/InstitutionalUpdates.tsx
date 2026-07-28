@@ -5,14 +5,17 @@ import {
   CheckCheck,
   ChevronRight,
   FileCheck2,
+  Trash2,
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import {
+  deleteAllNotifications,
   getNotificationInbox,
   markAllNotificationsRead,
   markNotificationRead,
+  NOTIFICATIONS_CHANGED_EVENT,
 } from "@/services/notifications";
 import type { InstitutionalNotification } from "@/types/notification";
 
@@ -28,6 +31,9 @@ export default function InstitutionalUpdates() {
   const [items, setItems] = useState<InstitutionalNotification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [busyAction, setBusyAction] = useState<
+    "read" | "delete" | null
+  >(null);
   const [error, setError] = useState("");
 
   const load = useCallback(async () => {
@@ -67,17 +73,66 @@ export default function InstitutionalUpdates() {
         )
       );
       setUnreadCount((current) => Math.max(0, current - 1));
+      window.dispatchEvent(
+        new Event(NOTIFICATIONS_CHANGED_EVENT)
+      );
     }
     router.push(`/mappa?report=${encodeURIComponent(item.reportId)}`);
   }
 
   async function markAllRead() {
-    await markAllNotificationsRead();
-    const readAt = new Date().toISOString();
-    setItems((current) =>
-      current.map((item) => ({ ...item, readAt: item.readAt ?? readAt }))
-    );
-    setUnreadCount(0);
+    if (busyAction || unreadCount === 0) return;
+
+    try {
+      setBusyAction("read");
+      await markAllNotificationsRead();
+      const readAt = new Date().toISOString();
+      setItems((current) =>
+        current.map((item) => ({
+          ...item,
+          readAt: item.readAt ?? readAt,
+        }))
+      );
+      setUnreadCount(0);
+      setError("");
+      window.dispatchEvent(
+        new Event(NOTIFICATIONS_CHANGED_EVENT)
+      );
+    } catch (nextError) {
+      console.error("Errore lettura aggiornamenti:", nextError);
+      setError(
+        "Non è stato possibile segnare gli aggiornamenti come letti."
+      );
+    } finally {
+      setBusyAction(null);
+    }
+  }
+
+  async function deleteNotifications() {
+    if (busyAction || items.length === 0) return;
+    if (
+      !window.confirm(
+        "Vuoi eliminare definitivamente tutte le notifiche? Questa azione non può essere annullata."
+      )
+    ) {
+      return;
+    }
+
+    try {
+      setBusyAction("delete");
+      await deleteAllNotifications();
+      setItems([]);
+      setUnreadCount(0);
+      setError("");
+      window.dispatchEvent(
+        new Event(NOTIFICATIONS_CHANGED_EVENT)
+      );
+    } catch (nextError) {
+      console.error("Errore eliminazione aggiornamenti:", nextError);
+      setError("Non è stato possibile eliminare le notifiche.");
+    } finally {
+      setBusyAction(null);
+    }
   }
 
   if (loading) {
@@ -99,15 +154,31 @@ export default function InstitutionalUpdates() {
             Comunicazioni ufficiali sulle tue segnalazioni.
           </p>
         </div>
-        {unreadCount > 0 ? (
-          <button
-            type="button"
-            onClick={() => void markAllRead()}
-            className="inline-flex items-center gap-2 rounded-xl bg-white px-3 py-2 text-xs font-black text-[#1762a8] shadow-sm ring-1 ring-slate-200"
-          >
-            <CheckCheck className="size-4" />
-            Segna tutte come lette
-          </button>
+        {items.length > 0 ? (
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => void markAllRead()}
+              disabled={busyAction !== null || unreadCount === 0}
+              className="inline-flex items-center gap-2 rounded-xl bg-white px-3 py-2 text-xs font-black text-[#1762a8] shadow-sm ring-1 ring-slate-200 transition disabled:cursor-not-allowed disabled:opacity-45"
+            >
+              <CheckCheck className="size-4" />
+              {busyAction === "read"
+                ? "Salvataggio..."
+                : "Segna come lette"}
+            </button>
+            <button
+              type="button"
+              onClick={() => void deleteNotifications()}
+              disabled={busyAction !== null}
+              className="inline-flex items-center gap-2 rounded-xl bg-red-50 px-3 py-2 text-xs font-black text-red-600 shadow-sm ring-1 ring-red-100 transition hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-45"
+            >
+              <Trash2 className="size-4" />
+              {busyAction === "delete"
+                ? "Eliminazione..."
+                : "Elimina notifiche"}
+            </button>
+          </div>
         ) : null}
       </div>
 
