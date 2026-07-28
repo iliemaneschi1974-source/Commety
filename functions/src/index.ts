@@ -9,6 +9,7 @@ import { expirationScheduler } from "./schedulers/expirationScheduler";
 import { deleteAccount } from "./callable/deleteAccount";
 import { chat } from "./callable/chat";
 import { getPublicProfile } from "./callable/publicProfile";
+import { communityAction } from "./callable/communityAction";
 
 /**
  * Configurazione globale delle Cloud Functions.
@@ -49,3 +50,6 @@ export { chat };
 
 /** Profilo pubblico, limitato ai dati scelti dall'utente. */
 export { getPublicProfile };
+
+/** Conferme e voti sullo stato delle segnalazioni. */
+export { communityAction };

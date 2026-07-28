@@ -3,15 +3,13 @@ import {
   doc,
   getDocs,
   onSnapshot,
-  runTransaction,
-  serverTimestamp,
   writeBatch,
 } from "firebase/firestore";
+import { httpsCallable } from "firebase/functions";
 
-import { db } from "@/lib/firebase";
+import { db, functions } from "@/lib/firebase";
 import { getCurrentUser } from "@/services/auth";
 import { getDeviceId, getReportOwnerKey } from "@/services/device";
-import { registerReportActivity } from "@/services/reportLifecycle";
 
 export type ReportStatusVote = "ACTIVE" | "ENDED";
 
@@ -33,10 +31,17 @@ export function subscribeReportStatusVote(
     getStatusVoteId()
   );
 
-  return onSnapshot(voteRef, (snapshot) => {
-    const value = snapshot.data()?.vote;
-    callback(value === "ACTIVE" || value === "ENDED" ? value : null);
-  });
+  return onSnapshot(
+    voteRef,
+    (snapshot) => {
+      const value = snapshot.data()?.vote;
+      callback(value === "ACTIVE" || value === "ENDED" ? value : null);
+    },
+    (error) => {
+      console.error("Impossibile leggere il voto sullo stato:", error);
+      callback(null);
+    }
+  );
 }
 
 /**
@@ -47,82 +52,26 @@ export async function submitReportStatusVote(
   reportId: string,
   vote: ReportStatusVote
 ): Promise<{ closed: boolean }> {
-  const firebaseUser = getCurrentUser();
-  const voterId = getStatusVoteId();
   const ownerKey = await getReportOwnerKey(reportId);
-  const reportRef = doc(db, "reports", reportId);
-  const voteRef = doc(reportRef, "statusVotes", voterId);
-
-  const result = await runTransaction(db, async (transaction) => {
-    const reportSnapshot = await transaction.get(reportRef);
-
-    if (!reportSnapshot.exists()) {
-      throw new Error("Segnalazione non trovata.");
-    }
-
-    const report = reportSnapshot.data();
-    const isOwner =
-      report.userId === firebaseUser?.uid ||
-      report.authorConfirmationKey === ownerKey;
-
-    if (isOwner) {
-      throw new Error("Non puoi aggiornare lo stato di una segnalazione creata da te.");
-    }
-
-    if (report.status !== "ACTIVE") {
-      throw new Error("Questa segnalazione non è più attiva.");
-    }
-
-    const previousSnapshot = await transaction.get(voteRef);
-    const previous = previousSnapshot.data()?.vote as ReportStatusVote | undefined;
-
-    if (previous === vote) {
-      return { refreshActivity: false, closed: false };
-    }
-
-    let activeVotes = Number(report.activeStatusVotes ?? 0);
-    let endedVotes = Number(report.endedStatusVotes ?? 0);
-
-    if (previous === "ACTIVE") activeVotes = Math.max(0, activeVotes - 1);
-    if (previous === "ENDED") endedVotes = Math.max(0, endedVotes - 1);
-
-    if (vote === "ACTIVE") activeVotes += 1;
-    if (vote === "ENDED") endedVotes += 1;
-
-    transaction.set(voteRef, {
-      vote,
-      userId: firebaseUser?.uid ?? null,
-      deviceId: getDeviceId(),
-      updatedAt: serverTimestamp(),
-    });
-
-    transaction.update(reportRef, {
-      activeStatusVotes: activeVotes,
-      endedStatusVotes: endedVotes,
-      ...(endedVotes >= ENDED_REPORT_VOTES_REQUIRED
-        ? { status: "RESOLVED", resolvedReason: "COMMUNITY_ENDED" }
-        : {}),
-      updatedAt: serverTimestamp(),
-    });
-
-    return {
-      refreshActivity: vote === "ACTIVE",
-      closed: endedVotes >= ENDED_REPORT_VOTES_REQUIRED,
-    };
+  const action = httpsCallable<
+    {
+      action: "SUBMIT_STATUS_VOTE";
+      reportId: string;
+      deviceId: string;
+      ownerKey: string;
+      vote: ReportStatusVote;
+    },
+    { closed: boolean; vote: ReportStatusVote }
+  >(functions, "communityAction");
+  const result = await action({
+    action: "SUBMIT_STATUS_VOTE",
+    reportId,
+    deviceId: getDeviceId(),
+    ownerKey,
+    vote,
   });
 
-  if (result.refreshActivity) {
-    try {
-      await registerReportActivity(reportId, "confirmation");
-    } catch (error) {
-      console.error(
-        "Impossibile aggiornare la scadenza dopo il voto sullo stato:",
-        error
-      );
-    }
-  }
-
-  return { closed: result.closed };
+  return { closed: result.data.closed };
 }
 
 export async function deleteReportStatusVotes(reportId: string): Promise<void> {
