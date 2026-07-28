@@ -79,6 +79,21 @@ function formatDate(value: string): string {
   }).format(new Date(value));
 }
 
+function escapeCsvCell(value: unknown): string {
+  let text = String(value ?? "");
+  if (/^[=+\-@]/.test(text)) text = `'${text}`;
+  return `"${text.replaceAll('"', '""')}"`;
+}
+
+function escapeHtml(value: unknown): string {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
 function StatusBadge({ status }: { status: AdminReportStatus }) {
   return (
     <span
@@ -109,6 +124,11 @@ export default function AdminDashboard({
   const [loggingOut, setLoggingOut] = useState(false);
   const [saving, setSaving] = useState(false);
   const [actionMessage, setActionMessage] = useState("");
+  const [activeSection, setActiveSection] = useState("dashboard");
+  const [reportMonth, setReportMonth] = useState(() => {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+  });
 
   useEffect(() => {
     async function refreshReports() {
@@ -134,6 +154,12 @@ export default function AdminDashboard({
         // Il polling riproverà automaticamente al ciclo successivo.
       }
     }
+
+    void fetch("/admin-comune/session", {
+      method: "POST",
+    }).then((response) => {
+      if (response.ok) void refreshReports();
+    });
 
     const interval = window.setInterval(
       () => void refreshReports(),
@@ -225,6 +251,37 @@ export default function AdminDashboard({
         )
       : 0;
 
+  const monthlyReports = useMemo(
+    () =>
+      reports.filter((report) => {
+        const createdAt = new Date(report.createdAt);
+        const key = `${createdAt.getFullYear()}-${String(
+          createdAt.getMonth() + 1
+        ).padStart(2, "0")}`;
+        return key === reportMonth;
+      }),
+    [reportMonth, reports]
+  );
+
+  const monthlyLabel = useMemo(() => {
+    const [year, month] = reportMonth.split("-").map(Number);
+    return new Intl.DateTimeFormat("it-IT", {
+      month: "long",
+      year: "numeric",
+    }).format(new Date(year, month - 1, 1));
+  }, [reportMonth]);
+
+  const monthlyResolved = monthlyReports.filter(
+    (report) => report.status === "RESOLVED"
+  ).length;
+  const monthlyUrgent = monthlyReports.filter(
+    (report) => report.priority === "URGENT"
+  ).length;
+  const monthlyConfirmations = monthlyReports.reduce(
+    (total, report) => total + report.confirmations,
+    0
+  );
+
   async function updateSelected(
     changes: Partial<Pick<AdminReport, "status" | "priority" | "institutionalNote">>
   ) {
@@ -281,11 +338,154 @@ export default function AdminDashboard({
     router.refresh();
   }
 
+  function navigateTo(section: string) {
+    setActiveSection(section);
+    setMenuOpen(false);
+    if (section === "dashboard") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    document
+      .getElementById(section)
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function exportCsv(
+    items: AdminReport[],
+    filename: string
+  ) {
+    const headers = [
+      "ID",
+      "Data e ora",
+      "Titolo",
+      "Categoria",
+      "Stato",
+      "Priorità",
+      "Luogo",
+      "Municipio",
+      "Autore",
+      "Conferme",
+      "Segnalazione valida",
+      "Segnalazione scaduta",
+      "Nota istituzionale",
+    ];
+    const rows = items.map((report) => [
+      report.id,
+      new Date(report.createdAt).toLocaleString("it-IT"),
+      report.title,
+      report.category,
+      ADMIN_STATUS_LABELS[report.status],
+      ADMIN_PRIORITY_LABELS[report.priority],
+      report.address,
+      report.district,
+      report.author.displayName,
+      report.confirmations,
+      report.activeVotes,
+      report.expiredVotes,
+      report.institutionalNote ?? "",
+    ]);
+    const csv = [headers, ...rows]
+      .map((row) => row.map(escapeCsvCell).join(";"))
+      .join("\r\n");
+    const url = URL.createObjectURL(
+      new Blob([`\uFEFF${csv}`], {
+        type: "text/csv;charset=utf-8",
+      })
+    );
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = filename;
+    anchor.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function printMonthlyReport() {
+    const popup = window.open(
+      "",
+      "_blank",
+      "width=1200,height=850"
+    );
+    if (!popup) {
+      setActionMessage(
+        "Il browser ha bloccato la finestra del report. Consenti i popup e riprova."
+      );
+      return;
+    }
+    popup.opener = null;
+
+    const tableRows = monthlyReports
+      .map(
+        (report) => `
+          <tr>
+            <td>${escapeHtml(report.id)}</td>
+            <td>${escapeHtml(formatDate(report.createdAt))}</td>
+            <td><strong>${escapeHtml(report.title)}</strong><br><small>${escapeHtml(report.address)}</small></td>
+            <td>${escapeHtml(report.category)}</td>
+            <td>${escapeHtml(ADMIN_PRIORITY_LABELS[report.priority])}</td>
+            <td>${escapeHtml(ADMIN_STATUS_LABELS[report.status])}</td>
+          </tr>`
+      )
+      .join("");
+
+    popup.document.write(`<!doctype html>
+      <html lang="it">
+        <head>
+          <meta charset="utf-8">
+          <title>Report Commety Roma - ${escapeHtml(monthlyLabel)}</title>
+          <style>
+            @page { size: A4 landscape; margin: 14mm; }
+            * { box-sizing: border-box; }
+            body { margin: 0; color: #17365f; font-family: Arial, sans-serif; }
+            header { display: flex; justify-content: space-between; align-items: end; border-bottom: 4px solid #1f79bd; padding-bottom: 14px; }
+            h1 { margin: 0; color: #092653; font-size: 26px; }
+            header p { margin: 5px 0 0; color: #60738c; }
+            .brand { color: #1f79bd; font-size: 24px; font-weight: 800; }
+            .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 22px 0; }
+            .metric { border: 1px solid #dbe5ef; border-radius: 12px; padding: 14px; background: #f5f9fd; }
+            .metric strong { display: block; color: #092653; font-size: 25px; }
+            .metric span { color: #64748b; font-size: 11px; text-transform: uppercase; }
+            table { width: 100%; border-collapse: collapse; font-size: 10px; }
+            th { background: #0d376f; color: white; padding: 9px; text-align: left; }
+            td { border-bottom: 1px solid #dbe5ef; padding: 8px; vertical-align: top; }
+            small { color: #64748b; }
+            .empty { padding: 40px; text-align: center; color: #64748b; border: 1px solid #dbe5ef; }
+            footer { margin-top: 18px; color: #718096; font-size: 9px; text-align: right; }
+          </style>
+        </head>
+        <body>
+          <header>
+            <div>
+              <h1>Report mensile delle segnalazioni</h1>
+              <p>Comune pilota di Roma · ${escapeHtml(monthlyLabel)}</p>
+            </div>
+            <div class="brand">commety</div>
+          </header>
+          <section class="metrics">
+            <div class="metric"><strong>${monthlyReports.length}</strong><span>Segnalazioni</span></div>
+            <div class="metric"><strong>${monthlyResolved}</strong><span>Risolte</span></div>
+            <div class="metric"><strong>${monthlyUrgent}</strong><span>Urgenti</span></div>
+            <div class="metric"><strong>${monthlyConfirmations}</strong><span>Conferme community</span></div>
+          </section>
+          ${
+            monthlyReports.length
+              ? `<table>
+                  <thead><tr><th>ID</th><th>Data</th><th>Segnalazione</th><th>Categoria</th><th>Priorità</th><th>Stato</th></tr></thead>
+                  <tbody>${tableRows}</tbody>
+                </table>`
+              : `<div class="empty">Nessuna segnalazione registrata nel periodo selezionato.</div>`
+          }
+          <footer>Documento generato dal pannello Commety · ${escapeHtml(currentDate)}</footer>
+          <script>window.addEventListener("load", () => { window.print(); });<\/script>
+        </body>
+      </html>`);
+    popup.document.close();
+  }
+
   const nav = [
-    [LayoutDashboard, "Dashboard", true],
-    [Inbox, "Segnalazioni", false],
-    [BarChart3, "Statistiche", false],
-    [FileText, "Report mensile", false],
+    [LayoutDashboard, "Dashboard", "dashboard"],
+    [Inbox, "Segnalazioni", "segnalazioni"],
+    [BarChart3, "Statistiche", "statistiche"],
+    [FileText, "Report mensile", "report-mensile"],
   ] as const;
 
   return (
@@ -328,12 +528,16 @@ export default function AdminDashboard({
           </div>
         </div>
         <nav className="mt-8 space-y-2">
-          {nav.map(([Icon, label, active]) => (
+          {nav.map(([Icon, label, section]) => (
             <button
               key={label}
               type="button"
+              onClick={() => navigateTo(section)}
+              aria-current={
+                activeSection === section ? "page" : undefined
+              }
               className={`flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm font-bold transition ${
-                active
+                activeSection === section
                   ? "bg-[#1d65ad] text-white shadow-lg"
                   : "text-blue-100/65 hover:bg-white/5 hover:text-white"
               }`}
@@ -439,7 +643,10 @@ export default function AdminDashboard({
             </div>
           </section>
 
-          <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          <section
+            id="statistiche"
+            className="scroll-mt-24 grid gap-4 sm:grid-cols-2 xl:grid-cols-4"
+          >
             {([
               [Inbox, "Nuove", counts.new, "Da verificare", "#2476c8"],
               [ShieldCheck, "Prese in carico", counts.taken, "Gestione avviata", "#d58b16"],
@@ -480,7 +687,7 @@ export default function AdminDashboard({
                     Andamento delle segnalazioni
                   </h3>
                   <p className="mt-1 text-xs text-slate-400">
-                    Ultimi 12 mesi · dati dimostrativi
+                    Ultimi 12 mesi · dati reali del territorio
                   </p>
                 </div>
                 <span className="rounded-xl bg-emerald-50 px-3 py-2 text-xs font-black text-emerald-700">
@@ -521,7 +728,7 @@ export default function AdminDashboard({
                 Indicatori di servizio
               </h3>
               <p className="mt-1 text-xs text-slate-400">
-                Prestazioni simulate del Comune
+                Indicatori calcolati sulle segnalazioni reali
               </p>
               <div className="mt-6 space-y-5">
                 {([
@@ -632,8 +839,139 @@ export default function AdminDashboard({
           </section>
 
           <section
+            id="report-mensile"
+            className="scroll-mt-24 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm"
+          >
+            <div className="flex flex-col gap-5 border-b border-slate-200 bg-[linear-gradient(120deg,#092653,#145b9d)] p-6 text-white sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-[0.18em] text-cyan-200">
+                  Rendicontazione
+                </p>
+                <h3 className="mt-2 text-xl font-black">
+                  Report mensile
+                </h3>
+                <p className="mt-1 text-sm text-blue-100/70">
+                  Riepilogo operativo delle segnalazioni di Roma.
+                </p>
+              </div>
+              <label className="text-xs font-black text-blue-100">
+                Mese di riferimento
+                <input
+                  type="month"
+                  value={reportMonth}
+                  onChange={(event) => {
+                    if (event.target.value) {
+                      setReportMonth(event.target.value);
+                    }
+                  }}
+                  className="mt-2 block h-11 rounded-xl border border-white/15 bg-white px-4 font-bold text-[#14345f] outline-none"
+                />
+              </label>
+            </div>
+
+            <div className="p-5 sm:p-6">
+              <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                <div>
+                  <h4 className="font-black capitalize text-[#092653]">
+                    {monthlyLabel}
+                  </h4>
+                  <p className="mt-1 text-xs text-slate-400">
+                    Dati aggiornati automaticamente dalla dashboard.
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      exportCsv(
+                        monthlyReports,
+                        `commety-roma-${reportMonth}.csv`
+                      )
+                    }
+                    className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 text-xs font-black text-[#14345f] hover:bg-slate-50"
+                  >
+                    <Download className="size-4" />
+                    Scarica CSV
+                  </button>
+                  <button
+                    type="button"
+                    onClick={printMonthlyReport}
+                    className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-[#1d65ad] px-4 text-xs font-black text-white shadow-lg shadow-blue-900/15 hover:bg-[#15558f]"
+                  >
+                    <FileText className="size-4" />
+                    Esporta PDF
+                  </button>
+                </div>
+              </div>
+
+              <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                {[
+                  ["Segnalazioni ricevute", monthlyReports.length],
+                  ["Segnalazioni risolte", monthlyResolved],
+                  ["Priorità urgente", monthlyUrgent],
+                  ["Conferme community", monthlyConfirmations],
+                ].map(([label, value]) => (
+                  <article
+                    key={String(label)}
+                    className="rounded-2xl border border-slate-200 bg-slate-50 p-4"
+                  >
+                    <p className="text-2xl font-black text-[#0d376f]">
+                      {String(value)}
+                    </p>
+                    <p className="mt-1 text-xs font-bold text-slate-500">
+                      {String(label)}
+                    </p>
+                  </article>
+                ))}
+              </div>
+
+              <div className="mt-6 overflow-hidden rounded-2xl border border-slate-200">
+                {monthlyReports.length > 0 ? (
+                  <div className="divide-y divide-slate-100">
+                    {monthlyReports.slice(0, 5).map((report) => (
+                      <button
+                        key={report.id}
+                        type="button"
+                        onClick={() => {
+                          setSelected(report);
+                          setNote(report.institutionalNote ?? "");
+                        }}
+                        className="flex w-full items-center gap-3 p-4 text-left hover:bg-blue-50/30"
+                      >
+                        <span
+                          className="size-3 shrink-0 rounded-full"
+                          style={{
+                            backgroundColor:
+                              categoryColors[report.category],
+                          }}
+                        />
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate text-sm font-extrabold text-[#14345f]">
+                            {report.title}
+                          </p>
+                          <p className="mt-1 truncate text-xs text-slate-400">
+                            {formatDate(report.createdAt)} · {report.address}
+                          </p>
+                        </div>
+                        <StatusBadge status={report.status} />
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="p-9 text-center">
+                    <FileText className="mx-auto size-8 text-slate-300" />
+                    <p className="mt-3 text-sm font-black text-[#14345f]">
+                      Nessuna segnalazione nel mese selezionato
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </section>
+
+          <section
             id="segnalazioni"
-            className="rounded-3xl border border-slate-200 bg-white shadow-sm"
+            className="scroll-mt-24 rounded-3xl border border-slate-200 bg-white shadow-sm"
           >
             <div className="border-b border-slate-200 p-5 sm:p-6">
               <div className="flex flex-col justify-between gap-4 xl:flex-row xl:items-center">
@@ -647,6 +985,14 @@ export default function AdminDashboard({
                 </div>
                 <button
                   type="button"
+                  onClick={() =>
+                    exportCsv(
+                      filtered,
+                      `commety-roma-segnalazioni-${new Date()
+                        .toISOString()
+                        .slice(0, 10)}.csv`
+                    )
+                  }
                   className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 text-xs font-black text-[#14345f]"
                 >
                   <Download className="size-4" />

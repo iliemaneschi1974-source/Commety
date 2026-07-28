@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { ADMIN_COOKIE_NAME } from "@/lib/admin/session";
+import {
+  ADMIN_COOKIE_NAME,
+  ADMIN_SESSION_DURATION_SECONDS,
+  createAdminSessionToken,
+  getAdminSession,
+} from "@/lib/admin/session";
 
 export async function POST(request: NextRequest) {
   const origin = request.headers.get("origin");
@@ -11,21 +16,23 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  const session = await getAdminSession();
+  if (!session) {
+    return NextResponse.json(
+      { error: "Accesso non autorizzato." },
+      { status: 401 }
+    );
+  }
+
   const response = NextResponse.json({ success: true });
   response.cookies.set({
     name: ADMIN_COOKIE_NAME,
-    value: "",
+    value: createAdminSessionToken(session.email),
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
     path: "/",
-    maxAge: 0,
+    maxAge: ADMIN_SESSION_DURATION_SECONDS,
   });
-  response.headers.append(
-    "Set-Cookie",
-    `${ADMIN_COOKIE_NAME}=; Path=/admin-comune; Max-Age=0; HttpOnly; SameSite=Strict${
-      process.env.NODE_ENV === "production" ? "; Secure" : ""
-    }`
-  );
   return response;
 }
