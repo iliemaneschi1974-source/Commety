@@ -12,6 +12,19 @@ import {
 const ROMA_MUNICIPALITY_CODE = "058091";
 const REPORT_LIMIT = 500;
 
+const notificationStatusMessages: Partial<
+  Record<AdminReportStatus, string>
+> = {
+  TAKEN: "ha preso in carico la tua segnalazione.",
+  IN_PROGRESS: "ha avviato la lavorazione della tua segnalazione.",
+  RESOLVED: "ha indicato la tua segnalazione come risolta.",
+  OUT_OF_SCOPE:
+    "ha indicato che la segnalazione non è di propria competenza.",
+  DUPLICATE:
+    "ha collegato la segnalazione a una pratica già esistente.",
+  HIDDEN: "ha oscurato la segnalazione.",
+};
+
 const categoryLabels: Record<string, AdminReport["category"]> = {
   traffico: "Traffico",
   pericolo: "Pericolo",
@@ -175,6 +188,14 @@ export async function updateRomaAdminReport(
       throw new Error("REPORT_OUTSIDE_TERRITORY");
     }
 
+    const report = snapshot.data() ?? {};
+    const workflow = report.municipalWorkflow ?? {};
+    const statusChanged =
+      Boolean(update.status) && update.status !== workflow.status;
+    const noteChanged =
+      update.institutionalNote !== undefined &&
+      update.institutionalNote !== workflow.institutionalNote;
+
     const fields: Record<string, unknown> = {
       "municipalWorkflow.updatedAt": FieldValue.serverTimestamp(),
       "municipalWorkflow.updatedBy": adminEmail,
@@ -193,5 +214,40 @@ export async function updateRomaAdminReport(
     }
 
     transaction.update(reportRef, fields);
+
+    if (
+      typeof report.userId === "string" &&
+      report.userId &&
+      (statusChanged || noteChanged)
+    ) {
+      const notificationRef = adminDb
+        .collection("userNotifications")
+        .doc();
+      const statusMessage = update.status
+        ? notificationStatusMessages[update.status]
+        : undefined;
+      const message = statusMessage
+        ? `Il Comune di Roma ${statusMessage}`
+        : "Il Comune di Roma ha pubblicato un aggiornamento sulla tua segnalazione.";
+
+      transaction.set(notificationRef, {
+        userId: report.userId,
+        type: "MUNICIPAL_UPDATE",
+        reportId,
+        reportTitle: String(
+          report.title ?? "Segnalazione Commety"
+        ).slice(0, 160),
+        municipalityCode: ROMA_MUNICIPALITY_CODE,
+        municipalityName: "Roma",
+        status: update.status ?? workflow.status ?? "NEW",
+        message,
+        institutionalNote:
+          update.institutionalNote !== undefined
+            ? update.institutionalNote
+            : workflow.institutionalNote ?? null,
+        createdAt: FieldValue.serverTimestamp(),
+        readAt: null,
+      });
+    }
   });
 }

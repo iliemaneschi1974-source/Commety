@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowLeft, Ban, Check, MessageCircle, Send, Trash2, X } from "lucide-react";
+import { ArrowLeft, Ban, Bell, Check, MessageCircle, Send, Trash2, X } from "lucide-react";
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 
 import { useAuth } from "@/contexts/AuthContext";
@@ -16,6 +16,7 @@ import {
   sendChatMessage,
 } from "@/services/chat";
 import { ChatMessage, ChatThread } from "@/types/chat";
+import InstitutionalUpdates from "@/components/Notifications/InstitutionalUpdates";
 
 function formatTime(value?: string) {
   if (!value) return "";
@@ -73,6 +74,7 @@ export default function ChatClient({
   const [text, setText] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [view, setView] = useState<"chat" | "updates">("chat");
 
   const loadInbox = useCallback(async () => {
     if (!user) return;
@@ -261,6 +263,41 @@ export default function ChatClient({
         <div className="relative z-10"><Image src="/logo-header-cropped.png" alt="Commety" width={180} height={48} priority className="mx-auto h-11 w-auto object-contain [filter:drop-shadow(0_0_10px_rgba(255,255,255,0.75))_drop-shadow(0_6px_8px_rgba(2,16,42,0.7))]" /><div className="mt-5 flex flex-col items-center"><span className="flex size-11 items-center justify-center rounded-full bg-white/15"><MessageCircle className="size-5 text-emerald-300" /></span><h1 className="mt-3 text-3xl font-bold tracking-tight">Messaggi</h1><p className="mt-1 text-sm text-white/80">Conversazioni private della community</p></div></div>
       </header>
 
+      <div className="grid grid-cols-2 rounded-2xl border border-slate-200 bg-white p-1.5 shadow-sm">
+        <button
+          type="button"
+          onClick={() => setView("chat")}
+          className={`flex h-11 items-center justify-center gap-2 rounded-xl text-sm font-black transition ${
+            view === "chat"
+              ? "bg-[#0F2D5F] text-white"
+              : "text-slate-500 hover:bg-slate-50"
+          }`}
+        >
+          <MessageCircle className="size-4" />
+          Chat
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            setView("updates");
+            setActiveThread(null);
+          }}
+          className={`flex h-11 items-center justify-center gap-2 rounded-xl text-sm font-black transition ${
+            view === "updates"
+              ? "bg-[#1762a8] text-white"
+              : "text-slate-500 hover:bg-slate-50"
+          }`}
+        >
+          <Bell className="size-4" />
+          Aggiornamenti
+        </button>
+      </div>
+
+      {view === "updates" ? (
+        <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl">
+          <InstitutionalUpdates />
+        </div>
+      ) : (
       <div className="grid min-h-[calc(100vh-27rem)] overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl md:grid-cols-[290px_1fr]">
         <aside className={`${activeThread ? "hidden md:block" : "block"} border-b border-slate-200 bg-white md:border-b-0 md:border-r`}>
           <div className="border-b border-slate-100 px-5 py-4"><h2 className="font-bold text-[#0F2D5F]">Le tue conversazioni</h2><p className="mt-1 text-sm text-slate-500">Utenti registrati di Commety</p></div>
@@ -312,6 +349,7 @@ export default function ChatClient({
           </> : <div className="m-auto max-w-sm p-8 text-center"><MessageCircle className="mx-auto size-12 text-[#1b4b87]" /><h2 className="mt-5 text-2xl font-bold text-[#0F2D5F]">Le tue conversazioni</h2><p className="mt-2 text-slate-500">Seleziona una chat oppure avviane una dal profilo o dai commenti sulla mappa.</p></div>}
         </section>
       </div>
+      )}
 
     </main>
   );

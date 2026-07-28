@@ -8,6 +8,7 @@ import { House, LogIn, LogOut, Map, MessageCircle, UserRound } from "lucide-reac
 import LoginModal from "@/components/Auth/LoginModal";
 import { useAuth } from "@/contexts/AuthContext";
 import { getChatInbox } from "@/services/chat";
+import { getNotificationInbox } from "@/services/notifications";
 
 type NavigationItemProps = {
   href: string;
@@ -53,20 +54,30 @@ export default function BottomAppNav() {
   const router = useRouter();
   const { isAuthenticated, user, signOut } = useAuth();
   const [pendingRequests, setPendingRequests] = useState(0);
+  const [unreadUpdates, setUnreadUpdates] = useState(0);
   const [loginOpen, setLoginOpen] = useState(false);
 
   const loadPendingRequests = useCallback(async () => {
     if (!isAuthenticated || !user) return;
 
     try {
-      const threads = await getChatInbox();
-      setPendingRequests(
-        threads.filter(
-          (thread) =>
-            thread.status === "REQUESTED" &&
-            thread.requestedBy !== user.uid
-        ).length
-      );
+      const [threadsResult, notificationsResult] =
+        await Promise.allSettled([
+        getChatInbox(),
+        getNotificationInbox(),
+      ]);
+      if (threadsResult.status === "fulfilled") {
+        setPendingRequests(
+          threadsResult.value.filter(
+            (thread) =>
+              thread.status === "REQUESTED" &&
+              thread.requestedBy !== user.uid
+          ).length
+        );
+      }
+      if (notificationsResult.status === "fulfilled") {
+        setUnreadUpdates(notificationsResult.value.unreadCount);
+      }
     } catch (error) {
       console.error("Errore caricamento richieste chat:", error);
     }
@@ -117,7 +128,7 @@ export default function BottomAppNav() {
       {isAuthenticated ? <NavigationItem href="/profile" label="Profilo" active={pathname === "/profile"} color="#0F2D5F">
         <UserRound className="size-5" />
       </NavigationItem> : <button type="button" onClick={() => setLoginOpen(true)} className="flex min-w-0 flex-1 flex-col items-center gap-1 rounded-xl py-1.5 text-[10px] font-bold text-slate-500 transition hover:bg-slate-50 hover:text-[#0F2D5F]"><span className="flex size-8 items-center justify-center text-[#0F2D5F]"><UserRound className="size-5" /></span><span>Profilo</span></button>}
-      {isAuthenticated ? <NavigationItem href="/chat" label="Messaggi" active={pathname === "/chat"} color="#8B5CF6" badge={pendingRequests}>
+      {isAuthenticated ? <NavigationItem href="/chat" label="Messaggi" active={pathname === "/chat"} color="#8B5CF6" badge={pendingRequests + unreadUpdates}>
         <MessageCircle className="size-5" />
       </NavigationItem> : <button type="button" onClick={() => setLoginOpen(true)} className="flex min-w-0 flex-1 flex-col items-center gap-1 rounded-xl py-1.5 text-[10px] font-bold text-slate-500 transition hover:bg-slate-50 hover:text-[#0F2D5F]"><span className="flex size-8 items-center justify-center text-[#8B5CF6]"><MessageCircle className="size-5" /></span><span>Messaggi</span></button>}
       {isAuthenticated ? <button type="button" onClick={() => void handleLogout()} aria-label="Esci" className="flex min-w-0 flex-1 flex-col items-center gap-1 rounded-2xl py-1 text-[10px] font-bold text-slate-500 transition hover:text-red-600">

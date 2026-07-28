@@ -2,6 +2,7 @@
 
 import {
   CheckCircle2,
+  Building2,
   MapPin,
   MessageCircle,
   Share2,
@@ -163,6 +164,51 @@ export default function ReportBottomSheet({
           </div>
         </section>
 
+        {report.municipalWorkflow &&
+        (report.municipalWorkflow.status !== "NEW" ||
+          report.municipalWorkflow.institutionalNote) ? (
+          <section className="mt-6 overflow-hidden rounded-3xl border border-cyan-200/35 bg-[linear-gradient(135deg,#eaf7ff,#ffffff)] text-[#0F2D5F] shadow-[0_14px_30px_rgba(4,42,88,0.22)]">
+            <div className="flex items-center gap-3 bg-[#145b9d] px-5 py-4 text-white">
+              <span className="flex size-10 items-center justify-center rounded-xl bg-white/15">
+                <Building2 className="size-5" />
+              </span>
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-[0.16em] text-cyan-200">
+                  Comunicazione verificata
+                </p>
+                <h3 className="font-black">
+                  Aggiornamento del Comune di{" "}
+                  {report.territory?.municipalityName ?? "Roma"}
+                </h3>
+              </div>
+            </div>
+            <div className="p-5">
+              {report.municipalWorkflow.status ? (
+                <span className="inline-flex rounded-full bg-blue-100 px-3 py-1.5 text-xs font-black text-[#145b9d]">
+                  {
+                    MUNICIPAL_STATUS_LABELS[
+                      report.municipalWorkflow.status
+                    ]
+                  }
+                </span>
+              ) : null}
+              {report.municipalWorkflow.institutionalNote ? (
+                <p className="mt-4 text-base font-semibold leading-7 text-slate-700">
+                  {report.municipalWorkflow.institutionalNote}
+                </p>
+              ) : null}
+              {report.municipalWorkflow.updatedAt ? (
+                <p className="mt-4 text-xs text-slate-400">
+                  Aggiornato il{" "}
+                  {formatTimestamp(
+                    report.municipalWorkflow.updatedAt
+                  )}
+                </p>
+              ) : null}
+            </div>
+          </section>
+        ) : null}
+
         {report.video ? <ReportVideo key={report.id} src={report.video.url} /> : report.images.length > 0 && (
           <section className="mt-6">
             <h3 className="mb-3 text-sm font-semibold uppercase tracking-[0.16em] text-white/70">Foto della segnalazione</h3>
@@ -236,6 +282,16 @@ const ACCESSIBILITY_KIND_LABELS = {
   altro: "Altro",
 } as const;
 
+const MUNICIPAL_STATUS_LABELS = {
+  NEW: "Nuova",
+  TAKEN: "Presa in carico",
+  IN_PROGRESS: "In lavorazione",
+  RESOLVED: "Risolta",
+  OUT_OF_SCOPE: "Non di competenza",
+  DUPLICATE: "Duplicata",
+  HIDDEN: "Oscurata",
+} as const;
+
 function ReportDetail({ label, value }: { label: string; value: string }) {
   return (
     <div>
@@ -254,6 +310,20 @@ function formatLocalDateTime(value: string): string {
 
   return new Intl.DateTimeFormat("it-IT", {
     dateStyle: "short",
+    timeStyle: "short",
+  }).format(date);
+}
+
+function formatTimestamp(value: {
+  toDate?: () => Date;
+  seconds?: number;
+}): string {
+  const date =
+    typeof value.toDate === "function"
+      ? value.toDate()
+      : new Date((value.seconds ?? 0) * 1000);
+  return new Intl.DateTimeFormat("it-IT", {
+    dateStyle: "medium",
     timeStyle: "short",
   }).format(date);
 }

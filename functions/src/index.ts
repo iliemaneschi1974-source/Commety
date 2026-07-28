@@ -10,6 +10,7 @@ import { deleteAccount } from "./callable/deleteAccount";
 import { chat } from "./callable/chat";
 import { getPublicProfile } from "./callable/publicProfile";
 import { communityAction } from "./callable/communityAction";
+import { notifications } from "./callable/notifications";
 
 /**
  * Configurazione globale delle Cloud Functions.
@@ -53,3 +54,6 @@ export { getPublicProfile };
 
 /** Conferme e voti sullo stato delle segnalazioni. */
 export { communityAction };
+
+/** Aggiornamenti istituzionali destinati agli utenti. */
+export { notifications };

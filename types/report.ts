@@ -121,6 +121,21 @@ export interface Report {
     source: string;
   };
 
+  municipalWorkflow?: {
+    status?:
+      | "NEW"
+      | "TAKEN"
+      | "IN_PROGRESS"
+      | "RESOLVED"
+      | "OUT_OF_SCOPE"
+      | "DUPLICATE"
+      | "HIDDEN";
+    priority?: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
+    institutionalNote?: string;
+    municipalityCode?: string;
+    updatedAt?: Timestamp;
+  };
+
   status: ReportStatus;
 
   /** Motivo della chiusura anticipata, quando deciso dalla community. */
