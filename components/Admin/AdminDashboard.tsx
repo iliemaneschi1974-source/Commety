@@ -436,26 +436,64 @@ export default function AdminDashboard({
           <meta charset="utf-8">
           <title>Report Commety Roma - ${escapeHtml(monthlyLabel)}</title>
           <style>
-            @page { size: A4 landscape; margin: 14mm; }
+            @page {
+              size: A4 landscape;
+              margin: 15mm 14mm 16mm;
+            }
             * { box-sizing: border-box; }
-            body { margin: 0; color: #17365f; font-family: Arial, sans-serif; }
-            header { display: flex; justify-content: space-between; align-items: end; border-bottom: 4px solid #1f79bd; padding-bottom: 14px; }
-            h1 { margin: 0; color: #092653; font-size: 26px; }
+            html {
+              background: #ffffff;
+              color-scheme: light;
+              -webkit-print-color-adjust: exact;
+              print-color-adjust: exact;
+            }
+            body {
+              width: 100%;
+              margin: 0;
+              background: #ffffff;
+              color: #17365f;
+              font-family: Arial, Helvetica, sans-serif;
+            }
+            .report-page {
+              width: 100%;
+              max-width: 269mm;
+              margin: 0 auto;
+            }
+            header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 4px solid #1f79bd; padding-bottom: 12px; }
+            h1 { margin: 0; color: #092653; font-size: 24px; line-height: 1.15; }
             header p { margin: 5px 0 0; color: #60738c; }
             .brand { color: #1f79bd; font-size: 24px; font-weight: 800; }
-            .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 22px 0; }
-            .metric { border: 1px solid #dbe5ef; border-radius: 12px; padding: 14px; background: #f5f9fd; }
-            .metric strong { display: block; color: #092653; font-size: 25px; }
+            .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 16px 0; break-inside: avoid; page-break-inside: avoid; }
+            .metric { border: 1px solid #dbe5ef; border-radius: 10px; padding: 11px 12px; background: #f5f9fd; }
+            .metric strong { display: block; color: #092653; font-size: 22px; }
             .metric span { color: #64748b; font-size: 11px; text-transform: uppercase; }
-            table { width: 100%; border-collapse: collapse; font-size: 10px; }
-            th { background: #0d376f; color: white; padding: 9px; text-align: left; }
-            td { border-bottom: 1px solid #dbe5ef; padding: 8px; vertical-align: top; }
+            table { width: 100%; table-layout: fixed; border-collapse: collapse; font-size: 9.5px; }
+            thead { display: table-header-group; }
+            tr { break-inside: avoid; page-break-inside: avoid; }
+            th { background: #0d376f; color: white; padding: 8px 7px; text-align: left; }
+            td { overflow-wrap: anywhere; border-bottom: 1px solid #dbe5ef; padding: 7px; vertical-align: top; }
+            th:nth-child(1), td:nth-child(1) { width: 17%; }
+            th:nth-child(2), td:nth-child(2) { width: 12%; }
+            th:nth-child(3), td:nth-child(3) { width: 31%; }
+            th:nth-child(4), td:nth-child(4) { width: 15%; }
+            th:nth-child(5), td:nth-child(5) { width: 13%; }
+            th:nth-child(6), td:nth-child(6) { width: 12%; }
             small { color: #64748b; }
             .empty { padding: 40px; text-align: center; color: #64748b; border: 1px solid #dbe5ef; }
-            footer { margin-top: 18px; color: #718096; font-size: 9px; text-align: right; }
+            footer { margin-top: 12px; padding-top: 8px; border-top: 1px solid #dbe5ef; color: #718096; font-size: 9px; text-align: right; break-inside: avoid; page-break-inside: avoid; }
+            @media screen {
+              body { padding: 15mm 14mm 16mm; }
+              .report-page { min-height: 179mm; }
+            }
+            @media print {
+              html, body { width: 100%; min-height: 0; }
+              body { padding: 0; }
+              .report-page { max-width: none; margin: 0; }
+            }
           </style>
         </head>
         <body>
+          <main class="report-page">
           <header>
             <div>
               <h1>Report mensile delle segnalazioni</h1>
@@ -478,6 +516,7 @@ export default function AdminDashboard({
               : `<div class="empty">Nessuna segnalazione registrata nel periodo selezionato.</div>`
           }
           <footer>Documento generato dal pannello Commety · ${escapeHtml(currentDate)}</footer>
+          </main>
           <script>window.addEventListener("load", () => { window.print(); });<\/script>
         </body>
       </html>`);
