@@ -44,6 +44,14 @@ export const notifications = onCall(
       const items = snapshot.docs
         .map((document) => {
           const data = document.data();
+          const includesNote =
+            data.eventKind === "NOTE" ||
+            data.eventKind === "STATUS_AND_NOTE" ||
+            (!data.eventKind &&
+              typeof data.message === "string" &&
+              data.message.includes(
+                "ha pubblicato un aggiornamento"
+              ));
           return {
             id: document.id,
             type: "MUNICIPAL_UPDATE" as const,
@@ -60,6 +68,7 @@ export const notifications = onCall(
                 : undefined,
             message: String(data.message ?? ""),
             institutionalNote:
+              includesNote &&
               typeof data.institutionalNote === "string"
                 ? data.institutionalNote
                 : undefined,

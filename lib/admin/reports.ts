@@ -241,10 +241,16 @@ export async function updateRomaAdminReport(
         municipalityName: "Roma",
         status: update.status ?? workflow.status ?? "NEW",
         message,
+        eventKind:
+          statusChanged && noteChanged
+            ? "STATUS_AND_NOTE"
+            : statusChanged
+              ? "STATUS"
+              : "NOTE",
         institutionalNote:
-          update.institutionalNote !== undefined
+          noteChanged
             ? update.institutionalNote
-            : workflow.institutionalNote ?? null,
+            : null,
         createdAt: FieldValue.serverTimestamp(),
         readAt: null,
       });

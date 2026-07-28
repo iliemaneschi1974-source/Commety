@@ -313,6 +313,9 @@ export default function AdminDashboard({
           result.error ?? "Aggiornamento non riuscito."
         );
       }
+      if (changes.institutionalNote !== undefined) {
+        setNote("");
+      }
       setActionMessage("Aggiornamento salvato.");
     } catch (error) {
       setReports((current) =>
@@ -812,7 +815,7 @@ export default function AdminDashboard({
                       type="button"
                       onClick={() => {
                         setSelected(report);
-                        setNote(report.institutionalNote ?? "");
+                        setNote("");
                       }}
                       className="flex w-full items-center gap-3 rounded-2xl border border-slate-100 p-3 text-left hover:border-blue-200 hover:bg-blue-50/30"
                     >
@@ -934,7 +937,7 @@ export default function AdminDashboard({
                         type="button"
                         onClick={() => {
                           setSelected(report);
-                          setNote(report.institutionalNote ?? "");
+                          setNote("");
                         }}
                         className="flex w-full items-center gap-3 p-4 text-left hover:bg-blue-50/30"
                       >
@@ -1122,7 +1125,7 @@ export default function AdminDashboard({
                           type="button"
                           onClick={() => {
                             setSelected(report);
-                            setNote(report.institutionalNote ?? "");
+                            setNote("");
                           }}
                           className="inline-flex items-center gap-2 rounded-xl bg-[#eaf3fc] px-3 py-2 text-xs font-black text-[#145b9d]"
                         >
@@ -1143,7 +1146,7 @@ export default function AdminDashboard({
                   type="button"
                   onClick={() => {
                     setSelected(report);
-                    setNote(report.institutionalNote ?? "");
+                    setNote("");
                   }}
                   className="block w-full p-5 text-left"
                 >
