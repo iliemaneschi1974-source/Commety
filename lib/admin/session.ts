@@ -19,7 +19,8 @@ export interface AdminSession {
 }
 
 function getSessionSecret(): string | null {
-  const secret = process.env.COMMETY_ADMIN_SESSION_SECRET;
+  const secret =
+    process.env.COMMETY_ADMIN_SESSION_SECRET?.trim();
   return secret && secret.length >= 32 ? secret : null;
 }
 
@@ -102,8 +103,10 @@ export function verifyAdminCredentials(
 ): "valid" | "invalid" | "not-configured" {
   const expectedEmail =
     process.env.COMMETY_ADMIN_EMAIL?.trim().toLowerCase();
-  const passwordSalt = process.env.COMMETY_ADMIN_PASSWORD_SALT;
-  const passwordHash = process.env.COMMETY_ADMIN_PASSWORD_HASH;
+  const passwordSalt =
+    process.env.COMMETY_ADMIN_PASSWORD_SALT?.trim();
+  const passwordHash =
+    process.env.COMMETY_ADMIN_PASSWORD_HASH?.trim();
 
   if (!expectedEmail || !passwordSalt || !passwordHash) {
     return "not-configured";
