@@ -21,6 +21,7 @@ import MessageDialog from "@/components/ui/MessageDialog";
 import { useConfirmation } from "@/hooks/useConfirmation";
 import { useReportStatusVote } from "@/hooks/useReportStatusVote";
 import { REPORT_CATEGORY_CONFIG } from "@/lib/reportCategoryConfig";
+import { hasMunicipalHistory } from "@/lib/reportMunicipalHistory";
 import { buildShareData } from "@/lib/share";
 import { cleanupReport } from "@/services/lifecycle/cleanup";
 import { Report } from "@/types/report";
@@ -81,8 +82,12 @@ export default function ReportBottomSheet({
       return;
     }
 
+    const keepAdministrativeHistory =
+      hasMunicipalHistory(currentReport);
     const confirmed = window.confirm(
-      "Vuoi eliminare definitivamente questa segnalazione? Verranno rimossi anche eventuali foto, video, commenti e conferme."
+      keepAdministrativeHistory
+        ? "Vuoi eliminare questa segnalazione? Non sarà più visibile su Commety, ma resterà nello storico amministrativo del Comune."
+        : "Vuoi eliminare definitivamente questa segnalazione? Verranno rimossi anche eventuali foto, video, commenti e conferme."
     );
 
     if (!confirmed) {

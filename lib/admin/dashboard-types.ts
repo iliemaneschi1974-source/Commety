@@ -42,6 +42,8 @@ export interface AdminReport {
     alt: string;
   };
   institutionalNote?: string;
+  deletedByAuthor?: boolean;
+  deletedByAuthorAt?: string;
 }
 
 export const ADMIN_STATUS_LABELS: Record<

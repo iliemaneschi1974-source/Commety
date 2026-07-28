@@ -160,7 +160,11 @@ const reportId = sharedReportId;
   reportId
 );
 
-      if (!report) {
+      if (
+        !report ||
+        report.isVisible !== true ||
+        report.archivedForMunicipality === true
+      ) {
         console.warn("Segnalazione non trovata");
         return;
       }

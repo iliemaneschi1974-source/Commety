@@ -97,7 +97,13 @@ export async function getRomaAdminReports(): Promise<AdminReport[]> {
     .get();
 
   return snapshot.docs
-    .filter((document) => document.data().isVisible === true)
+    .filter((document) => {
+      const data = document.data();
+      return (
+        data.isVisible === true ||
+        data.archivedForMunicipality === true
+      );
+    })
     .map((document) => {
       const data = document.data();
       const workflow = data.municipalWorkflow ?? {};
@@ -154,6 +160,11 @@ export async function getRomaAdminReports(): Promise<AdminReport[]> {
           typeof workflow.institutionalNote === "string"
             ? workflow.institutionalNote
             : undefined,
+        deletedByAuthor:
+          data.archivedForMunicipality === true,
+        deletedByAuthorAt: data.deletedByAuthorAt
+          ? asDate(data.deletedByAuthorAt).toISOString()
+          : undefined,
       } satisfies AdminReport;
     })
     .sort(

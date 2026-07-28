@@ -292,13 +292,18 @@ export function listenUserReports(
     q,
     (snapshot: QuerySnapshot<DocumentData>) => {
       const reports: Report[] =
-        snapshot.docs.map((document) => ({
-          id: document.id,
-          ...(document.data() as Omit<
-            Report,
-            "id"
-          >),
-        }));
+        snapshot.docs
+          .map((document) => ({
+            id: document.id,
+            ...(document.data() as Omit<
+              Report,
+              "id"
+            >),
+          }))
+          .filter(
+            (report) =>
+              report.archivedForMunicipality !== true
+          );
 
       callback(reports);
     },
@@ -331,6 +336,21 @@ export async function deleteReport(
   id: string
 ) {
   return deleteDoc(doc(db, "reports", id));
+}
+
+/**
+ * Rimuove la segnalazione dagli spazi pubblici conservandola nello storico
+ * amministrativo del Comune che l'ha già presa in gestione.
+ */
+export async function archiveReportForMunicipality(
+  id: string
+) {
+  return updateDoc(doc(db, "reports", id), {
+    isVisible: false,
+    archivedForMunicipality: true,
+    deletedByAuthorAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  });
 }
 
 /**

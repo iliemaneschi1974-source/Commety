@@ -16,9 +16,11 @@ import {
 } from "@/services/reportStatusVotes";
 
 import {
+  archiveReportForMunicipality,
   deleteReport,
   getReportById,
 } from "@/services/reports";
+import { hasMunicipalHistory } from "@/lib/reportMunicipalHistory";
 
 /**
  * Elimina definitivamente una segnalazione
@@ -37,6 +39,11 @@ export async function cleanupReport(
   const report = await getReportById(reportId);
 
   if (!report) {
+    return;
+  }
+
+  if (hasMunicipalHistory(report)) {
+    await archiveReportForMunicipality(reportId);
     return;
   }
 

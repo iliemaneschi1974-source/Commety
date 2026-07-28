@@ -136,6 +136,13 @@ export interface Report {
     updatedAt?: Timestamp;
   };
 
+  /**
+   * Una segnalazione già gestita dal Comune viene rimossa dagli spazi
+   * pubblici, ma conservata nello storico amministrativo.
+   */
+  archivedForMunicipality?: boolean;
+  deletedByAuthorAt?: Timestamp;
+
   status: ReportStatus;
 
   /** Motivo della chiusura anticipata, quando deciso dalla community. */
