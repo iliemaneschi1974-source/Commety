@@ -415,7 +415,7 @@ export default function AdminDashboard({
     const popup = window.open(
       "",
       "_blank",
-      "width=1200,height=850"
+      "width=850,height=1100"
     );
     if (!popup) {
       setActionMessage(
@@ -446,8 +446,8 @@ export default function AdminDashboard({
           <title>Report Commety Roma - ${escapeHtml(monthlyLabel)}</title>
           <style>
             @page {
-              size: A4 landscape;
-              margin: 15mm 14mm 16mm;
+              size: A4 portrait;
+              margin: 14mm 12mm 16mm;
             }
             * { box-sizing: border-box; }
             html {
@@ -465,25 +465,25 @@ export default function AdminDashboard({
             }
             .report-page {
               width: 100%;
-              max-width: 269mm;
+              max-width: 186mm;
               margin: 0 auto;
             }
             header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 4px solid #1f79bd; padding-bottom: 12px; }
             h1 { margin: 0; color: #092653; font-size: 24px; line-height: 1.15; }
             header p { margin: 5px 0 0; color: #60738c; }
             .brand { color: #1f79bd; font-size: 24px; font-weight: 800; }
-            .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 16px 0; break-inside: avoid; page-break-inside: avoid; }
+            .metrics { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin: 14px 0; break-inside: avoid; page-break-inside: avoid; }
             .metric { border: 1px solid #dbe5ef; border-radius: 10px; padding: 11px 12px; background: #f5f9fd; }
             .metric strong { display: block; color: #092653; font-size: 22px; }
             .metric span { color: #64748b; font-size: 11px; text-transform: uppercase; }
-            table { width: 100%; table-layout: fixed; border-collapse: collapse; font-size: 9.5px; }
+            table { width: 100%; max-width: 100%; table-layout: fixed; border-collapse: collapse; font-size: 8.5px; }
             thead { display: table-header-group; }
             tr { break-inside: avoid; page-break-inside: avoid; }
-            th { background: #0d376f; color: white; padding: 8px 7px; text-align: left; }
-            td { overflow-wrap: anywhere; border-bottom: 1px solid #dbe5ef; padding: 7px; vertical-align: top; }
-            th:nth-child(1), td:nth-child(1) { width: 17%; }
-            th:nth-child(2), td:nth-child(2) { width: 12%; }
-            th:nth-child(3), td:nth-child(3) { width: 31%; }
+            th { background: #0d376f; color: white; padding: 7px 5px; text-align: left; }
+            td { min-width: 0; overflow-wrap: anywhere; word-break: break-word; border-bottom: 1px solid #dbe5ef; padding: 6px 5px; vertical-align: top; }
+            th:nth-child(1), td:nth-child(1) { width: 18%; }
+            th:nth-child(2), td:nth-child(2) { width: 13%; }
+            th:nth-child(3), td:nth-child(3) { width: 29%; }
             th:nth-child(4), td:nth-child(4) { width: 15%; }
             th:nth-child(5), td:nth-child(5) { width: 13%; }
             th:nth-child(6), td:nth-child(6) { width: 12%; }
@@ -491,13 +491,13 @@ export default function AdminDashboard({
             .empty { padding: 40px; text-align: center; color: #64748b; border: 1px solid #dbe5ef; }
             footer { margin-top: 12px; padding-top: 8px; border-top: 1px solid #dbe5ef; color: #718096; font-size: 9px; text-align: right; break-inside: avoid; page-break-inside: avoid; }
             @media screen {
-              body { padding: 15mm 14mm 16mm; }
-              .report-page { min-height: 179mm; }
+              body { padding: 14mm 12mm 16mm; }
+              .report-page { min-height: 267mm; }
             }
             @media print {
-              html, body { width: 100%; min-height: 0; }
+              html, body { width: auto; max-width: 100%; min-height: 0; overflow: visible; }
               body { padding: 0; }
-              .report-page { max-width: none; margin: 0; }
+              .report-page { width: 100%; max-width: 100%; margin: 0; overflow: visible; }
             }
           </style>
         </head>
