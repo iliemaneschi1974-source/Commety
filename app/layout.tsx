@@ -70,7 +70,7 @@ export const metadata: Metadata = {
     images: [`${appUrl}/opengraph-image`],
   },
   icons: {
-    apple: "/og-image-square.png",
+    apple: "/app-icon-192.png",
   },
 };
 

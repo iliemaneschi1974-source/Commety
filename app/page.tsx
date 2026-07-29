@@ -1,6 +1,7 @@
 import Image from "next/image";
 import type { Metadata } from "next";
 import PromoVideo from "@/components/Landing/PromoVideo";
+import InstallAppButton from "@/components/Landing/InstallAppButton";
 import NewsSlider from "@/components/News/NewsSlider";
 import {
   Accessibility,
@@ -281,6 +282,7 @@ export default function Home() {
               >
                 Come funziona
               </a>
+              <InstallAppButton />
             </div>
           </div>
 
