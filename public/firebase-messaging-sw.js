@@ -22,7 +22,12 @@ self.addEventListener("push", (event) => {
     body: data.body || "Hai un nuovo aggiornamento su Commety.",
     icon: data.icon || "/commety-marker.png",
     badge: data.badge || "/commety-marker.png",
-    image: data.image || payload.notification?.image || undefined,
+    image:
+      data.reportImage ||
+      data.image ||
+      payload.notification?.data?.reportImage ||
+      payload.notification?.image ||
+      undefined,
     tag: data.tag || undefined,
     renotify: false,
     data: {

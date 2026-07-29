@@ -100,26 +100,42 @@ export const userNotificationCreatedTrigger = onDocumentCreated(
       data.pushMessage ?? data.message ?? "Hai un nuovo aggiornamento."
     ).slice(0, 180);
     const destination = destinationFor(data);
+    const notificationIcon = image
+      ? image.url
+      : "https://www.commety.it/commety-marker.png";
     const response = await getMessaging().sendEachForMulticast({
       tokens: tokens.slice(0, 500),
       data: {
         title: "Commety",
         body,
         url: destination,
-        icon: "/commety-marker.png",
+        icon: notificationIcon,
         badge: "/commety-marker.png",
-        ...(image ? { image: image.url } : {}),
+        ...(image
+          ? {
+              image: image.url,
+              reportImage: image.url,
+            }
+          : {}),
         tag: String(event.params.notificationId),
       },
       webpush: {
-        headers: { Urgency: preference === "messages" ? "high" : "normal" },
+        headers: {
+          Urgency: preference === "messages" ? "high" : "normal",
+          ...(image ? { image: image.url } : {}),
+        },
         notification: {
           title: "Commety",
           body,
-          icon: "https://www.commety.it/commety-marker.png",
+          icon: notificationIcon,
           badge: "https://www.commety.it/commety-marker.png",
           tag: String(event.params.notificationId),
-          ...(image ? { image: image.url } : {}),
+          ...(image
+            ? {
+                image: image.url,
+                data: { reportImage: image.url },
+              }
+            : {}),
         },
         fcmOptions: {
           link: `https://www.commety.it${destination}`,
