@@ -68,8 +68,8 @@ export const userNotificationCreatedTrigger = onDocumentCreated(
         body: String(data.pushMessage ?? data.message ?? "Hai un nuovo aggiornamento.")
           .slice(0, 180),
         url: destinationFor(data),
-        icon: "/logo.png",
-        badge: "/logo.png",
+        icon: "/commety-marker.png",
+        badge: "/commety-marker.png",
         tag: String(event.params.notificationId),
       },
       webpush: {

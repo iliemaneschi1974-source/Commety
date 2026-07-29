@@ -12,8 +12,8 @@ self.addEventListener("push", (event) => {
   const title = data.title || "Commety";
   const options = {
     body: data.body || "Hai un nuovo aggiornamento su Commety.",
-    icon: data.icon || "/logo.png",
-    badge: data.badge || "/logo.png",
+    icon: data.icon || "/commety-marker.png",
+    badge: data.badge || "/commety-marker.png",
     tag: data.tag || undefined,
     renotify: false,
     data: {

@@ -1,6 +1,8 @@
 import { ReportOpenGraphModel } from "@/types/opengraph";
 import { OPEN_GRAPH_CATEGORY_CONFIG } from "./categoryConfig";
 
+const COMMETY_LOGO_URL = "https://www.commety.it/logo-header-cropped.png";
+
 export interface ReportOpenGraphImageProps {
   readonly report: ReportOpenGraphModel;
 }
@@ -34,7 +36,7 @@ export default function ReportOpenGraphImage({ report }: ReportOpenGraphImagePro
           <div style={{ display: "flex", fontSize: "27px", color: "rgba(255,255,255,0.88)", fontWeight: 600 }}>📍 {report.address}</div>
           <div style={{ display: "flex", marginTop: "12px", fontSize: "22px", color: "rgba(255,255,255,0.62)" }}>{report.relativeTime}</div>
           <div style={{ display: "flex", alignItems: "center", marginTop: "32px" }}>
-            <CommetyMarker size={52} />
+            <CommetyLogo width={188} height={52} />
             <div style={{ display: "flex", marginLeft: "auto", fontSize: "17px", color: "rgba(255,255,255,0.55)", fontWeight: 600 }}>La mappa del mondo reale</div>
           </div>
         </div>
@@ -47,47 +49,10 @@ function InstitutionalVisual() {
   return <div style={{ width: "520px", height: "630px", display: "flex", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden", background: "linear-gradient(150deg, #123d72 0%, #071a3c 72%)" }}>
     <div style={{ position: "absolute", width: "740px", height: "740px", borderRadius: "370px", border: "1px solid rgba(255,255,255,0.13)", display: "flex" }} />
     <div style={{ position: "absolute", width: "500px", height: "500px", borderRadius: "250px", border: "1px solid rgba(255,255,255,0.12)", display: "flex" }} />
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", zIndex: 1 }}><CommetyMarker size={116} /><div style={{ display: "flex", marginTop: "24px", color: "rgba(255,255,255,0.72)", fontSize: "23px", fontWeight: 700 }}>Dalla community, sulla mappa.</div></div>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", zIndex: 1 }}><CommetyLogo width={280} height={77} /><div style={{ display: "flex", marginTop: "24px", color: "rgba(255,255,255,0.72)", fontSize: "23px", fontWeight: 700 }}>Dalla community, sulla mappa.</div></div>
   </div>;
 }
 
-function CommetyMarker({ size }: { size: number }) {
-  return (
-    <div
-      aria-label="Commety"
-      style={{
-        width: `${size}px`,
-        height: `${size}px`,
-        flexShrink: 0,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        position: "relative",
-        borderRadius: `${size / 2}px ${size / 2}px ${size / 2}px 6px`,
-        transform: "rotate(-45deg)",
-        background: "linear-gradient(145deg,#dcebff,#ffffff)",
-        boxShadow:
-          "0 0 12px rgba(255,255,255,0.72), 0 8px 16px rgba(2,16,42,0.42)",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          width: `${size * 0.64}px`,
-          height: `${size * 0.64}px`,
-          borderRadius: `${size}px`,
-          border: `${Math.max(3, Math.round(size * 0.055))}px solid #1d5da5`,
-          color: "#1d5da5",
-          fontSize: `${size * 0.42}px`,
-          lineHeight: 1,
-          fontWeight: 900,
-          transform: "rotate(45deg)",
-        }}
-      >
-        C
-      </div>
-    </div>
-  );
+function CommetyLogo({ width, height }: { width: number; height: number }) {
+  return <img src={COMMETY_LOGO_URL} alt="Commety" width={width} height={height} style={{ width: `${width}px`, height: `${height}px`, objectFit: "contain", filter: "drop-shadow(0 0 10px rgba(255,255,255,0.8)) drop-shadow(0 7px 8px rgba(2,16,42,0.7))" }} />;
 }
