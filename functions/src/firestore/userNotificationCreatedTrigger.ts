@@ -19,6 +19,38 @@ function destinationFor(data: FirebaseFirestore.DocumentData): string {
   return "/chat";
 }
 
+async function reportImageFor(
+  data: FirebaseFirestore.DocumentData
+): Promise<string | undefined> {
+  const reportId = data.reportId;
+  if (typeof reportId !== "string" || !reportId) return undefined;
+
+  try {
+    const snapshot = await adminDb.collection("reports").doc(reportId).get();
+    const report = snapshot.data();
+    if (!report || report.isVisible !== true || !Array.isArray(report.images)) {
+      return undefined;
+    }
+
+    const imageUrl = report.images.find(
+      (image: unknown) =>
+        image &&
+        typeof image === "object" &&
+        typeof (image as { url?: unknown }).url === "string"
+    )?.url;
+
+    return typeof imageUrl === "string" && imageUrl.startsWith("https://")
+      ? imageUrl
+      : undefined;
+  } catch (error) {
+    logger.warn("Impossibile recuperare la foto per la notifica push", {
+      notificationId: data.id ?? null,
+      error: error instanceof Error ? error.message : "unknown",
+    });
+    return undefined;
+  }
+}
+
 export const userNotificationCreatedTrigger = onDocumentCreated(
   {
     document: "userNotifications/{notificationId}",
@@ -61,6 +93,7 @@ export const userNotificationCreatedTrigger = onDocumentCreated(
     );
     if (tokens.length === 0) return;
 
+    const image = await reportImageFor(data);
     const response = await getMessaging().sendEachForMulticast({
       tokens: tokens.slice(0, 500),
       data: {
@@ -70,6 +103,7 @@ export const userNotificationCreatedTrigger = onDocumentCreated(
         url: destinationFor(data),
         icon: "/commety-marker.png",
         badge: "/commety-marker.png",
+        ...(image ? { image } : {}),
         tag: String(event.params.notificationId),
       },
       webpush: {
