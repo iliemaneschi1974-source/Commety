@@ -2,6 +2,7 @@ import {FieldValue} from "firebase-admin/firestore";
 import {HttpsError, onCall} from "firebase-functions/v2/https";
 
 import {adminDb} from "../config/firebaseAdmin";
+import {hasMunicipalHistory} from "../domain/reportMunicipalHistory";
 
 const REPORT_ID_PATTERN = /^[A-Za-z0-9_-]{1,160}$/;
 const OWNER_KEY_PATTERN = /^[0-9a-f]{64}$/i;
@@ -9,19 +10,6 @@ const OWNER_KEY_PATTERN = /^[0-9a-f]{64}$/i;
 interface DeleteReportData {
   reportId?: string;
   ownerKey?: string;
-}
-
-function hasMunicipalHistory(
-  report: FirebaseFirestore.DocumentData
-): boolean {
-  const workflow = report.municipalWorkflow;
-
-  return Boolean(
-    workflow?.updatedAt ||
-      (workflow?.status && workflow.status !== "NEW") ||
-      (typeof workflow?.institutionalNote === "string" &&
-        workflow.institutionalNote.trim())
-  );
 }
 
 /**

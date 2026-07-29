@@ -6,6 +6,7 @@ import {
   getActiveReports,
 } from "../repositories/reportsRepository";
 import { adminDb, adminStorage } from "../config/firebaseAdmin";
+import {hasMunicipalHistory} from "../domain/reportMunicipalHistory";
 
 /**
  * Risultato del job di scadenza.
@@ -24,8 +25,8 @@ export interface ReportExpirationResult {
 
 /**
  * Esegue il controllo di tutte le
- * segnalazioni ACTIVE e rimuove definitivamente quelle scadute,
- * comprese le risorse in Storage e le sotto-collezioni.
+ * segnalazioni ACTIVE. Quelle già trattate dal Comune vengono
+ * archiviate; le altre sono eliminate con media e sotto-collezioni.
  */
 export async function expireReports(): Promise<ReportExpirationResult> {
   const reports = await getActiveReports();
@@ -45,13 +46,24 @@ export async function expireReports(): Promise<ReportExpirationResult> {
       continue;
     }
 
-    await adminStorage.bucket().deleteFiles({
-      prefix: `reports/${report.id}/`,
-    });
+    const reportRef = adminDb.collection("reports").doc(report.id);
 
-    await adminDb.recursiveDelete(
-      adminDb.collection("reports").doc(report.id)
-    );
+    if (hasMunicipalHistory(report)) {
+      await reportRef.update({
+        status: "EXPIRED",
+        isVisible: false,
+        archivedForMunicipality: true,
+        archivedReason: "EXPIRED",
+        expiredAt: Timestamp.now(),
+        updatedAt: Timestamp.now(),
+      });
+    } else {
+      await adminStorage.bucket().deleteFiles({
+        prefix: `reports/${report.id}/`,
+      });
+
+      await adminDb.recursiveDelete(reportRef);
+    }
 
     expired++;
   }
