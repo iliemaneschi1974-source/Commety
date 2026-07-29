@@ -62,6 +62,8 @@ export function PushNotificationPreferences() {
   const [standalone, setStandalone] = useState(false);
   const [busy, setBusy] = useState(true);
   const [message, setMessage] = useState("");
+  const preferencesEnabled =
+    supported && (!isIosBrowser || standalone) && deviceEnabled;
 
   useEffect(() => {
     void Promise.resolve().then(() => {
@@ -184,8 +186,15 @@ export function PushNotificationPreferences() {
       <div className="mt-4 divide-y divide-slate-100">
         {options.map((option) => {
           const Icon = option.icon;
+          const checked =
+            preferencesEnabled && preferences[option.key];
           return (
-            <div key={option.key} className="flex items-center gap-3 py-4">
+            <div
+              key={option.key}
+              className={`flex items-center gap-3 py-4 transition ${
+                preferencesEnabled ? "" : "opacity-55"
+              }`}
+            >
               <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-[#1762a8]">
                 <Icon className="size-5" />
               </span>
@@ -199,16 +208,17 @@ export function PushNotificationPreferences() {
                 type="button"
                 role="switch"
                 aria-label={option.label}
-                aria-checked={preferences[option.key]}
-                disabled={busy}
+                aria-checked={checked}
+                aria-disabled={!preferencesEnabled || busy}
+                disabled={!preferencesEnabled || busy}
                 onClick={() => void togglePreference(option.key)}
                 className={`relative h-7 w-12 shrink-0 rounded-full transition ${
-                  preferences[option.key] ? "bg-[#1762a8]" : "bg-slate-300"
-                } disabled:opacity-50`}
+                  checked ? "bg-[#1762a8]" : "bg-slate-300"
+                } disabled:cursor-not-allowed`}
               >
                 <span
                   className={`absolute top-1 size-5 rounded-full bg-white shadow transition ${
-                    preferences[option.key] ? "left-6" : "left-1"
+                    checked ? "left-6" : "left-1"
                   }`}
                 />
               </button>
