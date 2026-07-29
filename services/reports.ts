@@ -339,21 +339,6 @@ export async function deleteReport(
 }
 
 /**
- * Rimuove la segnalazione dagli spazi pubblici conservandola nello storico
- * amministrativo del Comune che l'ha già presa in gestione.
- */
-export async function archiveReportForMunicipality(
-  id: string
-) {
-  return updateDoc(doc(db, "reports", id), {
-    isVisible: false,
-    archivedForMunicipality: true,
-    deletedByAuthorAt: serverTimestamp(),
-    updatedAt: serverTimestamp(),
-  });
-}
-
-/**
  * Incrementa il numero di conferme.
  */
 export async function confirmReport(

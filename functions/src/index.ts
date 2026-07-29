@@ -11,6 +11,7 @@ import { chat } from "./callable/chat";
 import { getPublicProfile } from "./callable/publicProfile";
 import { communityAction } from "./callable/communityAction";
 import { notifications } from "./callable/notifications";
+import { deleteReportByAuthor } from "./callable/deleteReportByAuthor";
 
 /**
  * Configurazione globale delle Cloud Functions.
@@ -57,3 +58,8 @@ export { communityAction };
 
 /** Aggiornamenti istituzionali destinati agli utenti. */
 export { notifications };
+
+/**
+ * Cancellazione dell'autore con conservazione dello storico comunale.
+ */
+export { deleteReportByAuthor };

@@ -16,11 +16,10 @@ import {
 } from "@/services/reportStatusVotes";
 
 import {
-  archiveReportForMunicipality,
   deleteReport,
   getReportById,
 } from "@/services/reports";
-import { hasMunicipalHistory } from "@/lib/reportMunicipalHistory";
+import {archiveReportIfMunicipallyManaged} from "@/services/reportDeletion";
 
 /**
  * Elimina definitivamente una segnalazione
@@ -36,14 +35,16 @@ import { hasMunicipalHistory } from "@/lib/reportMunicipalHistory";
 export async function cleanupReport(
   reportId: string
 ): Promise<void> {
-  const report = await getReportById(reportId);
+  const decision =
+    await archiveReportIfMunicipallyManaged(reportId);
 
-  if (!report) {
+  if (decision.archived || decision.missing) {
     return;
   }
 
-  if (hasMunicipalHistory(report)) {
-    await archiveReportForMunicipality(reportId);
+  const report = await getReportById(reportId);
+
+  if (!report) {
     return;
   }
 
