@@ -18,9 +18,6 @@ export function preferenceFor(data: NotificationData): PushPreference {
   }
   if (data.type === "VERIFICATION_REQUEST") return "verificationRequests";
   if (data.type === "NEARBY_REPORT") return "nearbyReports";
-  if (data.eventKind === "STATUS" || data.eventKind === "STATUS_AND_NOTE") {
-    return "statusChanges";
-  }
   return "municipalUpdates";
 }
 
@@ -29,11 +26,6 @@ export function shouldSendPush(
   configured: PushPreferences | undefined
 ): boolean {
   const preference = preferenceFor(data);
-
-  if (data.eventKind === "STATUS_AND_NOTE") {
-    return configured?.statusChanges !== false ||
-      configured?.municipalUpdates !== false;
-  }
 
   if (preference === "nearbyReports") {
     return configured?.nearbyReports === true;

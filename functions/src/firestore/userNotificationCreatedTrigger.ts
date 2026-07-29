@@ -50,7 +50,6 @@ export const userNotificationCreatedTrigger = onDocumentCreated(
       enabled,
       activeSubscriptions: subscriptions.size,
       municipalUpdatesEnabled: configured?.municipalUpdates !== false,
-      statusChangesEnabled: configured?.statusChanges !== false,
     });
     if (!enabled || subscriptions.empty) return;
 

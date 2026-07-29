@@ -6,44 +6,37 @@ import {
 } from "../functions/src/domain/pushNotificationPolicy";
 
 describe("push notification policy", () => {
-  it("invia il cambio stato anche con gli aggiornamenti comunali disattivati", () => {
+  it("raggruppa i cambi di stato negli aggiornamenti comunali", () => {
     const notification = {
       type: "MUNICIPAL_UPDATE",
       eventKind: "STATUS",
     };
     const preferences = {
-      municipalUpdates: false,
+      municipalUpdates: true,
       statusChanges: true,
     };
 
-    expect(preferenceFor(notification)).toBe("statusChanges");
+    expect(preferenceFor(notification)).toBe("municipalUpdates");
     expect(shouldSendPush(notification, preferences)).toBe(true);
   });
 
-  it("non invia una semplice nota se gli aggiornamenti comunali sono disattivati", () => {
-    expect(shouldSendPush(
-      { type: "MUNICIPAL_UPDATE", eventKind: "NOTE" },
-      { municipalUpdates: false, statusChanges: true }
-    )).toBe(false);
-  });
-
-  it("invia un cambio stato con nota se almeno una preferenza è attiva", () => {
-    const notification = {
-      type: "MUNICIPAL_UPDATE",
-      eventKind: "STATUS_AND_NOTE",
-    };
-
-    expect(shouldSendPush(notification, {
+  it("disattiva insieme note e cambi di stato", () => {
+    const preferences = {
       municipalUpdates: false,
       statusChanges: true,
-    })).toBe(true);
-    expect(shouldSendPush(notification, {
-      municipalUpdates: true,
-      statusChanges: false,
-    })).toBe(true);
-    expect(shouldSendPush(notification, {
-      municipalUpdates: false,
-      statusChanges: false,
-    })).toBe(false);
+    };
+
+    expect(shouldSendPush(
+      { type: "MUNICIPAL_UPDATE", eventKind: "NOTE" },
+      preferences
+    )).toBe(false);
+    expect(shouldSendPush(
+      { type: "MUNICIPAL_UPDATE", eventKind: "STATUS" },
+      preferences
+    )).toBe(false);
+    expect(shouldSendPush(
+      { type: "MUNICIPAL_UPDATE", eventKind: "STATUS_AND_NOTE" },
+      preferences
+    )).toBe(false);
   });
 });

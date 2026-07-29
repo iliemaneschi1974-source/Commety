@@ -1,6 +1,6 @@
 "use client";
 
-import { BellRing, Building2, MapPin, MessageCircle, ShieldCheck } from "lucide-react";
+import { BellRing, Building2, MapPin, MessageCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import {
@@ -23,14 +23,9 @@ const options: Array<{
   {
     key: "municipalUpdates",
     label: "Aggiornamenti del Comune",
-    description: "Comunicazioni ufficiali sulle tue segnalazioni.",
+    description:
+      "Presa in carico, lavorazione, comunicazioni e risoluzione delle tue segnalazioni.",
     icon: Building2,
-  },
-  {
-    key: "statusChanges",
-    label: "Presa in carico e risoluzione",
-    description: "Quando cambia lo stato di una tua segnalazione.",
-    icon: ShieldCheck,
   },
   {
     key: "messages",
