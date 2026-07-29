@@ -17,6 +17,10 @@ import {
 } from "@/services/chat";
 import { ChatMessage, ChatThread } from "@/types/chat";
 import InstitutionalUpdates from "@/components/Notifications/InstitutionalUpdates";
+import {
+  getNotificationInbox,
+  NOTIFICATIONS_CHANGED_EVENT,
+} from "@/services/notifications";
 
 function formatTime(value?: string) {
   if (!value) return "";
@@ -75,6 +79,7 @@ export default function ChatClient({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [view, setView] = useState<"chat" | "updates">("chat");
+  const [unreadUpdates, setUnreadUpdates] = useState(0);
 
   const loadInbox = useCallback(async () => {
     if (!user) return;
@@ -104,6 +109,17 @@ export default function ChatClient({
     }
   }, []);
 
+  const loadUnreadUpdates = useCallback(async () => {
+    if (!user) return;
+
+    try {
+      const inbox = await getNotificationInbox();
+      setUnreadUpdates(inbox.unreadCount);
+    } catch (nextError) {
+      console.error("Errore conteggio aggiornamenti:", nextError);
+    }
+  }, [user]);
+
   useEffect(() => {
     const timeout = window.setTimeout(() => {
       void loadInbox();
@@ -111,6 +127,19 @@ export default function ChatClient({
 
     return () => window.clearTimeout(timeout);
   }, [loadInbox]);
+
+  useEffect(() => {
+    const refresh = () => void loadUnreadUpdates();
+    const timeout = window.setTimeout(refresh, 0);
+    const interval = window.setInterval(refresh, 15_000);
+    window.addEventListener(NOTIFICATIONS_CHANGED_EVENT, refresh);
+
+    return () => {
+      window.clearTimeout(timeout);
+      window.clearInterval(interval);
+      window.removeEventListener(NOTIFICATIONS_CHANGED_EVENT, refresh);
+    };
+  }, [loadUnreadUpdates]);
 
   useEffect(() => {
     if (!recipientId || !user || recipientId === user.uid) return;
@@ -147,6 +176,11 @@ export default function ChatClient({
   const canRespondToRequest =
     activeThread?.status === "REQUESTED" && !requestFromMe;
   const canSendMessages = activeThread?.status === "ACCEPTED";
+  const pendingRequests = threads.filter(
+    (thread) =>
+      thread.status === "REQUESTED" &&
+      thread.requestedBy !== user?.uid
+  ).length;
 
   async function handleSelectThread(thread: ChatThread) {
     setError("");
@@ -275,6 +309,12 @@ export default function ChatClient({
         >
           <MessageCircle className="size-4" />
           Chat
+          {pendingRequests > 0 ? (
+            <NotificationCount
+              count={pendingRequests}
+              active={view === "chat"}
+            />
+          ) : null}
         </button>
         <button
           type="button"
@@ -290,6 +330,12 @@ export default function ChatClient({
         >
           <Bell className="size-4" />
           Aggiornamenti
+          {unreadUpdates > 0 ? (
+            <NotificationCount
+              count={unreadUpdates}
+              active={view === "updates"}
+            />
+          ) : null}
         </button>
       </div>
 
@@ -352,5 +398,26 @@ export default function ChatClient({
       )}
 
     </main>
+  );
+}
+
+function NotificationCount({
+  count,
+  active,
+}: {
+  count: number;
+  active: boolean;
+}) {
+  return (
+    <span
+      className={`inline-flex min-h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[10px] font-black ${
+        active
+          ? "bg-white text-[#0F2D5F]"
+          : "bg-emerald-400 text-[#062b20]"
+      }`}
+      aria-label={`${count} non letti`}
+    >
+      {count > 99 ? "99+" : count}
+    </span>
   );
 }

@@ -101,13 +101,13 @@ export default function ProfilePage() {
         onSave={handleSavePreferences}
       />
 
-      <PushNotificationPreferences />
-
       <ProfileStats stats={stats} />
 
       <ProfileReports reports={reports} />
 
       <ProfileGallery images={gallery} />
+
+      <PushNotificationPreferences />
 
       <AccountActions />
 
