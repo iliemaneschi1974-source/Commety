@@ -100,9 +100,8 @@ export const userNotificationCreatedTrigger = onDocumentCreated(
       data.pushMessage ?? data.message ?? "Hai un nuovo aggiornamento."
     ).slice(0, 180);
     const destination = destinationFor(data);
-    const notificationIcon = image
-      ? image.url
-      : "https://www.commety.it/commety-marker.png";
+    const notificationIcon =
+      "https://www.commety.it/commety-marker.png";
     const notificationBadge =
       "https://www.commety.it/notification-badge.png";
     const response = await getMessaging().sendEachForMulticast({
