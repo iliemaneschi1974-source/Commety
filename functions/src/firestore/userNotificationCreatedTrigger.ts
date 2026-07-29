@@ -8,6 +8,7 @@ import {
   shouldSendPush,
   type PushPreferences,
 } from "../domain/pushNotificationPolicy";
+import { notificationImageFor } from "../push/NotificationImageService";
 
 function destinationFor(data: FirebaseFirestore.DocumentData): string {
   if (data.type === "CHAT_MESSAGE" || data.type === "CHAT_REQUEST") {
@@ -21,7 +22,7 @@ function destinationFor(data: FirebaseFirestore.DocumentData): string {
 
 async function reportImageFor(
   data: FirebaseFirestore.DocumentData
-): Promise<string | undefined> {
+): Promise<{ url: string; bytes: number } | undefined> {
   const reportId = data.reportId;
   if (typeof reportId !== "string" || !reportId) return undefined;
 
@@ -32,15 +33,15 @@ async function reportImageFor(
       return undefined;
     }
 
-    const imageUrl = report.images.find(
+    const image = report.images.find(
       (image: unknown) =>
         image &&
         typeof image === "object" &&
-        typeof (image as { url?: unknown }).url === "string"
-    )?.url;
+        typeof (image as { storagePath?: unknown }).storagePath === "string"
+    );
 
-    return typeof imageUrl === "string" && imageUrl.startsWith("https://")
-      ? imageUrl
+    return image && typeof image === "object"
+      ? notificationImageFor(reportId, image)
       : undefined;
   } catch (error) {
     logger.warn("Impossibile recuperare la foto per la notifica push", {
@@ -55,6 +56,7 @@ export const userNotificationCreatedTrigger = onDocumentCreated(
   {
     document: "userNotifications/{notificationId}",
     region: "europe-west1",
+    memory: "512MiB",
   },
   async (event) => {
     const data = event.data?.data();
@@ -106,7 +108,7 @@ export const userNotificationCreatedTrigger = onDocumentCreated(
         url: destination,
         icon: "/commety-marker.png",
         badge: "/commety-marker.png",
-        ...(image ? { image } : {}),
+        ...(image ? { image: image.url } : {}),
         tag: String(event.params.notificationId),
       },
       webpush: {
@@ -117,7 +119,7 @@ export const userNotificationCreatedTrigger = onDocumentCreated(
           icon: "https://www.commety.it/commety-marker.png",
           badge: "https://www.commety.it/commety-marker.png",
           tag: String(event.params.notificationId),
-          ...(image ? { image } : {}),
+          ...(image ? { image: image.url } : {}),
         },
         fcmOptions: {
           link: `https://www.commety.it${destination}`,
@@ -129,6 +131,7 @@ export const userNotificationCreatedTrigger = onDocumentCreated(
       successCount: response.successCount,
       failureCount: response.failureCount,
       imageAttached: Boolean(image),
+      imageBytes: image?.bytes ?? 0,
       errorCodes: response.responses
         .filter((result) => !result.success)
         .map((result) => result.error?.code ?? "unknown"),
