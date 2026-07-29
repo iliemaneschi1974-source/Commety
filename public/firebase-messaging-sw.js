@@ -1,3 +1,11 @@
+self.addEventListener("install", () => {
+  self.skipWaiting();
+});
+
+self.addEventListener("activate", (event) => {
+  event.waitUntil(self.clients.claim());
+});
+
 self.addEventListener("push", (event) => {
   if (!event.data) return;
 
@@ -14,7 +22,7 @@ self.addEventListener("push", (event) => {
     body: data.body || "Hai un nuovo aggiornamento su Commety.",
     icon: data.icon || "/commety-marker.png",
     badge: data.badge || "/commety-marker.png",
-    image: data.image || undefined,
+    image: data.image || payload.notification?.image || undefined,
     tag: data.tag || undefined,
     renotify: false,
     data: {

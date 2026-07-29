@@ -94,13 +94,16 @@ export const userNotificationCreatedTrigger = onDocumentCreated(
     if (tokens.length === 0) return;
 
     const image = await reportImageFor(data);
+    const body = String(
+      data.pushMessage ?? data.message ?? "Hai un nuovo aggiornamento."
+    ).slice(0, 180);
+    const destination = destinationFor(data);
     const response = await getMessaging().sendEachForMulticast({
       tokens: tokens.slice(0, 500),
       data: {
         title: "Commety",
-        body: String(data.pushMessage ?? data.message ?? "Hai un nuovo aggiornamento.")
-          .slice(0, 180),
-        url: destinationFor(data),
+        body,
+        url: destination,
         icon: "/commety-marker.png",
         badge: "/commety-marker.png",
         ...(image ? { image } : {}),
@@ -108,12 +111,24 @@ export const userNotificationCreatedTrigger = onDocumentCreated(
       },
       webpush: {
         headers: { Urgency: preference === "messages" ? "high" : "normal" },
+        notification: {
+          title: "Commety",
+          body,
+          icon: "https://www.commety.it/commety-marker.png",
+          badge: "https://www.commety.it/commety-marker.png",
+          tag: String(event.params.notificationId),
+          ...(image ? { image } : {}),
+        },
+        fcmOptions: {
+          link: `https://www.commety.it${destination}`,
+        },
       },
     });
     logger.info("Esito invio notifica push", {
       notificationId: event.params.notificationId,
       successCount: response.successCount,
       failureCount: response.failureCount,
+      imageAttached: Boolean(image),
       errorCodes: response.responses
         .filter((result) => !result.success)
         .map((result) => result.error?.code ?? "unknown"),
