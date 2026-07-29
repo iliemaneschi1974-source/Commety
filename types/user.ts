@@ -43,6 +43,14 @@ export interface UserReputation {
 export interface UserPreferences {
   notificationsEnabled: boolean
 
+  pushNotifications?: {
+    municipalUpdates: boolean
+    statusChanges: boolean
+    messages: boolean
+    verificationRequests: boolean
+    nearbyReports: boolean
+  }
+
   darkMode: boolean
 
   /** Motivo dichiarato dall'utente durante l'onboarding del profilo. */

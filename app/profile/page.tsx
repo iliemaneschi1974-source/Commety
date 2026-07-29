@@ -7,6 +7,7 @@ import { ProfileReports } from "@/components/Profile/ProfileReports";
 import { ProfileStats } from "@/components/Profile/ProfileStats";
 import { AccountActions } from "@/components/Profile/AccountActions";
 import { ProfilePreferences } from "@/components/Profile/ProfilePreferences";
+import { PushNotificationPreferences } from "@/components/Profile/PushNotificationPreferences";
 
 import { useProfile } from "@/hooks/useProfile";
 import { useUserReports } from "@/hooks/useUserReports";
@@ -99,6 +100,8 @@ export default function ProfilePage() {
         }}
         onSave={handleSavePreferences}
       />
+
+      <PushNotificationPreferences />
 
       <ProfileStats stats={stats} />
 

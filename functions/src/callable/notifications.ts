@@ -42,6 +42,7 @@ export const notifications = onCall(
         .get();
 
       const items = snapshot.docs
+        .filter((document) => document.data().type === "MUNICIPAL_UPDATE")
         .map((document) => {
           const data = document.data();
           const includesNote =

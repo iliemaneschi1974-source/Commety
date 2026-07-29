@@ -232,7 +232,9 @@ export const chat = onCall(
       let thread = await threadRef.get();
 
       if (!thread.exists) {
-        await threadRef.set({
+        const notificationRef = adminDb.collection("userNotifications").doc();
+        const batch = adminDb.batch();
+        batch.set(threadRef, {
           members: [userId, recipientId],
           participants: [
             participant(userId, sender),
@@ -244,6 +246,17 @@ export const chat = onCall(
           createdAt: FieldValue.serverTimestamp(),
           updatedAt: FieldValue.serverTimestamp(),
         });
+        batch.set(notificationRef, {
+          userId: recipientId,
+          type: "CHAT_REQUEST",
+          threadId,
+          senderId: userId,
+          message: `${participant(userId, sender).displayName} vuole avviare una conversazione con te.`,
+          pushMessage: "Hai ricevuto una nuova richiesta di conversazione.",
+          createdAt: FieldValue.serverTimestamp(),
+          readAt: null,
+        });
+        await batch.commit();
         thread = await threadRef.get();
       }
 
@@ -351,7 +364,9 @@ export const chat = onCall(
       throw new HttpsError("invalid-argument", "Azione chat non valida.");
     }
 
-    const status = (await threadRef.get()).data()?.status;
+    const threadSnapshot = await threadRef.get();
+    const threadData = threadSnapshot.data() ?? {};
+    const status = threadData.status;
 
     if (status !== "ACCEPTED") {
       throw new HttpsError(
@@ -406,18 +421,35 @@ export const chat = onCall(
       };
     }
 
-    await Promise.all([
-      threadRef.collection("messages").add({
-        text,
-        senderId: userId,
-        createdAt: FieldValue.serverTimestamp(),
-      }),
-      threadRef.update({
-        lastMessage: text,
-        lastMessageAt: FieldValue.serverTimestamp(),
-        updatedAt: FieldValue.serverTimestamp(),
-      }),
-    ]);
+    const recipientId = (threadData.members as unknown[] ?? [])
+      .find((member) => member !== userId);
+    if (typeof recipientId !== "string") {
+      throw new HttpsError("not-found", "Destinatario non trovato.");
+    }
+
+    const sender = await getActiveUser(userId);
+    const batch = adminDb.batch();
+    batch.set(threadRef.collection("messages").doc(), {
+      text,
+      senderId: userId,
+      createdAt: FieldValue.serverTimestamp(),
+    });
+    batch.update(threadRef, {
+      lastMessage: text,
+      lastMessageAt: FieldValue.serverTimestamp(),
+      updatedAt: FieldValue.serverTimestamp(),
+    });
+    batch.set(adminDb.collection("userNotifications").doc(), {
+      userId: recipientId,
+      type: "CHAT_MESSAGE",
+      threadId,
+      senderId: userId,
+      message: `Nuovo messaggio da ${participant(userId, sender).displayName}.`,
+      pushMessage: "Hai ricevuto un nuovo messaggio privato.",
+      createdAt: FieldValue.serverTimestamp(),
+      readAt: null,
+    });
+    await batch.commit();
 
     return { sent: true };
   }

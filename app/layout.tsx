@@ -25,6 +25,12 @@ const appUrl =
 
 export const metadata: Metadata = {
   metadataBase: new URL(appUrl),
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Commety",
+  },
   verification: {
     google: "NW93TABpolzyjT84jxThajBWxlbv-YdSgKAFBOzIXkw",
   },
@@ -62,6 +68,9 @@ export const metadata: Metadata = {
     description:
       "Scopri meteo, viabilità, rete, trasporti, accessibilità, eventi e pericoli con le segnalazioni in tempo reale della community Commety.",
     images: [`${appUrl}/opengraph-image`],
+  },
+  icons: {
+    apple: "/og-image-square.png",
   },
 };
 

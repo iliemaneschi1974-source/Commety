@@ -27,18 +27,18 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID!,
 };
 
-const app = !getApps().length
+export const firebaseApp = !getApps().length
   ? initializeApp(firebaseConfig)
   : getApp();
 
-export const auth = getAuth(app);
+export const auth = getAuth(firebaseApp);
 
-export const db = getFirestore(app);
+export const db = getFirestore(firebaseApp);
 
-export const storage = getStorage(app);
+export const storage = getStorage(firebaseApp);
 
 export const functions = getFunctions(
-  app,
+  firebaseApp,
   "europe-west1"
 );
 

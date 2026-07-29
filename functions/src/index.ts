@@ -12,6 +12,8 @@ import { getPublicProfile } from "./callable/publicProfile";
 import { communityAction } from "./callable/communityAction";
 import { notifications } from "./callable/notifications";
 import { deleteReportByAuthor } from "./callable/deleteReportByAuthor";
+import { pushSettings } from "./callable/pushSettings";
+import { userNotificationCreatedTrigger } from "./firestore/userNotificationCreatedTrigger";
 
 /**
  * Configurazione globale delle Cloud Functions.
@@ -63,3 +65,9 @@ export { notifications };
  * Cancellazione dell'autore con conservazione dello storico comunale.
  */
 export { deleteReportByAuthor };
+
+/** Preferenze e registrazione dei dispositivi per Web Push. */
+export { pushSettings };
+
+/** Invio push quando nasce un aggiornamento destinato a un utente. */
+export { userNotificationCreatedTrigger };
