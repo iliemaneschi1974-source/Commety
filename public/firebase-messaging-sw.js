@@ -21,7 +21,7 @@ self.addEventListener("push", (event) => {
   const options = {
     body: data.body || "Hai un nuovo aggiornamento su Commety.",
     icon: data.icon || "/commety-marker.png",
-    badge: data.badge || "/commety-marker.png",
+    badge: data.badge || "/notification-badge.png",
     image:
       data.reportImage ||
       data.image ||

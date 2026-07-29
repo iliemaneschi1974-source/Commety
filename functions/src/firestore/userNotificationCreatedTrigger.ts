@@ -103,6 +103,8 @@ export const userNotificationCreatedTrigger = onDocumentCreated(
     const notificationIcon = image
       ? image.url
       : "https://www.commety.it/commety-marker.png";
+    const notificationBadge =
+      "https://www.commety.it/notification-badge.png";
     const response = await getMessaging().sendEachForMulticast({
       tokens: tokens.slice(0, 500),
       data: {
@@ -110,7 +112,7 @@ export const userNotificationCreatedTrigger = onDocumentCreated(
         body,
         url: destination,
         icon: notificationIcon,
-        badge: "/commety-marker.png",
+        badge: notificationBadge,
         ...(image
           ? {
               image: image.url,
@@ -128,7 +130,7 @@ export const userNotificationCreatedTrigger = onDocumentCreated(
           title: "Commety",
           body,
           icon: notificationIcon,
-          badge: "https://www.commety.it/commety-marker.png",
+          badge: notificationBadge,
           tag: String(event.params.notificationId),
           ...(image
             ? {
