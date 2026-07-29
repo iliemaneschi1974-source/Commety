@@ -37,6 +37,14 @@ function subscriptionId(uid: string, deviceId: string): string {
   return createHash("sha256").update(`${uid}:${deviceId}`).digest("hex");
 }
 
+function optionalToken(value: unknown): string | undefined {
+  return typeof value === "string" &&
+    value.length >= 40 &&
+    value.length <= 4096
+    ? value
+    : undefined;
+}
+
 export const pushSettings = onCall(
   { region: "europe-west1" },
   async (request) => {
@@ -68,16 +76,30 @@ export const pushSettings = onCall(
 
     if (action === "state") {
       const subscription = await subscriptionRef.get();
+      const token = optionalToken(request.data?.token);
+      const deviceEnabled =
+        subscription.exists && subscription.data()?.enabled === true;
+
+      if (
+        deviceEnabled &&
+        token &&
+        subscription.data()?.token !== token
+      ) {
+        await subscriptionRef.update({
+          token,
+          updatedAt: FieldValue.serverTimestamp(),
+        });
+      }
+
       return {
         preferences: storedPreferences,
-        deviceEnabled:
-          subscription.exists && subscription.data()?.enabled === true,
+        deviceEnabled,
       };
     }
 
     if (action === "enable") {
-      const token = request.data?.token;
-      if (typeof token !== "string" || token.length < 40 || token.length > 4096) {
+      const token = optionalToken(request.data?.token);
+      if (!token) {
         throw new HttpsError("invalid-argument", "Token push non valido.");
       }
       await subscriptionRef.set({

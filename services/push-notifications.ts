@@ -16,6 +16,7 @@ import {
 } from "@/types/push-notifications";
 
 const DEVICE_ID_KEY = "commety-push-device-id";
+const DEVICE_ENABLED_KEY = "commety-push-device-enabled";
 
 function getDeviceId(): string {
   const current = window.localStorage.getItem(DEVICE_ID_KEY);
@@ -37,6 +38,21 @@ async function callPushSettings<T>(
   return result.data;
 }
 
+async function getBrowserPushToken(): Promise<string | undefined> {
+  if (Notification.permission !== "granted") return undefined;
+
+  const registration = await navigator.serviceWorker.register(
+    "/firebase-messaging-sw.js",
+    { scope: "/", updateViaCache: "none" }
+  );
+  const vapidKey = process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY;
+  const token = await getToken(getMessaging(firebaseApp), {
+    serviceWorkerRegistration: registration,
+    ...(vapidKey ? { vapidKey } : {}),
+  });
+  return token || undefined;
+}
+
 export async function getPushNotificationState(): Promise<PushNotificationState> {
   const supported = await isSupported().catch(() => false);
   if (!supported) {
@@ -46,9 +62,29 @@ export async function getPushNotificationState(): Promise<PushNotificationState>
     };
   }
 
-  const state = await callPushSettings<PushNotificationState>("state", {
+  const token = await getBrowserPushToken().catch(() => undefined);
+  let state = await callPushSettings<PushNotificationState>("state", {
     deviceId: getDeviceId(),
+    ...(token ? { token } : {}),
   });
+  const storedIntent = window.localStorage.getItem(DEVICE_ENABLED_KEY);
+
+  if (
+    !state.deviceEnabled &&
+    storedIntent === "true" &&
+    token &&
+    Notification.permission === "granted"
+  ) {
+    state = await callPushSettings<PushNotificationState>("enable", {
+      deviceId: getDeviceId(),
+      token,
+    });
+  }
+
+  if (state.deviceEnabled) {
+    window.localStorage.setItem(DEVICE_ENABLED_KEY, "true");
+  }
+
   return {
     ...state,
     deviceEnabled:
@@ -66,23 +102,16 @@ export async function enablePushNotifications(): Promise<PushNotificationState> 
     throw new Error("PUSH_PERMISSION_DENIED");
   }
 
-  const registration = await navigator.serviceWorker.register(
-    "/firebase-messaging-sw.js",
-    { scope: "/", updateViaCache: "none" }
-  );
-  const messaging = getMessaging(firebaseApp);
-  const vapidKey = process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY;
-  const token = await getToken(messaging, {
-    serviceWorkerRegistration: registration,
-    ...(vapidKey ? { vapidKey } : {}),
-  });
+  const token = await getBrowserPushToken();
 
   if (!token) throw new Error("PUSH_TOKEN_UNAVAILABLE");
 
-  return callPushSettings<PushNotificationState>("enable", {
+  const state = await callPushSettings<PushNotificationState>("enable", {
     deviceId: getDeviceId(),
     token,
   });
+  window.localStorage.setItem(DEVICE_ENABLED_KEY, "true");
+  return state;
 }
 
 export async function disablePushNotifications(): Promise<PushNotificationState> {
@@ -92,6 +121,7 @@ export async function disablePushNotifications(): Promise<PushNotificationState>
   if (await isSupported().catch(() => false)) {
     await deleteToken(getMessaging(firebaseApp)).catch(() => false);
   }
+  window.localStorage.setItem(DEVICE_ENABLED_KEY, "false");
   return state;
 }
 
