@@ -119,6 +119,8 @@ export interface Report {
     regionCode: string;
     regionName: string;
     source: string;
+    districtCode?: string;
+    districtName?: string;
   };
 
   municipalWorkflow?: {

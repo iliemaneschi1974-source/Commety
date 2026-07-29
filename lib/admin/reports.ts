@@ -8,6 +8,7 @@ import {
   AdminReport,
   AdminReportStatus,
 } from "@/lib/admin/dashboard-types";
+import {resolveRomaMunicipio} from "@/lib/territory/romaMunicipalityResolver";
 
 const ROMA_MUNICIPALITY_CODE = "058091";
 const REPORT_LIMIT = 500;
@@ -111,6 +112,10 @@ export async function getRomaAdminReports(): Promise<AdminReport[]> {
         ? data.images[0]
         : undefined;
       const createdAt = asDate(data.createdAt);
+      const resolvedDistrict = resolveRomaMunicipio(
+        data.lat,
+        data.lng
+      );
 
       return {
         id: document.id,
@@ -122,7 +127,9 @@ export async function getRomaAdminReports(): Promise<AdminReport[]> {
         priority: asPriority(workflow.priority),
         municipality: "Roma",
         district: String(
-          data.territory?.districtName ?? "Municipio non assegnato"
+          data.territory?.districtName ??
+            resolvedDistrict?.districtName ??
+            "Municipio non assegnato"
         ),
         address: String(
           data.address ?? "Indirizzo non disponibile"

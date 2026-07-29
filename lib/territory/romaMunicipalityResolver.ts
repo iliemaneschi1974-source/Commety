@@ -1,30 +1,8 @@
-import {ROMA_BOUNDARY} from "./romaBoundary.generated";
 import {ROMA_MUNICIPI} from "./romaMunicipi.generated";
 
 type Position = readonly [number, number];
 type Ring = readonly Position[];
 type Polygon = readonly Ring[];
-type MultiPolygon = readonly Polygon[];
-
-export interface MunicipalityTerritory {
-  municipalityCode: "058091";
-  municipalityName: "Roma";
-  provinceCode: "RM";
-  regionCode: "12";
-  regionName: "Lazio";
-  source: "ISTAT_2026";
-  districtCode?: string;
-  districtName?: string;
-}
-
-const ROMA_TERRITORY: MunicipalityTerritory = {
-  municipalityCode: "058091",
-  municipalityName: "Roma",
-  provinceCode: "RM",
-  regionCode: "12",
-  regionName: "Lazio",
-  source: "ISTAT_2026",
-};
 
 function isPointInRing(
   longitude: number,
@@ -59,8 +37,7 @@ function isPointInPolygon(
   latitude: number,
   polygon: Polygon
 ): boolean {
-  if (polygon.length === 0) return false;
-  if (!isPointInRing(longitude, latitude, polygon[0])) {
+  if (!polygon.length || !isPointInRing(longitude, latitude, polygon[0])) {
     return false;
   }
   return !polygon
@@ -68,10 +45,19 @@ function isPointInPolygon(
     .some((hole) => isPointInRing(longitude, latitude, hole));
 }
 
-function resolveRomaMunicipio(
-  longitude: number,
-  latitude: number
+export function resolveRomaMunicipio(
+  latitude: unknown,
+  longitude: unknown
 ): {districtCode: string; districtName: string} | null {
+  if (
+    typeof latitude !== "number" ||
+    typeof longitude !== "number" ||
+    !Number.isFinite(latitude) ||
+    !Number.isFinite(longitude)
+  ) {
+    return null;
+  }
+
   for (const municipio of ROMA_MUNICIPI) {
     if (
       municipio.boundary.some((polygon) =>
@@ -84,29 +70,6 @@ function resolveRomaMunicipio(
       };
     }
   }
+
   return null;
-}
-
-export function resolveRomaTerritory(
-  latitude: unknown,
-  longitude: unknown
-): MunicipalityTerritory | null {
-  if (
-    typeof latitude !== "number" ||
-    typeof longitude !== "number" ||
-    !Number.isFinite(latitude) ||
-    !Number.isFinite(longitude)
-  ) {
-    return null;
-  }
-
-  const boundary = ROMA_BOUNDARY as MultiPolygon;
-  if (!boundary.some((polygon) =>
-    isPointInPolygon(longitude, latitude, polygon)
-  )) {
-    return null;
-  }
-
-  const district = resolveRomaMunicipio(longitude, latitude);
-  return district ? {...ROMA_TERRITORY, ...district} : ROMA_TERRITORY;
 }
