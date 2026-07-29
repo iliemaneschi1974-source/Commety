@@ -155,8 +155,16 @@ export function PushNotificationPreferences() {
         <div className="mt-5 flex items-center justify-between gap-4 rounded-2xl bg-slate-50 p-4">
           <div>
             <p className="font-black text-slate-800">Questo dispositivo</p>
-            <p className="mt-1 text-xs leading-5 text-slate-500">
-              L’autorizzazione viene richiesta solo dopo il tuo consenso.
+            <p
+              className={`mt-1 text-xs font-bold leading-5 ${
+                deviceEnabled ? "text-emerald-700" : "text-slate-500"
+              }`}
+            >
+              {busy
+                ? "Verifica delle notifiche in corso..."
+                : deviceEnabled
+                  ? "Notifiche attive su questo dispositivo."
+                  : "Notifiche disattivate su questo dispositivo."}
             </p>
           </div>
           <button

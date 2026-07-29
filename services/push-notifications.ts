@@ -17,6 +17,7 @@ import {
 
 const DEVICE_ID_KEY = "commety-push-device-id";
 const DEVICE_ENABLED_KEY = "commety-push-device-enabled";
+let deviceSyncPromise: Promise<PushNotificationState | undefined> | undefined;
 
 function getDeviceId(): string {
   const current = window.localStorage.getItem(DEVICE_ID_KEY);
@@ -75,9 +76,15 @@ export async function getPushNotificationState(): Promise<PushNotificationState>
     token &&
     Notification.permission === "granted"
   ) {
+    // Il browser può conservare un token che Firebase ha già invalidato.
+    // Se la sottoscrizione è sparita, ne richiediamo uno nuovo.
+    await deleteToken(getMessaging(firebaseApp)).catch(() => false);
+    const refreshedToken = await getBrowserPushToken().catch(() => undefined);
+    if (!refreshedToken) return state;
+
     state = await callPushSettings<PushNotificationState>("enable", {
       deviceId: getDeviceId(),
-      token,
+      token: refreshedToken,
     });
   }
 
@@ -90,6 +97,27 @@ export async function getPushNotificationState(): Promise<PushNotificationState>
     deviceEnabled:
       state.deviceEnabled && Notification.permission === "granted",
   };
+}
+
+export async function synchronizePushNotificationDevice(): Promise<
+  PushNotificationState | undefined
+> {
+  if (
+    typeof window === "undefined" ||
+    window.localStorage.getItem(DEVICE_ENABLED_KEY) !== "true" ||
+    !("Notification" in window) ||
+    Notification.permission !== "granted"
+  ) {
+    return undefined;
+  }
+
+  if (!deviceSyncPromise) {
+    deviceSyncPromise = getPushNotificationState().finally(() => {
+      deviceSyncPromise = undefined;
+    });
+  }
+
+  return deviceSyncPromise;
 }
 
 export async function enablePushNotifications(): Promise<PushNotificationState> {

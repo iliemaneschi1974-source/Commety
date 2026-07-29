@@ -12,6 +12,7 @@ import {
   getNotificationInbox,
   NOTIFICATIONS_CHANGED_EVENT,
 } from "@/services/notifications";
+import { synchronizePushNotificationDevice } from "@/services/push-notifications";
 
 type NavigationItemProps = {
   href: string;
@@ -114,6 +115,28 @@ export default function BottomAppNav() {
         refreshNotifications
       );
   }, [loadPendingRequests]);
+
+  useEffect(() => {
+    if (!isAuthenticated || !user) return;
+
+    const synchronizeDevice = () => {
+      void synchronizePushNotificationDevice().catch((error) => {
+        console.error("Errore sincronizzazione notifiche push:", error);
+      });
+    };
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") synchronizeDevice();
+    };
+
+    synchronizeDevice();
+    window.addEventListener("focus", synchronizeDevice);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      window.removeEventListener("focus", synchronizeDevice);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [isAuthenticated, user]);
 
   if (
     pathname !== "/" &&
