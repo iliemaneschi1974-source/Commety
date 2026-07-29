@@ -1,26 +1,13 @@
 import { getMessaging } from "firebase-admin/messaging";
+import * as logger from "firebase-functions/logger";
 import { onDocumentCreated } from "firebase-functions/v2/firestore";
 
 import { adminDb } from "../config/firebaseAdmin";
-
-type PushPreference =
-  | "municipalUpdates"
-  | "statusChanges"
-  | "messages"
-  | "verificationRequests"
-  | "nearbyReports";
-
-function preferenceFor(data: FirebaseFirestore.DocumentData): PushPreference {
-  if (data.type === "CHAT_MESSAGE" || data.type === "CHAT_REQUEST") {
-    return "messages";
-  }
-  if (data.type === "VERIFICATION_REQUEST") return "verificationRequests";
-  if (data.type === "NEARBY_REPORT") return "nearbyReports";
-  if (data.eventKind === "STATUS" || data.eventKind === "STATUS_AND_NOTE") {
-    return "statusChanges";
-  }
-  return "municipalUpdates";
-}
+import {
+  preferenceFor,
+  shouldSendPush,
+  type PushPreferences,
+} from "../domain/pushNotificationPolicy";
 
 function destinationFor(data: FirebaseFirestore.DocumentData): string {
   if (data.type === "CHAT_MESSAGE" || data.type === "CHAT_REQUEST") {
@@ -52,13 +39,19 @@ export const userNotificationCreatedTrigger = onDocumentCreated(
     ]);
 
     const preference = preferenceFor(data);
-    const configured = userSnapshot.data()?.preferences?.pushNotifications;
-    const enabled = data.eventKind === "STATUS_AND_NOTE"
-      ? configured?.statusChanges !== false ||
-        configured?.municipalUpdates !== false
-      : preference === "nearbyReports"
-        ? configured?.nearbyReports === true
-        : configured?.[preference] !== false;
+    const configured = userSnapshot.data()?.preferences
+      ?.pushNotifications as PushPreferences | undefined;
+    const enabled = shouldSendPush(data, configured);
+    logger.info("Valutazione notifica push", {
+      notificationId: event.params.notificationId,
+      type: data.type ?? null,
+      eventKind: data.eventKind ?? null,
+      preference,
+      enabled,
+      activeSubscriptions: subscriptions.size,
+      municipalUpdatesEnabled: configured?.municipalUpdates !== false,
+      statusChangesEnabled: configured?.statusChanges !== false,
+    });
     if (!enabled || subscriptions.empty) return;
 
     const tokenDocuments = subscriptions.docs.filter(
@@ -83,6 +76,14 @@ export const userNotificationCreatedTrigger = onDocumentCreated(
       webpush: {
         headers: { Urgency: preference === "messages" ? "high" : "normal" },
       },
+    });
+    logger.info("Esito invio notifica push", {
+      notificationId: event.params.notificationId,
+      successCount: response.successCount,
+      failureCount: response.failureCount,
+      errorCodes: response.responses
+        .filter((result) => !result.success)
+        .map((result) => result.error?.code ?? "unknown"),
     });
 
     const invalidCodes = new Set([
