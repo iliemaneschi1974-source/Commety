@@ -17,7 +17,7 @@ const news = [
   },
   {
     href: "/news/cosa-fare-animale-abbandonato-o-maltrattato",
-    image: "/news-animale-abbandonato-hero.png",
+    image: "/news-animale-abbandonato-cover-v2.jpg",
     imageAlt: "Una persona presta assistenza in sicurezza a un cane abbandonato",
     date: "23 luglio 2026",
     title: "Cosa fare se vediamo un animale abbandonato o maltrattato",
@@ -26,7 +26,7 @@ const news = [
   },
   {
     href: "/news/segnalazioni-guasti-windtre-iliad-tim-fastweb-vodafone",
-    image: "/news-guasti-rete-hero.png",
+    image: "/news-guasti-rete-cover-v2.jpg",
     imageAlt: "Guasti di rete visualizzati su una mappa digitale",
     date: "23 luglio 2026",
     title: "Guasti WINDTRE, iliad, TIM, Fastweb e Vodafone: come segnalarli",
@@ -35,7 +35,7 @@ const news = [
   },
   {
     href: "/news/segnalazioni-in-tempo-reale-perche-sono-importanti",
-    image: "/og-institutional-map.png",
+    image: "/news-segnalazioni-realtime-cover-v2.jpg",
     imageAlt: "Segnalazioni geolocalizzate sulla mappa di Commety",
     date: "23 luglio 2026",
     title: "Segnalazioni in tempo reale: perché sono importanti?",
@@ -44,7 +44,7 @@ const news = [
   },
   {
     href: "/news/commety-su-gofundme",
-    image: "/landing-maria-rossi.png",
+    image: "/news-commety-gofundme-cover-v2.jpg",
     imageAlt: "Una persona della community Commety",
     date: "22 luglio 2026",
     title: "Commety è su GoFundMe",

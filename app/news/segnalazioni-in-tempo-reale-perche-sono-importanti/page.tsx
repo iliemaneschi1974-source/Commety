@@ -15,7 +15,7 @@ import {
 const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://www.commety.it";
 const slug = "/news/segnalazioni-in-tempo-reale-perche-sono-importanti";
 const articleUrl = `${siteUrl}${slug}`;
-const imageUrl = `${siteUrl}/og-institutional-map.png`;
+const imageUrl = `${siteUrl}/news-segnalazioni-realtime-cover-v2.jpg`;
 const publishedAt = "2026-07-23T09:00:00+02:00";
 
 const title = "Segnalazioni in tempo reale: perché sono importanti?";
@@ -217,7 +217,7 @@ export default function RealTimeReportsArticle() {
             </p>
             <div className="relative mt-10 overflow-hidden rounded-[1.75rem] border border-white/15 shadow-[0_20px_46px_rgba(0,0,0,0.28)]">
               <Image
-                src="/og-institutional-map.png"
+                src="/news-segnalazioni-realtime-cover-v2.jpg"
                 alt="La mappa di Commety con segnalazioni geolocalizzate in tempo reale"
                 width={1731}
                 height={909}

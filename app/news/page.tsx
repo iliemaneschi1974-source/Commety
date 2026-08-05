@@ -57,7 +57,7 @@ export default function NewsPage() {
               <span className="mt-8 inline-flex items-center gap-2 font-bold text-emerald-200">Leggi la guida <ArrowRight className="size-5 transition group-hover:translate-x-1" /></span>
             </div>
             <div className="relative min-h-64">
-              <Image src="/news-animale-abbandonato-hero.png" alt="Assistenza sicura a un cane abbandonato" fill sizes="(max-width: 1024px) 100vw, 40vw" className="object-cover" />
+              <Image src="/news-animale-abbandonato-cover-v2.jpg" alt="Assistenza sicura a un cane abbandonato" fill sizes="(max-width: 1024px) 100vw, 40vw" className="object-cover" />
               <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(7,31,24,0.38),transparent)]" />
             </div>
           </div>
@@ -73,7 +73,7 @@ export default function NewsPage() {
               <span className="mt-8 inline-flex items-center gap-2 font-bold text-orange-200">Leggi la guida <ArrowRight className="size-5 transition group-hover:translate-x-1" /></span>
             </div>
             <div className="relative min-h-64">
-              <Image src="/news-guasti-rete-hero.png" alt="Guasti di rete visualizzati su una mappa digitale" fill sizes="(max-width: 1024px) 100vw, 40vw" className="object-cover" />
+              <Image src="/news-guasti-rete-cover-v2.jpg" alt="Guasti di rete visualizzati su una mappa digitale" fill sizes="(max-width: 1024px) 100vw, 40vw" className="object-cover" />
               <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(7,26,60,0.35),transparent)]" />
             </div>
           </div>

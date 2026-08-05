@@ -3,7 +3,11 @@ import { ImageResponse } from "next/og";
 import ReportOpenGraphImage from "@/components/opengraph-image/ReportOpenGraphImage";
 import { mapReportToOpenGraphModel } from "@/lib/opengraphMapper";
 import { getServerReportById } from "@/services/serverReports";
-export const dynamic = "force-dynamic";
+
+// La card completa viene memorizzata all'edge per evitare che i crawler social
+// debbano attendere a ogni richiesta Firestore, Firebase Storage e ImageResponse.
+// Dopo dieci minuti Next.js la rigenera con gli eventuali aggiornamenti.
+export const revalidate = 600;
 
 export const runtime = "nodejs";
 

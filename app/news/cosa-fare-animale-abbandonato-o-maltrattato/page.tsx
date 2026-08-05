@@ -18,7 +18,7 @@ import {
 const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://www.commety.it";
 const slug = "/news/cosa-fare-animale-abbandonato-o-maltrattato";
 const articleUrl = `${siteUrl}${slug}`;
-const heroImage = `${siteUrl}/news-animale-abbandonato-hero.png`;
+const heroImage = `${siteUrl}/news-animale-abbandonato-cover-v2.jpg`;
 const rescueImage = `${siteUrl}/news-animale-soccorso-veterinario.png`;
 const publishedAt = "2026-07-23T16:00:00+02:00";
 
@@ -79,8 +79,8 @@ export const metadata: Metadata = {
     images: [
       {
         url: heroImage,
-        width: 1536,
-        height: 920,
+        width: 1672,
+        height: 941,
         alt: "Una persona presta assistenza in sicurezza a un cane abbandonato",
       },
     ],
@@ -242,10 +242,10 @@ export default function AnimalRescueGuidePage() {
             </p>
             <div className="relative mt-10 overflow-hidden rounded-[1.75rem] border border-white/15 shadow-[0_20px_46px_rgba(0,0,0,0.28)]">
               <Image
-                src="/news-animale-abbandonato-hero.png"
+                src="/news-animale-abbandonato-cover-v2.jpg"
                 alt="Una persona offre acqua a un cane abbandonato mentre chiama i soccorsi"
-                width={1536}
-                height={920}
+                width={1672}
+                height={941}
                 priority
                 className="h-auto w-full"
               />

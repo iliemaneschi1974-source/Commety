@@ -42,7 +42,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date("2026-07-23T09:00:00+02:00"),
       changeFrequency: "monthly",
       priority: 0.8,
-      images: [`${siteUrl}/og-institutional-map.png`],
+      images: [`${siteUrl}/news-segnalazioni-realtime-cover-v2.jpg`],
     },
     {
       url: `${siteUrl}/news/segnalazioni-guasti-windtre-iliad-tim-fastweb-vodafone`,
@@ -50,7 +50,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.8,
       images: [
-        `${siteUrl}/news-guasti-rete-hero.png`,
+        `${siteUrl}/news-guasti-rete-cover-v2.jpg`,
         `${siteUrl}/news-guasti-rete-community.png`,
       ],
     },
@@ -60,7 +60,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.8,
       images: [
-        `${siteUrl}/news-animale-abbandonato-hero.png`,
+        `${siteUrl}/news-animale-abbandonato-cover-v2.jpg`,
         `${siteUrl}/news-animale-soccorso-veterinario.png`,
       ],
     },
@@ -69,7 +69,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date("2026-07-22T09:00:00+02:00"),
       changeFrequency: "monthly",
       priority: 0.8,
-      images: [`${siteUrl}/og-institutional-map.png`, `${siteUrl}/landing-maria-rossi.png`],
+      images: [`${siteUrl}/news-commety-gofundme-cover-v2.jpg`, `${siteUrl}/landing-maria-rossi.png`],
     },
   ];
 }

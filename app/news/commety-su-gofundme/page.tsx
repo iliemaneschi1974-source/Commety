@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     section: "News",
     tags: ["GoFundMe", "crowdfunding", "innovazione sociale", "community", "territorio"],
     images: [{
-      url: `${siteUrl}/og-institutional-map.png`,
+      url: `${siteUrl}/news-commety-gofundme-cover-v2.jpg`,
       width: 1731,
       height: 909,
       alt: "Commety, la mappa del mondo reale",
@@ -59,7 +59,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Commety è su GoFundMe",
     description: "Sostieni una piattaforma italiana per il territorio, l'inclusione e la community.",
-    images: [`${siteUrl}/og-institutional-map.png`],
+    images: [`${siteUrl}/news-commety-gofundme-cover-v2.jpg`],
   },
 };
 
@@ -82,7 +82,7 @@ export default function GoFundMeNewsPage() {
               "@type": "NewsArticle",
               headline: "Da oggi Commety è anche su GoFundMe",
               description: "Commety apre una raccolta GoFundMe per far crescere una piattaforma italiana dedicata a territorio, inclusione, informazione utile e community.",
-              image: [`${siteUrl}/og-institutional-map.png`],
+              image: [`${siteUrl}/news-commety-gofundme-cover-v2.jpg`],
               datePublished: publishedAt,
               dateModified: publishedAt,
               mainEntityOfPage: { "@type": "WebPage", "@id": articleUrl },
@@ -105,7 +105,7 @@ export default function GoFundMeNewsPage() {
             <h1 className="mt-5 max-w-3xl text-4xl font-black leading-tight tracking-tight sm:text-6xl">Da oggi Commety &egrave; anche su GoFundMe</h1>
             <p className="mt-6 max-w-2xl text-xl leading-9 text-white/80">Una raccolta per far crescere una piattaforma italiana, utile e costruita insieme alle persone.</p>
             <div className="relative mt-10 overflow-hidden rounded-[1.75rem] border border-white/15 shadow-[0_20px_46px_rgba(0,0,0,0.28)]">
-              <Image src="/og-institutional-map.png" alt="La mappa Commety con i marker della community" width={1731} height={909} priority className="h-auto w-full" />
+              <Image src="/news-commety-gofundme-cover-v2.jpg" alt="La mappa Commety con i marker della community" width={1731} height={909} priority className="h-auto w-full" />
             </div>
           </div>
         </section>

@@ -17,7 +17,7 @@ import {
 const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://www.commety.it";
 const slug = "/news/segnalazioni-guasti-windtre-iliad-tim-fastweb-vodafone";
 const articleUrl = `${siteUrl}${slug}`;
-const heroImage = `${siteUrl}/news-guasti-rete-hero.png`;
+const heroImage = `${siteUrl}/news-guasti-rete-cover-v2.jpg`;
 const communityImage = `${siteUrl}/news-guasti-rete-community.png`;
 const publishedAt = "2026-07-23T12:00:00+02:00";
 
@@ -82,8 +82,8 @@ export const metadata: Metadata = {
     images: [
       {
         url: heroImage,
-        width: 1536,
-        height: 920,
+        width: 1672,
+        height: 941,
         alt: "Guasti di rete mobile e internet visualizzati su una mappa",
       },
     ],
@@ -296,10 +296,10 @@ export default function TelecomOutageGuidePage() {
             </p>
             <div className="relative mt-10 overflow-hidden rounded-[1.75rem] border border-white/15 shadow-[0_20px_46px_rgba(0,0,0,0.28)]">
               <Image
-                src="/news-guasti-rete-hero.png"
+                src="/news-guasti-rete-cover-v2.jpg"
                 alt="Una mappa digitale mostra diversi guasti di rete in una città italiana"
-                width={1536}
-                height={920}
+                width={1672}
+                height={941}
                 priority
                 className="h-auto w-full"
               />
