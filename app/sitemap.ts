@@ -26,9 +26,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: `${siteUrl}/news`,
-      lastModified: new Date("2026-07-23T09:00:00+02:00"),
+      lastModified: new Date("2026-08-05T12:00:00+02:00"),
       changeFrequency: "weekly",
       priority: 0.7,
+    },
+    {
+      url: `${siteUrl}/news/come-segnalare-buca-stradale-al-comune`,
+      lastModified: new Date("2026-08-05T12:00:00+02:00"),
+      changeFrequency: "monthly",
+      priority: 0.8,
+      images: [`${siteUrl}/news-buca-stradale-hero.jpg`],
     },
     {
       url: `${siteUrl}/news/segnalazioni-in-tempo-reale-perche-sono-importanti`,

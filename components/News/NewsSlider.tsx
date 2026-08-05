@@ -7,6 +7,15 @@ import { useRef } from "react";
 
 const news = [
   {
+    href: "/news/come-segnalare-buca-stradale-al-comune",
+    image: "/news-buca-stradale-hero.jpg",
+    imageAlt: "Una cittadina fotografa in sicurezza una buca stradale",
+    date: "5 agosto 2026",
+    title: "Come segnalare una buca stradale al Comune",
+    abstract:
+      "Procedura, contatti, fotografie utili e documenti da conservare in caso di danni.",
+  },
+  {
     href: "/news/cosa-fare-animale-abbandonato-o-maltrattato",
     image: "/news-animale-abbandonato-hero.png",
     imageAlt: "Una persona presta assistenza in sicurezza a un cane abbandonato",
