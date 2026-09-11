@@ -7,6 +7,15 @@ import { useRef } from "react";
 
 const news = [
   {
+    href: "/news/come-segnalare-allagamenti-tombini-ostruiti",
+    image: "/news-allagamenti-tombini-cover.png",
+    imageAlt: "Una persona segnala una caditoia ostruita dopo un temporale",
+    date: "11 settembre 2026",
+    title: "Allagamenti e tombini ostruiti: come fare una segnalazione utile",
+    abstract:
+      "Quando chiamare i soccorsi, cosa comunicare al Comune e come avvisare la community su Commety.",
+  },
+  {
     href: "/news/come-segnalare-buca-stradale-al-comune",
     image: "/news-buca-stradale-hero.jpg",
     imageAlt: "Una cittadina fotografa in sicurezza una buca stradale",

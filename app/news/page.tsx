@@ -40,9 +40,8 @@ export default function NewsPage() {
               <p className="mt-5 max-w-2xl text-lg leading-8 text-white/75">Quando chiamare i soccorsi, cosa comunicare al Comune e come segnalarlo su Commety.</p>
               <span className="mt-8 inline-flex items-center gap-2 font-bold text-cyan-200">Leggi la guida <ArrowRight className="size-5 transition group-hover:translate-x-1" /></span>
             </div>
-            <div className="relative min-h-64 bg-[radial-gradient(circle_at_42%_34%,rgba(185,239,255,0.85),transparent_16%),radial-gradient(circle_at_68%_62%,rgba(32,167,115,0.62),transparent_14%),linear-gradient(145deg,#23a6d5,#071a3c_72%)]">
-              <div className="absolute inset-0 opacity-35 [background-image:linear-gradient(rgba(255,255,255,0.22)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.22)_1px,transparent_1px)] [background-size:34px_34px]" />
-              <CloudRainWind className="absolute left-1/2 top-1/2 size-24 -translate-x-1/2 -translate-y-1/2 text-white/90 drop-shadow-[0_0_24px_rgba(185,239,255,0.7)]" />
+            <div className="relative min-h-64 overflow-hidden bg-[#0b2d3a]">
+              <Image src="/news-allagamenti-tombini-cover.png" alt="Una persona segnala una caditoia ostruita dopo un temporale" fill sizes="(max-width: 1024px) 100vw, 40vw" className="object-cover transition duration-500 group-hover:scale-[1.03]" />
             </div>
           </div>
         </Link>

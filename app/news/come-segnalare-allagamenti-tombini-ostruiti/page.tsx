@@ -4,10 +4,15 @@ import Link from "next/link";
 import {
   ArrowLeft,
   ArrowRight,
+  AlertTriangle,
+  Building2,
+  CarFront,
+  Camera,
   CheckCircle2,
   CircleAlert,
   CloudRainWind,
   Droplets,
+  FileCheck2,
   MapPinned,
   Phone,
   ShieldAlert,
@@ -18,7 +23,7 @@ import {
 const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://www.commety.it";
 const slug = "/news/come-segnalare-allagamenti-tombini-ostruiti";
 const articleUrl = `${siteUrl}${slug}`;
-const heroImage = `${siteUrl}/logo-commety.png`;
+const heroImage = `${siteUrl}/news-allagamenti-tombini-cover.png`;
 const publishedAt = "2026-09-11T07:30:00+02:00";
 
 const title =
@@ -77,9 +82,9 @@ export const metadata: Metadata = {
     images: [
       {
         url: heroImage,
-        width: 512,
-        height: 512,
-        alt: "Logo Commety",
+        width: 1800,
+        height: 1013,
+        alt: "Una persona segnala da un marciapiede una caditoia ostruita dopo un temporale",
       },
     ],
   },
@@ -112,6 +117,16 @@ const faqs = [
     answer:
       "No. Commety aiuta la comunita' a vedere cosa sta accadendo sul territorio, ma non sostituisce il 112, i Vigili del Fuoco, la Protezione Civile o i canali ufficiali del Comune.",
   },
+  {
+    question: "Devo attraversare l'acqua per controllare un tombino?",
+    answer:
+      "No. Non entrare nell'acqua, non rimuovere griglie o foglie con le mani e non avvicinarti a tombini sollevati. L'acqua puo' nascondere buche, cavi, ostacoli o corrente: comunica quello che osservi da una posizione protetta.",
+  },
+  {
+    question: "Come aggiorno una segnalazione quando l'acqua si ritira?",
+    answer:
+      "Indica l'orario in cui la situazione e' cambiata e aggiungi soltanto informazioni nuove, come strada riaperta, acqua ancora presente o caditoia nuovamente visibile. Su Commety puoi aggiornare la segnalazione per aiutare chi consulta la mappa.",
+  },
 ];
 
 const checklist = [
@@ -121,6 +136,7 @@ const checklist = [
   "Presenza di persone, veicoli bloccati, cantieri, scuole, negozi o accessi impediti.",
   "Foto ampia del punto e, se sicuro, dettaglio dell'ostruzione.",
   "Data, ora e condizioni meteo al momento della segnalazione.",
+  "Eventuali cambiamenti: acqua in aumento, strada chiusa, acqua ritirata o ostacolo rimosso.",
 ];
 
 export default function FloodingGuidePage() {
@@ -212,10 +228,15 @@ export default function FloodingGuidePage() {
               una segnalazione precisa, fatta al canale giusto e condivisa con
               chi si trova vicino.
             </p>
-            <div className="relative mt-10 min-h-72 overflow-hidden rounded-[1.75rem] border border-white/15 bg-[radial-gradient(circle_at_28%_30%,rgba(185,239,255,0.95),transparent_14%),radial-gradient(circle_at_68%_58%,rgba(32,167,115,0.7),transparent_16%),linear-gradient(145deg,#23a6d5,#071a3c_72%)] shadow-[0_20px_46px_rgba(0,0,0,0.28)]">
-              <div className="absolute inset-0 opacity-30 [background-image:linear-gradient(rgba(255,255,255,0.22)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.22)_1px,transparent_1px)] [background-size:34px_34px]" />
-              <CloudRainWind className="absolute left-1/2 top-1/2 size-28 -translate-x-1/2 -translate-y-[58%] text-white/90 drop-shadow-[0_0_24px_rgba(185,239,255,0.7)]" />
-              <Waves className="absolute bottom-12 left-1/2 size-32 -translate-x-1/2 text-white/75" />
+            <div className="relative mt-10 overflow-hidden rounded-[1.75rem] border border-white/15 shadow-[0_20px_46px_rgba(0,0,0,0.28)]">
+              <Image
+                src="/news-allagamenti-tombini-cover.png"
+                alt="Una persona segnala da un marciapiede una caditoia ostruita dopo un temporale"
+                width={1800}
+                height={1013}
+                priority
+                className="h-auto w-full"
+              />
             </div>
           </div>
         </section>
@@ -248,6 +269,21 @@ export default function FloodingGuidePage() {
               </div>
             </div>
 
+            <section className="mt-10 rounded-3xl border border-[#cfe2ea] bg-[#f0f8fb] p-6 sm:p-8">
+              <div className="flex gap-4">
+                <AlertTriangle className="mt-1 size-7 shrink-0 text-[#17698b]" />
+                <div>
+                  <h2 className="text-2xl font-black">Prima di segnalare: quattro cose da non fare</h2>
+                  <ul className="mt-4 space-y-3 leading-7 text-[#365f6c]">
+                    <li>Non attraversare un sottopasso o una strada allagata, nemmeno se l&apos;acqua sembra bassa.</li>
+                    <li>Non spostare griglie, tombini, transenne o altri elementi della strada.</li>
+                    <li>Non fermarti in doppia fila o in carreggiata per registrare un video.</li>
+                    <li>Non condividere informazioni non verificate: indica sempre cosa hai visto, dove e quando.</li>
+                  </ul>
+                </div>
+              </div>
+            </section>
+
             <h2 className="mt-12 text-3xl font-black tracking-tight">
               Capitolo 1: capire se e&apos; emergenza
             </h2>
@@ -273,7 +309,44 @@ export default function FloodingGuidePage() {
             </div>
 
             <h2 className="mt-12 text-3xl font-black tracking-tight">
-              Capitolo 2: cosa comunicare
+              Capitolo 2: a chi inviare la segnalazione
+            </h2>
+            <p className="mt-5 text-lg leading-8 text-[#365f6c]">
+              Quando non e&apos; necessaria una chiamata di emergenza, il primo
+              riferimento e&apos; di solito il Comune: il sito istituzionale puo&apos;
+              indicare un portale per le segnalazioni, l&apos;URP, la Polizia Locale
+              o il gestore del servizio di manutenzione. In alcune citta&apos; il
+              servizio idrico o il gestore della strada ha un canale dedicato.
+            </p>
+            <div className="mt-7 grid gap-4 sm:grid-cols-2">
+              <div className="rounded-3xl border border-[#cfe2ea] bg-white p-6">
+                <Building2 className="size-7 text-[#17698b]" />
+                <h3 className="mt-4 text-xl font-black">Comune e manutenzione</h3>
+                <p className="mt-2 leading-7 text-[#4b6d78]">
+                  Per caditoie sporche, ristagni e problemi ricorrenti su strade
+                  comunali, usa il canale ufficiale e conserva protocollo o
+                  conferma di invio.
+                </p>
+              </div>
+              <div className="rounded-3xl border border-[#cfe2ea] bg-white p-6">
+                <Phone className="size-7 text-[#17698b]" />
+                <h3 className="mt-4 text-xl font-black">Polizia Locale e soccorsi</h3>
+                <p className="mt-2 leading-7 text-[#4b6d78]">
+                  Se la viabilita&apos; e&apos; compromessa o il pericolo cresce,
+                  contatta chi puo&apos; disporre una messa in sicurezza. Per le
+                  emergenze usa il 112.
+                </p>
+              </div>
+            </div>
+            <p className="mt-5 text-sm leading-6 text-[#5c7680]">
+              Se non sai chi gestisce il tratto, invia posizione e riferimenti
+              al Comune o alla Polizia Locale e chiedi il canale competente.
+              Un solo invio completo e&apos; piu&apos; utile di molte segnalazioni
+              duplicate e senza localizzazione.
+            </p>
+
+            <h2 className="mt-12 text-3xl font-black tracking-tight">
+              Capitolo 3: cosa comunicare
             </h2>
             <p className="mt-5 text-lg leading-8 text-[#365f6c]">
               Una buona segnalazione permette a chi interviene di trovare il
@@ -306,7 +379,37 @@ export default function FloodingGuidePage() {
             </div>
 
             <h2 className="mt-12 text-3xl font-black tracking-tight">
-              Capitolo 3: un testo pronto da inviare
+              Capitolo 4: foto, video e posizione senza esporsi
+            </h2>
+            <p className="mt-5 text-lg leading-8 text-[#365f6c]">
+              Una segnalazione efficace non ha bisogno di immagini spettacolari:
+              ha bisogno di elementi che permettano di capire il punto. Una
+              foto panoramica, scattata dal marciapiede, con un incrocio o un
+              numero civico vicino e&apos; spesso piu&apos; utile di un primo piano.
+            </p>
+            <div className="mt-7 grid gap-4 sm:grid-cols-2">
+              <div className="rounded-3xl border border-[#cfe2ea] bg-[#f7fbfc] p-6">
+                <Camera className="size-7 text-[#17698b]" />
+                <h3 className="mt-4 text-xl font-black">Per documentare bene</h3>
+                <p className="mt-2 leading-7 text-[#4b6d78]">
+                  Inquadra via, incrocio o punto di riferimento; registra data
+                  e ora; aggiungi un dettaglio dell&apos;ostruzione solo se resta
+                  possibile farlo da terreno asciutto e sicuro.
+                </p>
+              </div>
+              <div className="rounded-3xl border border-[#cfe2ea] bg-[#f7fbfc] p-6">
+                <ShieldAlert className="size-7 text-[#17698b]" />
+                <h3 className="mt-4 text-xl font-black">Per proteggere le persone</h3>
+                <p className="mt-2 leading-7 text-[#4b6d78]">
+                  Non mostrare volti, targhe, interni privati o dati personali.
+                  Non filmare mentre guidi e non chiedere ad altri di avvicinarsi
+                  all&apos;acqua per ottenere immagini migliori.
+                </p>
+              </div>
+            </div>
+
+            <h2 className="mt-12 text-3xl font-black tracking-tight">
+              Capitolo 5: un testo pronto da inviare
             </h2>
             <blockquote className="mt-6 rounded-3xl border-l-4 border-[#17698b] bg-[#f0f8fb] p-6 text-lg leading-8 text-[#294f5e]">
               &quot;Segnalo un allagamento in via [nome], all&apos;altezza del civico
@@ -318,7 +421,38 @@ export default function FloodingGuidePage() {
             </blockquote>
 
             <h2 className="mt-12 text-3xl font-black tracking-tight">
-              Capitolo 4: quando il problema si ripete
+              Capitolo 6: muoversi a piedi o in auto durante un allagamento
+            </h2>
+            <p className="mt-5 text-lg leading-8 text-[#365f6c]">
+              Le condizioni possono cambiare in pochi minuti. Se devi
+              spostarti, scegli percorsi alternativi e segui le chiusure o le
+              indicazioni ufficiali. L&apos;acqua rende difficile vedere buche,
+              marciapiedi danneggiati, tombini aperti e ostacoli sotto la
+              superficie.
+            </p>
+            <div className="mt-7 grid gap-4 sm:grid-cols-2">
+              <div className="rounded-3xl border border-[#cfe2ea] bg-white p-6">
+                <CarFront className="size-7 text-[#17698b]" />
+                <h3 className="mt-4 text-xl font-black">Se sei in auto</h3>
+                <p className="mt-2 leading-7 text-[#4b6d78]">
+                  Non entrare in sottopassi o tratti con acqua in movimento. Se
+                  trovi una strada chiusa, non aggirare le transenne: torna
+                  indietro e scegli un percorso sicuro.
+                </p>
+              </div>
+              <div className="rounded-3xl border border-[#cfe2ea] bg-white p-6">
+                <Waves className="size-7 text-[#17698b]" />
+                <h3 className="mt-4 text-xl font-black">Se sei a piedi</h3>
+                <p className="mt-2 leading-7 text-[#4b6d78]">
+                  Evita passaggi in discesa, argini, sottopassi e zone dove non
+                  distingui il fondo. Cerca un luogo riparato e informa i
+                  soccorsi se qualcuno non riesce a uscire in sicurezza.
+                </p>
+              </div>
+            </div>
+
+            <h2 className="mt-12 text-3xl font-black tracking-tight">
+              Capitolo 7: quando il problema si ripete
             </h2>
             <p className="mt-5 text-lg leading-8 text-[#365f6c]">
               Se la stessa strada si allaga a ogni temporale, conserva le
@@ -327,6 +461,20 @@ export default function FloodingGuidePage() {
               caditoie, verifica delle pendenze o interventi piu&apos; strutturali
               sulla rete di raccolta delle acque.
             </p>
+            <div className="mt-7 rounded-3xl border border-[#cfe2ea] bg-[#f7fbfc] p-6">
+              <div className="flex gap-4">
+                <FileCheck2 className="mt-1 size-7 shrink-0 text-[#17698b]" />
+                <div>
+                  <h3 className="text-xl font-black">Come fare un seguito utile</h3>
+                  <p className="mt-2 leading-7 text-[#4b6d78]">
+                    Cita il numero della prima pratica, indica se il rischio e&apos;
+                    cambiato e allega solo nuove foto o orari. Quando il punto
+                    torna praticabile, aggiorna anche Commety: una mappa utile
+                    ha bisogno sia degli avvisi sia delle conferme di rientro.
+                  </p>
+                </div>
+              </div>
+            </div>
             <p className="mt-5 text-lg leading-8 text-[#365f6c]">
               Aggiorna la richiesta solo con elementi nuovi: livello dell&apos;acqua,
               durata, tratto interessato, ostacoli presenti e impatto su
