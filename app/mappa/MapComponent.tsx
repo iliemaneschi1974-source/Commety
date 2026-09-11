@@ -259,10 +259,33 @@ processingOverlay.showProcessing(
 );
 
 return new Promise((resolve) => {
-  const unsubscribe = listenModerationDecision(
+  let settled = false;
+  let unsubscribe = () => {};
+
+  const finishWithError = (message: string) => {
+    if (settled) return;
+    settled = true;
+    window.clearTimeout(timeoutId);
+    unsubscribe();
+    processingOverlay.hide();
+    setMessageDialogTitle("Segnalazione non pubblicata");
+    setMessageDialogDescription(message);
+    setMessageDialogOpen(true);
+    resolve(false);
+  };
+
+  const timeoutId = window.setTimeout(() => {
+    finishWithError(
+      "La verifica sta richiedendo troppo tempo. Riprova tra qualche minuto."
+    );
+  }, 310_000);
+
+  unsubscribe = listenModerationDecision(
     reportId,
     (event) => {
-
+      if (settled) return;
+      settled = true;
+      window.clearTimeout(timeoutId);
       unsubscribe();
 
       if (
@@ -300,6 +323,15 @@ return new Promise((resolve) => {
       setMessageDialogOpen(true);
 
       resolve(false);
+    },
+    (reason) => {
+      finishWithError(
+        reason === "MEDIA_PROCESSING_FAILED"
+          ? data.video
+            ? "Non è stato possibile elaborare il video in modo sicuro. Riprova con una nuova registrazione."
+            : "Non è stato possibile elaborare l'immagine in modo sicuro. Riprova con una nuova foto."
+          : "La verifica è stata interrotta da un problema di connessione. Riprova tra qualche minuto."
+      );
     }
   );
 });

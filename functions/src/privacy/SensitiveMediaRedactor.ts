@@ -221,7 +221,7 @@ function runFfmpeg(inputPath: string, outputPath: string, boxes: TimedBox[]): Pr
   const filters = boxes.map((box) => {
     const from = box.from.toFixed(2);
     const to = box.to.toFixed(2);
-    return `delogo=x=${box.left}:y=${box.top}:w=${box.width}:h=${box.height}:band=12:show=0:enable='between(t\\,${from}\\,${to})'`;
+    return `delogo=x=${box.left}:y=${box.top}:w=${box.width}:h=${box.height}:show=0:enable='between(t\\,${from}\\,${to})'`;
   }).join(",");
 
   return new Promise((resolve, reject) => {

@@ -1,0 +1,12 @@
+.git
+.next
+node_modules
+functions/node_modules
+functions/lib
+public/video-source
+vendita-commety
+Commety-data-room-vendita.zip
+Commety-mediakit.zip
+Comunicati stampa
+mediakit
+*.log

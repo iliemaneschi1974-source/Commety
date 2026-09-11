@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Construction, HeartHandshake, Newspaper, PawPrint, RadioTower, WifiOff } from "lucide-react";
+import { ArrowRight, CloudRainWind, Construction, HeartHandshake, Newspaper, PawPrint, RadioTower, WifiOff } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "News | Commety",
@@ -31,6 +31,22 @@ export default function NewsPage() {
       </section>
 
       <section className="mx-auto grid max-w-6xl gap-6 px-6 pb-16 sm:px-8 sm:pb-20">
+        <Link href="/news/come-segnalare-allagamenti-tombini-ostruiti" className="group block overflow-hidden rounded-[2rem] border border-white/15 bg-[linear-gradient(135deg,#061735_0%,#17698b_48%,#23a6d5_100%)] shadow-[0_22px_55px_rgba(2,16,42,0.3)] transition hover:-translate-y-1 hover:border-white/30">
+          <div className="grid lg:grid-cols-[1.2fr_0.8fr]">
+            <div className="p-8 sm:p-12">
+              <div className="flex size-12 items-center justify-center rounded-2xl bg-cyan-400/15 text-cyan-200"><CloudRainWind className="size-6" /></div>
+              <p className="mt-7 text-sm font-bold uppercase tracking-[0.16em] text-[#b9efff]">11 settembre 2026</p>
+              <h2 className="mt-3 max-w-2xl text-3xl font-black leading-tight sm:text-5xl">Allagamenti e tombini ostruiti: come fare una segnalazione utile</h2>
+              <p className="mt-5 max-w-2xl text-lg leading-8 text-white/75">Quando chiamare i soccorsi, cosa comunicare al Comune e come segnalarlo su Commety.</p>
+              <span className="mt-8 inline-flex items-center gap-2 font-bold text-cyan-200">Leggi la guida <ArrowRight className="size-5 transition group-hover:translate-x-1" /></span>
+            </div>
+            <div className="relative min-h-64 bg-[radial-gradient(circle_at_42%_34%,rgba(185,239,255,0.85),transparent_16%),radial-gradient(circle_at_68%_62%,rgba(32,167,115,0.62),transparent_14%),linear-gradient(145deg,#23a6d5,#071a3c_72%)]">
+              <div className="absolute inset-0 opacity-35 [background-image:linear-gradient(rgba(255,255,255,0.22)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.22)_1px,transparent_1px)] [background-size:34px_34px]" />
+              <CloudRainWind className="absolute left-1/2 top-1/2 size-24 -translate-x-1/2 -translate-y-1/2 text-white/90 drop-shadow-[0_0_24px_rgba(185,239,255,0.7)]" />
+            </div>
+          </div>
+        </Link>
+
         <Link href="/news/come-segnalare-buca-stradale-al-comune" className="group block overflow-hidden rounded-[2rem] border border-white/15 bg-[linear-gradient(135deg,#061735_0%,#0F2D5F_48%,#2878bd_100%)] shadow-[0_22px_55px_rgba(2,16,42,0.3)] transition hover:-translate-y-1 hover:border-white/30">
           <div className="grid lg:grid-cols-[1.2fr_0.8fr]">
             <div className="p-8 sm:p-12">
