@@ -6,6 +6,9 @@ import Link from "next/link";
 import { useRef } from "react";
 
 const news = [
+  { href: "/news/come-segnalare-rifiuti-abbandonati", image: "/news-rifiuti-abbandonati-cover.png", imageAlt: "Rifiuti abbandonati documentati da una cittadina", date: "11 settembre 2026", title: "Rifiuti abbandonati: come fare una segnalazione efficace", abstract: "Cosa fotografare, chi contattare e come informare la community." },
+  { href: "/news/come-segnalare-lampione-spento", image: "/news-lampione-spento-cover.png", imageAlt: "Un lampione spento in una strada di sera", date: "11 settembre 2026", title: "Lampione spento o pericolante: come segnalarlo", abstract: "I riferimenti utili per far intervenire il gestore in sicurezza." },
+  { href: "/news/come-segnalare-perdita-acqua-strada", image: "/news-perdita-acqua-cover.png", imageAlt: "Una perdita d'acqua in strada", date: "11 settembre 2026", title: "Perdita d'acqua in strada: come segnalarla", abstract: "Cosa osservare e come inviare una segnalazione utile." },
   {
     href: "/news/come-segnalare-allagamenti-tombini-ostruiti",
     image: "/news-allagamenti-tombini-cover.png",

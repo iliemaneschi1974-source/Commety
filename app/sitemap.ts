@@ -37,6 +37,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
       images: [`${siteUrl}/logo-commety.png`],
     },
+    { url: `${siteUrl}/news/come-segnalare-rifiuti-abbandonati`, lastModified: new Date("2026-09-11T12:00:00+02:00"), changeFrequency: "monthly", priority: 0.8 },
+    { url: `${siteUrl}/news/come-segnalare-lampione-spento`, lastModified: new Date("2026-09-11T12:00:00+02:00"), changeFrequency: "monthly", priority: 0.8 },
+    { url: `${siteUrl}/news/come-segnalare-perdita-acqua-strada`, lastModified: new Date("2026-09-11T12:00:00+02:00"), changeFrequency: "monthly", priority: 0.8 },
     {
       url: `${siteUrl}/news/come-segnalare-buca-stradale-al-comune`,
       lastModified: new Date("2026-08-05T12:00:00+02:00"),

@@ -31,6 +31,11 @@ export default function NewsPage() {
       </section>
 
       <section className="mx-auto grid max-w-6xl gap-6 px-6 pb-16 sm:px-8 sm:pb-20">
+        {[
+          ["/news/come-segnalare-rifiuti-abbandonati", "/news-rifiuti-abbandonati-cover.png", "Rifiuti abbandonati: come fare una segnalazione efficace", "Cosa fotografare, chi contattare e come informare la community."],
+          ["/news/come-segnalare-lampione-spento", "/news-lampione-spento-cover.png", "Lampione spento o pericolante: come segnalarlo", "I riferimenti utili per far intervenire il gestore in sicurezza."],
+          ["/news/come-segnalare-perdita-acqua-strada", "/news-perdita-acqua-cover.png", "Perdita d'acqua in strada: come segnalarla", "Cosa osservare e come inviare una segnalazione utile."],
+        ].map(([href, image, title, summary]) => <Link key={href} href={href} className="group block overflow-hidden rounded-[2rem] border border-white/15 bg-[linear-gradient(135deg,#061735_0%,#0F2D5F_48%,#2878bd_100%)] shadow-[0_22px_55px_rgba(2,16,42,0.3)] transition hover:-translate-y-1 hover:border-white/30"><div className="grid lg:grid-cols-[1.2fr_0.8fr]"><div className="p-8 sm:p-12"><p className="text-sm font-bold uppercase tracking-[.16em] text-[#a9d5ff]">11 settembre 2026</p><h2 className="mt-3 max-w-2xl text-3xl font-black leading-tight sm:text-5xl">{title}</h2><p className="mt-5 max-w-2xl text-lg leading-8 text-white/75">{summary}</p><span className="mt-8 inline-flex items-center gap-2 font-bold text-sky-200">Leggi la guida <ArrowRight className="size-5 transition group-hover:translate-x-1" /></span></div><div className="relative min-h-64 overflow-hidden"><Image src={image} alt="" fill sizes="(max-width: 1024px) 100vw, 40vw" className="object-cover transition duration-500 group-hover:scale-[1.03]" /></div></div></Link>)}
         <Link href="/news/come-segnalare-allagamenti-tombini-ostruiti" className="group block overflow-hidden rounded-[2rem] border border-white/15 bg-[linear-gradient(135deg,#061735_0%,#17698b_48%,#23a6d5_100%)] shadow-[0_22px_55px_rgba(2,16,42,0.3)] transition hover:-translate-y-1 hover:border-white/30">
           <div className="grid lg:grid-cols-[1.2fr_0.8fr]">
             <div className="p-8 sm:p-12">
