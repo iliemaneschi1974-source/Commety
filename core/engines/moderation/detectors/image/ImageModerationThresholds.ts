@@ -100,6 +100,13 @@ export class ImageModerationThresholds {
    */
   public static readonly IMAGE_CONSISTENCY = 0.70;
 
+  /**
+   * La coerenza stimata sui frame di un video puo' variare molto tra inizio,
+   * centro e fine della registrazione. Non trasformiamo una stima incerta in
+   * un rifiuto automatico: serve un'alta confidenza dell'analisi AI.
+   */
+  public static readonly IMAGE_CONSISTENCY_CONFIDENCE = 0.90;
+
   private constructor() {
     // Classe di utilità.
   }

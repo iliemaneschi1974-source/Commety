@@ -38,7 +38,13 @@ export class DescriptionConsistencyRule
 
     const soglia =
       ImageModerationThresholds.IMAGE_CONSISTENCY;
-      
+
+    if (
+      consistency.confidence <
+      ImageModerationThresholds.IMAGE_CONSISTENCY_CONFIDENCE
+    ) {
+      return [];
+    }
 
     if (
       consistency.descriptionSimilarity >= soglia &&
