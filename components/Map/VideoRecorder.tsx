@@ -14,6 +14,9 @@ export default function VideoRecorder({ onChange }: VideoRecorderProps) {
   const previewRef = useRef<HTMLVideoElement>(null);
   const playbackRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
+  const recorderRef = useRef<MediaRecorder | null>(null);
+  const stopTimerRef = useRef<number | null>(null);
+  const countdownTimerRef = useRef<number | null>(null);
   const [recording, setRecording] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [posterUrl, setPosterUrl] = useState<string | null>(null);
@@ -24,12 +27,30 @@ export default function VideoRecorder({ onChange }: VideoRecorderProps) {
 
   useEffect(() => () => {
     streamRef.current?.getTracks().forEach((track) => track.stop());
+    clearRecordingTimers();
     if (previewUrl) URL.revokeObjectURL(previewUrl);
   }, [previewUrl]);
 
   useEffect(() => () => {
     if (posterUrl) URL.revokeObjectURL(posterUrl);
   }, [posterUrl]);
+
+  function clearRecordingTimers() {
+    if (stopTimerRef.current !== null) {
+      window.clearTimeout(stopTimerRef.current);
+      stopTimerRef.current = null;
+    }
+    if (countdownTimerRef.current !== null) {
+      window.clearInterval(countdownTimerRef.current);
+      countdownTimerRef.current = null;
+    }
+  }
+
+  function stopRecording() {
+    clearRecordingTimers();
+    const recorder = recorderRef.current;
+    if (recorder?.state === "recording") recorder.stop();
+  }
 
   async function startRecording() {
     setError(null);
@@ -47,6 +68,7 @@ export default function VideoRecorder({ onChange }: VideoRecorderProps) {
       const recorder = mimeType
         ? new MediaRecorder(stream, { mimeType })
         : new MediaRecorder(stream);
+      recorderRef.current = recorder;
       let recordedMimeType = recorder.mimeType || mimeType || "video/webm";
       recorder.ondataavailable = (event) => {
         if (event.data.size > 0) {
@@ -55,6 +77,8 @@ export default function VideoRecorder({ onChange }: VideoRecorderProps) {
         }
       };
       recorder.onstop = async () => {
+        clearRecordingTimers();
+        recorderRef.current = null;
         const livePoster = await captureLivePoster(previewRef.current);
         if (previewRef.current) previewRef.current.srcObject = null;
         stream.getTracks().forEach((track) => track.stop());
@@ -84,17 +108,17 @@ export default function VideoRecorder({ onChange }: VideoRecorderProps) {
       recorder.start(250);
       setRecording(true);
       setSecondsLeft(MAX_SECONDS);
-      const timer = window.setInterval(() => {
-        setSecondsLeft((value) => {
-          if (value <= 1) {
-            window.clearInterval(timer);
-            recorder.stop();
-            return 0;
-          }
-          return value - 1;
-        });
-      }, 1000);
+      const deadline = Date.now() + MAX_SECONDS * 1000;
+      countdownTimerRef.current = window.setInterval(() => {
+        setSecondsLeft(Math.max(0, Math.ceil((deadline - Date.now()) / 1000)));
+      }, 100);
+      stopTimerRef.current = window.setTimeout(() => {
+        setSecondsLeft(0);
+        stopRecording();
+      }, MAX_SECONDS * 1000);
     } catch {
+      clearRecordingTimers();
+      recorderRef.current = null;
       setError("Impossibile aprire la fotocamera. Verifica i permessi del browser.");
     }
   }
